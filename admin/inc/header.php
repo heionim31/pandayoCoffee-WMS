@@ -54,8 +54,6 @@
     </script>
     <script src="<?php echo base_url ?>dist/js/script.js"></script>
 
-    <!-- MUST REMOVED TO HIDE "oretnom" -->
-    <#?php echo html_entity_decode($_settings->load_data()); ?>
-
+   
 
   </head>
