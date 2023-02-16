@@ -11,7 +11,7 @@
 		object-position:center center;
 	}
 </style>
-<div class="card card-outline rounded-0 card-teal">
+<div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
 		<h3 class="card-title">Stock Manager</h3>
 	</div>

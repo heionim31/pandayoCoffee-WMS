@@ -1,3 +1,4 @@
+
 <?php if($_settings->chk_flashdata('success')): ?>
 <script>
 	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
@@ -11,7 +12,7 @@
         object-position:center center;
     }
 </style>
-<div class="card card-outline rounded-0 card-teal">
+<div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
 		<h3 class="card-title">List of Users</h3>
 		<div class="card-tools">
@@ -44,7 +45,7 @@
 				<tbody>
 					<?php 
 					$i = 1;
-						$qry = $conn->query("SELECT *, concat(firstname,' ', coalesce(concat(middlename,' '), '') , lastname) as `name` from `users` where id != '{$_settings->userdata('id')}' order by concat(firstname,' ', lastname) asc ");
+						$qry = $conn->query("SELECT *, concat(firstname,' ', coalesce(concat(middlename,' '), '') , lastname) as `name` from `users_list` where id != '{$_settings->userdata('id')}' order by concat(firstname,' ', lastname) asc ");
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>

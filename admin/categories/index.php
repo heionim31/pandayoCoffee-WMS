@@ -11,7 +11,8 @@
 		object-position:center center;
 	}
 </style>
-<div class="card card-outline rounded-0 card-teal">
+
+<div class="card card-outline rounded-5 card-dark">
 	<div class="card-header">
 		<h3 class="card-title">List of Categories</h3>
 		<div class="card-tools">
@@ -40,6 +41,7 @@
 					</tr>
 				</thead>
 				<tbody>
+
 					<?php 
 					$i = 1;
 						$qry = $conn->query("SELECT * from `category_list` where delete_flag = 0 order by `name` asc ");
@@ -77,6 +79,7 @@
 		</div>
 	</div>
 </div>
+								
 <script>
 	$(document).ready(function(){
 		$('.delete_data').click(function(){
