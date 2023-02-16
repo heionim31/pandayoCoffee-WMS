@@ -12,7 +12,7 @@
   }
 </style>
 <!-- Navbar -->
-      <nav class="main-header navbar navbar-expand navbar-light shadow text-sm">
+      <nav class="main-header navbar navbar-expand navbar-dark text-sm">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
           <li class="nav-item">

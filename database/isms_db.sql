@@ -1,15 +1,21 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2022 at 07:34 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.5
+-- Generation Time: Feb 16, 2023 at 08:08 PM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `isms_db`
@@ -40,8 +46,7 @@ INSERT INTO `category_list` (`id`, `name`, `unit`, `description`, `status`, `del
 (1, 'Vegetables', 'pcs', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam mi tellus, vehicula in aliquet quis, euismod id est. Vestibulum eget tellus eros. ', 1, 0, '2022-05-28 09:24:50', '2022-05-28 09:24:50'),
 (2, 'Seasoning', 'pcs', 'Sed aliquet neque diam, sit amet fringilla ante tincidunt quis. Suspendisse porta, neque eget pellentesque elementum, augue ex aliquet justo, vel bibendum risus neque in urna. In feugiat sapien vel felis finibus, vitae congue ipsum efficitur', 1, 0, '2022-05-28 09:25:52', '2022-05-28 09:25:52'),
 (3, 'Dairy Products', 'pcs', 'Aliquam in sollicitudin eros. Fusce tortor massa, pulvinar ac nunc non, maximus elementum nunc.', 1, 0, '2022-05-28 09:28:35', '2022-05-28 09:28:35'),
-(4, 'Meat', 'pcs', 'Curabitur et ornare nisl. Sed non nulla urna. Etiam imperdiet sem turpis, nec cursus mauris malesuada quis.', 1, 0, '2022-05-28 09:30:40', '2022-05-28 09:30:40'),
-(5, 'Test', 'pcs', 'test123', 1, 1, '2022-05-28 09:36:45', '2022-05-28 09:37:28');
+(4, 'Meat', 'pcs', 'Curabitur et ornare nisl. Sed non nulla urna. Etiam imperdiet sem turpis, nec cursus mauris malesuada quis.', 1, 0, '2022-05-28 09:30:40', '2022-05-28 09:30:40');
 
 -- --------------------------------------------------------
 
@@ -137,11 +142,11 @@ CREATE TABLE `system_info` (
 --
 
 INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
-(1, 'name', 'Ingredients Stock Management System'),
-(6, 'short_name', 'ISMS - PHP'),
-(11, 'logo', 'uploads/logo.png?v=1653699689'),
+(1, 'name', 'Pandayo Coffee Warehouse Management System'),
+(6, 'short_name', 'PCWMS'),
+(11, 'logo', 'uploads/logo.png?v=1676459057'),
 (13, 'user_avatar', 'uploads/user_avatar.jpg'),
-(14, 'cover', 'uploads/cover.png?v=1653710421'),
+(14, 'cover', 'uploads/cover.png?v=1676459181'),
 (17, 'phone', '456-987-1231'),
 (18, 'mobile', '09123456987 / 094563212222 '),
 (19, 'email', 'info@musicschool.com'),
@@ -150,10 +155,10 @@ INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `users_list`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE `users_list` (
   `id` int(50) NOT NULL,
   `firstname` varchar(250) NOT NULL,
   `middlename` text DEFAULT NULL,
@@ -168,12 +173,16 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2';
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `users_list`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
-(1, 'Adminstrator', '', 'Admin', 'admin', '0192023a7bbd73250516f069df18b500', 'uploads/avatars/1.png?v=1649834664', NULL, 1, '2021-01-20 14:02:37', '2022-05-16 14:17:49'),
-(2, 'John', 'D', 'Smith', 'jsmith', '1254737c076cf867dc53d60a0364f38e', 'uploads/avatars/2.png?v=1653715045', NULL, 2, '2022-05-28 13:17:24', '2022-05-28 13:17:25');
+INSERT INTO `users_list` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
+(1, 'Admin', '', 'Manager', 'admin', '0192023a7bbd73250516f069df18b500', 'uploads/avatars/1.png?v=1676554601', NULL, 1, '2021-01-20 14:02:37', '2023-02-16 22:06:42'),
+(2, 'John Carlo', '', 'Moral', 'john', '1254737c076cf867dc53d60a0364f38e', 'uploads/avatars/2.png?v=1676554943', NULL, 2, '2022-05-28 13:17:24', '2023-02-16 21:42:23'),
+(4, 'Noah james', 'sample', 'Mainit', 'noah', '890db99ccec89d1b57d7684142788780', NULL, NULL, 2, '2023-02-17 01:45:53', '2023-02-17 01:45:53'),
+(5, 'Test1', 'Test2', 'Test3', 'test1', '098f6bcd4621d373cade4e832627b4f6', NULL, NULL, 2, '2023-02-17 01:46:52', '2023-02-17 01:46:52'),
+(6, 'testadmin', 'testadmin2', 'testadmin3', 'testadmin', '54f822514144d7bb14d70ca0ca1e5fa3', NULL, NULL, 1, '2023-02-17 01:49:30', '2023-02-17 01:49:30'),
+(7, 'Darryl', '', 'Panis', 'darryl123', '0a1871d3d800c50075a6b8806d05c0e2', NULL, NULL, 2, '2023-02-17 02:02:04', '2023-02-17 02:02:04');
 
 -- --------------------------------------------------------
 
@@ -236,9 +245,9 @@ ALTER TABLE `system_info`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `users_list`
 --
-ALTER TABLE `users`
+ALTER TABLE `users_list`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -283,10 +292,10 @@ ALTER TABLE `system_info`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `users_list`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `users_list`
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `waste_list`
@@ -322,3 +331,7 @@ ALTER TABLE `stockout_list`
 ALTER TABLE `waste_list`
   ADD CONSTRAINT `item_id_fk_wl` FOREIGN KEY (`item_id`) REFERENCES `item_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

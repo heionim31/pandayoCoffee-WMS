@@ -1,5 +1,5 @@
 <?php 
-$user = $conn->query("SELECT * FROM users where id ='".$_settings->userdata('id')."'");
+$user = $conn->query("SELECT * FROM users_list where id ='".$_settings->userdata('id')."'");
 foreach($user->fetch_array() as $k =>$v){
 	$meta[$k] = $v;
 }
@@ -9,7 +9,7 @@ foreach($user->fetch_array() as $k =>$v){
 	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
 </script>
 <?php endif;?>
-<div class="card card-outline rounded-0 card-teal">
+<div class="card card-outline rounded-0 card-dark">
 	<div class="card-body">
 		<div class="container-fluid">
 			<div id="msg"></div>

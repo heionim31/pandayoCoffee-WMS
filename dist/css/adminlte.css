@@ -11,6 +11,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
+  --brown: #a15c16;
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -66,7 +67,7 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff;
+  background-color: #d37d0d;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {

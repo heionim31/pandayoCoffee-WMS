@@ -24,7 +24,7 @@ Class Users extends DBConnection {
 			}
 		}
 		if(empty($id)){
-			$qry = $this->conn->query("INSERT INTO users set {$data}");
+			$qry = $this->conn->query("INSERT INTO users_list set {$data}");
 			if($qry){
 				$id=$this->conn->insert_id;
 				$this->settings->set_flashdata('success','User Details successfully saved.');
@@ -56,7 +56,7 @@ Class Users extends DBConnection {
 					unlink(base_app.$fname);
 					$upload =imagepng($temp,base_app.$fname);
 					if($upload){
-						$this->conn->query("UPDATE `users` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$id}'");
+						$this->conn->query("UPDATE `users_list` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$id}'");
 						if($this->settings->userdata('id') == $id)
 						$this->settings->set_userdata('avatar',$fname."?v=".time());
 					}
@@ -69,7 +69,7 @@ Class Users extends DBConnection {
 			}
 
 		}else{
-			$qry = $this->conn->query("UPDATE users set $data where id = {$id}");
+			$qry = $this->conn->query("UPDATE users_list set $data where id = {$id}");
 			if($qry){
 				$this->settings->set_flashdata('success','User Details successfully updated.');
 				foreach($_POST as $k => $v){
@@ -100,7 +100,7 @@ Class Users extends DBConnection {
 					unlink(base_app.$fname);
 					$upload =imagepng($temp,base_app.$fname);
 					if($upload){
-						$this->conn->query("UPDATE `users` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$id}'");
+						$this->conn->query("UPDATE `users_list` set `avatar` = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$id}'");
 						if($this->settings->userdata('id') == $id)
 						$this->settings->set_userdata('avatar',$fname."?v=".time());
 					}
@@ -110,14 +110,14 @@ Class Users extends DBConnection {
 
 				return 1;
 			}else{
-				return "UPDATE users set $data where id = {$id}";
+				return "UPDATE users_list set $data where id = {$id}";
 			}
 			
 		}
 	}
 	public function delete_users(){
 		extract($_POST);
-		$qry = $this->conn->query("DELETE FROM users where id = $id");
+		$qry = $this->conn->query("DELETE FROM users_list where id = $id");
 		if($qry){
 			$this->settings->set_flashdata('success','User Details successfully deleted.');
 			if(is_file(base_app."uploads/avatars/$id.png"))
