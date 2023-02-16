@@ -59,7 +59,17 @@
                           Stock Manager
                         </p>
                       </a>
-                    </li> 
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                      <a href="./?page=minimum_notif" class="nav-link nav-minimum_stocks">
+                      <i class="nav-icon fas fa-bell"></i>
+                        <p>
+                          Stock Notifications
+                        </p>
+                      </a>
+                    </li>
+
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-item">
                       <a href="#" class="nav-link">
