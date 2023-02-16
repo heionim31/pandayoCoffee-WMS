@@ -12,7 +12,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 	echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
 }
 ?>
-<div class="content bg-gradient-teal py-5 px-4">
+<div class="content bg-gradient-dark py-5 px-4">
     <h3 class="font-weight-bolder">Stock Details</h3>
 </div>
 <div class="row mt-n4 justify-content-center">
@@ -23,7 +23,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
             </div>
         </div>
-        <div class="card card-outline card-teal rounded-0 shadow printout">
+        <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title"><b>Item Details</b></div>
             </div>

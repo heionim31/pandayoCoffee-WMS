@@ -23,7 +23,7 @@
   <h1 class="text-center text-white px-4 py-5" id="page-title"><b><?php echo $_settings->info('name') ?></b></h1>
 <div class="login-box">
   <!-- /.login-logo -->
-  <div class="card card-teal my-2">
+  <div class="card card-dark my-2">
     <div class="card-body">
       <p class="login-box-msg">Please enter your credentials</p>
       <form id="login-frm" action="" method="post">

@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['id'])){
-    $user = $conn->query("SELECT * FROM users where id ='{$_GET['id']}' ");
+    $user = $conn->query("SELECT * FROM users_list where id ='{$_GET['id']}' ");
     foreach($user->fetch_array() as $k =>$v){
         $meta[$k] = $v;
     }
@@ -11,7 +11,7 @@ if(isset($_GET['id'])){
 	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
 </script>
 <?php endif;?>
-<div class="card card-outline rounded-0 card-teal">
+<div class="card card-outline rounded-0 card-dark">
 	<div class="card-body">
 		<div class="container-fluid">
 			<div id="msg"></div>
