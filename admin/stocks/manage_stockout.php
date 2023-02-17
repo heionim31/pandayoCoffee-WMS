@@ -1,32 +1,37 @@
 <?php 
-require_once('../../config.php');
-if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `stockout_list` where id = '{$_GET['id']}' ");
-    if($qry->num_rows > 0){
-        foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+    require_once('../../config.php');
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = $conn->query("SELECT * from `stockout_list` where id = '{$_GET['id']}' ");
+        if($qry->num_rows > 0){
+            foreach($qry->fetch_assoc() as $k => $v){
+                $$k=$v;
+            }
         }
     }
-}
 ?>
+
 <div class="container-fluid">
     <form action="" id="stockout-form">
         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
         <input type="hidden" name="item_id" value="<?= isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '') ?>">
+        
         <div class="form-group">
             <label for="date" class="control-label">Date</label>
             <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($date) ? $date : '' ?>" max="<?= date("Y-m-d") ?>" required>
         </div>
+
         <div class="form-group">
             <label for="quantity" class="control-label">Quantity</label>
             <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0 text-right" value="<?= isset($quantity) ? format_num($quantity) : '' ?>" required>
         </div>
+
         <div class="form-group">
             <label for="remarks" class="control-label">Remarks</label>
             <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" required><?= isset($remarks) ? ($remarks) : '' ?></textarea>
         </div>
     </form>
 </div>
+
 <script>
     $(function(){
         $('#stockout-form').submit(function(e){

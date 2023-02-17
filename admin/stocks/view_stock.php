@@ -1,32 +1,37 @@
 <?php 
-if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
-    if($qry->num_rows > 0){
-        foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+        if($qry->num_rows > 0){
+            foreach($qry->fetch_assoc() as $k => $v){
+                $$k=$v;
+            }
+        }else{
+            echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
         }
     }else{
-		echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
-	}
-}else{
-	echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
-}
+        echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
+    }
 ?>
+
 <div class="content bg-gradient-dark py-5 px-4">
     <h3 class="font-weight-bolder">Stock Details</h3>
 </div>
+
 <div class="row mt-n4 justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+
         <div class="card rounded-0 shadow">
             <div class="card-footer py-1 text-center">
                 <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
                 <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
             </div>
         </div>
+
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title"><b>Item Details</b></div>
             </div>
+
             <div class="card-body">
                 <div class="container-fluid">
                     <fieldset>
@@ -34,14 +39,17 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                             <div class="col-4 bg-gradient-teal m-0 p-1 border">Category</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
+
                         <div class="d-flex w-100">
                             <div class="col-4 bg-gradient-teal m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
+
                         <div class="d-flex w-100">
                             <div class="col-4 bg-gradient-teal m-0 p-1 border">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
                         </div>
+
                         <div class="d-flex w-100">
                             <div class="col-4 bg-gradient-teal m-0 p-1 border">Available</div>
                             <div class="col-8 m-0 p-1 border font-weight-bolder"><?= isset($available) ? format_num($available) : '' ?></div>
@@ -49,8 +57,8 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     </fieldset>
                 </div>
             </div>
-            
         </div>
+
         <div class="card card-outline card-teal rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Stock-In History</div>
@@ -58,6 +66,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_stockin"><i class="far fa-plus-square"></i> Add Stock In</button>
                 </div>
             </div>
+
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="stockin-tbl">
                     <thead>
@@ -68,6 +77,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                             <th class="p-1 text-center">Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <?php 
                         if(isset($id)):
@@ -91,6 +101,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </table>
             </div>
         </div>
+
         <div class="card card-outline card-teal rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Stock-Out History</div>
@@ -98,6 +109,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_stockout"><i class="far fa-plus-square"></i> Add Stock Out</button>
                 </div>
             </div>
+            
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="stockout-tbl">
                     <thead>
@@ -108,6 +120,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                             <th class="p-1 text-center">Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <?php 
                         if(isset($id)):
@@ -131,6 +144,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </table>
             </div>
         </div>
+
         <div class="card card-outline card-teal rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Waste History</div>
@@ -138,6 +152,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_waste"><i class="far fa-plus-square"></i> Add Waste Data</button>
                 </div>
             </div>
+
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="waste-tbl">
                     <thead>
@@ -148,6 +163,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                             <th class="p-1 text-center">Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <?php 
                         if(isset($id)):
@@ -173,6 +189,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         </div>
     </div>
 </div>
+
 <noscript id="print-header">
     <div>
         <style>
@@ -180,6 +197,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 min-height:unset !important;
             }
         </style>
+
         <div class="d-flex w-100 align-items-center">
             <div class="col-2 text-center">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="" class="rounded-circle border" style="width: 5em;height: 5em;object-fit:cover;object-position:center center">
@@ -191,10 +209,10 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </div>
             </div>
         </div>
-       
         <hr>
     </div>
 </noscript>
+
 <script>
     var tbl1,tbl2, tbl3;
      function print_t(){
@@ -217,6 +235,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
             card.find('th:nth-child(4)').remove()
             el += card[0].outerHTML
         })
+
         h.find('title').text("order Details - Print View")
         var nw = window.open("", "_blank", "width="+($(window).width() * .8)+",left="+($(window).width() * .1)+",height="+($(window).height() * .8)+",top="+($(window).height() * .1))
             nw.document.querySelector('head').innerHTML = h.html()
@@ -250,6 +269,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 }, 200);
             }, 300);
     }
+
     $(function(){
        
         $('#print').click(function(){
@@ -312,6 +332,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         $('.dataTables_filter input').addClass('rounded-0 form-control-sm py-1');
         
     })
+
     function delete_stockin($id){
 		start_loader();
 		$.ajax({
@@ -357,6 +378,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 			}
 		})
 	}
+    
     function delete_waste($id){
 		start_loader();
 		$.ajax({

@@ -1,8 +1,9 @@
 <?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
+	<script>
+		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+	</script>
 <?php endif;?>
+
 <style>
 	.item-img{
 		width:3em;
@@ -11,16 +12,20 @@
 		object-position:center center;
 	}
 </style>
+
 <div class="card card-outline rounded-0 card-dark">
+
 	<div class="card-header">
 		<h3 class="card-title">List of Items</h3>
 		<div class="card-tools">
 			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
 		</div>
 	</div>
+
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered" id="list">
+
 				<colgroup>
 					<col width="5%">
 					<col width="15%">
@@ -29,6 +34,7 @@
 					<col width="10%">
 					<col width="10%">
 				</colgroup>
+
 				<thead>
 					<tr>
 						<th>#</th>
@@ -39,6 +45,7 @@
 						<th>Action</th>
 					</tr>
 				</thead>
+
 				<tbody>
 					<?php 
 					$i = 1;
@@ -78,10 +85,13 @@
 						</tr>
 					<?php endwhile; ?>
 				</tbody>
+
 			</table>
 		</div>
 	</div>
+
 </div>
+
 <script>
 	$(document).ready(function(){
 		$('.delete_data').click(function(){
@@ -104,6 +114,7 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
+	
 	function delete_item($id){
 		start_loader();
 		$.ajax({

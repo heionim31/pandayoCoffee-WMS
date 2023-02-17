@@ -1,9 +1,11 @@
 <?php 
-$month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
+    $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
 ?>
+
 <div class="content py-5 px-3 bg-gradient-dark">
     <h2>Monthly Stock-In Reports</h2>
 </div>
+
 <div class="row flex-column mt-4 justify-content-center align-items-center mt-lg-n4 mt-md-3 mt-sm-0">
     <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
         <div class="card rounded-0 mb-2 shadow">
@@ -29,16 +31,20 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
             </div>
         </div>
     </div>
+
     <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
         <div class="card rounded-0 mb-2 shadow">
+
             <div class="card-header py-1">
                 <div class="card-tools">
                     <button class="btn btn-flat btn-sm btn-light bg-gradient-light border text-dark" type="button" id="print"><i class="fa fa-print"></i> Print</button>
                 </div>
             </div>
+
             <div class="card-body">
                 <div class="container-fluid" id="printout">
                     <table class="table table-bordered">
+
                         <colgroup>
                             <col width="10%">
                             <col width="15%">
@@ -46,6 +52,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                             <col width="15%">
                             <col width="30%">
                         </colgroup>
+
                         <thead>
                             <tr>
                                 <th class="px-1 py-1 text-center">#</th>
@@ -55,6 +62,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                                 <th class="px-1 py-1 text-center">Remarks</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             <?php 
                             $g_total = 0;
@@ -82,12 +90,16 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                                 </tr>
                             <?php endif; ?>
                         </tbody>
+
                     </table>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
+
 <noscript id="print-header">
     <div>
         <style>
@@ -95,6 +107,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                 min-height:unset !important;
             }
         </style>
+        
         <div class="d-flex w-100 align-items-center">
             <div class="col-2 text-center">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="" class="rounded-circle border" style="width: 5em;height: 5em;object-fit:cover;object-position:center center">
@@ -110,6 +123,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
         <hr>
     </div>
 </noscript>
+
 <script>
     function print_r(){
         var h = $('head').clone()
@@ -130,6 +144,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                 }, 200);
             }, 300);
     }
+
     $(function(){
         $('#filter-form').submit(function(e){
             e.preventDefault()
