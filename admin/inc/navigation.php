@@ -8,9 +8,10 @@
       <aside class="main-sidebar sidebar-white navbar-dark elevation-4 sidebar-no-expand">
         <!-- Brand Logo -->
         <a href="<?php echo base_url ?>admin" class="brand-link bg-white text-sm">
-        <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3" style="opacity: .8;width: 1.5rem;height: 1.5rem;max-height: unset">
+      <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3" style="opacity: .8;width: 3rem;height: 2.5rem;max-height: unset;">
         <span class="brand-text font-normal"><?php echo $_settings->info('short_name') ?></span>
         </a>
+</br>
         <!-- Sidebar -->
         <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden">
           <div class="os-resize-observer-host observed">
@@ -64,7 +65,7 @@
                     <li class="nav-item dropdown">
                       <a href="./?page=minimum_notif" class="nav-link nav-minimum_stocks">
                       <i class="nav-icon fas fa-bell"></i>
-                        <p>
+                        <p style="color:white">
                           Stock Notifications
                         </p>
                       </a>
