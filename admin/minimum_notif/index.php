@@ -48,9 +48,7 @@
 
 				<div class="form-group">
 					<label for="out_of_stock" class="control-label">Out of Stock</label>
-					<input type="text" class="form-control form-control-sm" name="out_of_stock" id="out_of_stock" placeholder="Enter stock range"> <!--value="php echo $_settings->info('name') --> 
-					
-					<!-- value="0" disabled> -->
+					<input type="text" class="form-control form-control-sm" name="out_of_stock" id="out_of_stock" placeholder="Enter stock range"> <!--value="php echo $_settings->info('name') -->
 				</div>
           
                 <div class="form-group">
