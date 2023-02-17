@@ -407,6 +407,7 @@
     'navbar-navy',
     'navbar-lightblue',
     'navbar-teal',
+    'navbar-brown',
     'navbar-cyan',
     'navbar-dark',
     'navbar-gray-dark',
@@ -436,6 +437,7 @@
     'bg-orange',
     'bg-lime',
     'bg-teal',
+    'bg-brown',
     'bg-olive'
   ]
 
@@ -455,6 +457,7 @@
     'accent-orange',
     'accent-lime',
     'accent-teal',
+    'bg-brown',
     'accent-olive'
   ]
 
@@ -490,6 +493,7 @@
     'sidebar-light-orange',
     'sidebar-light-lime',
     'sidebar-light-teal',
+    'sidebar-light-brown',
     'sidebar-light-olive'
   ]
 

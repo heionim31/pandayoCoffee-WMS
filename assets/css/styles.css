@@ -18,7 +18,6 @@
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
-  --bs-brown: #a15c16;
   --bs-red: #dc3545;
   --bs-orange: #fd7e14;
   --bs-yellow: #ffc107;
@@ -67,7 +66,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
   color: #212529;
-  background-color: teal;
+  background-color: rgb(243, 243, 243);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

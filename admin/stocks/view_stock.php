@@ -31,19 +31,19 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 <div class="container-fluid">
                     <fieldset>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-teal m-0 p-1 border">Category</div>
+                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Category</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-teal m-0 p-1 border">Item Name</div>
+                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-teal m-0 p-1 border">Unit</div>
+                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-teal m-0 p-1 border">Available</div>
+                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Available</div>
                             <div class="col-8 m-0 p-1 border font-weight-bolder"><?= isset($available) ? format_num($available) : '' ?></div>
                         </div>
                     </fieldset>
@@ -51,7 +51,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
             </div>
             
         </div>
-        <div class="card card-outline card-teal rounded-0 shadow printout">
+        <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Stock-In History</div>
                 <div class="card-tools">
@@ -91,7 +91,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </table>
             </div>
         </div>
-        <div class="card card-outline card-teal rounded-0 shadow printout">
+        <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Stock-Out History</div>
                 <div class="card-tools">
@@ -131,7 +131,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </table>
             </div>
         </div>
-        <div class="card card-outline card-teal rounded-0 shadow printout">
+        <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Waste History</div>
                 <div class="card-tools">
