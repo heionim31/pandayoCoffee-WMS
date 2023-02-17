@@ -21,7 +21,7 @@
 
 
 <div class="col-lg-12">
-	<div class="card card-outline rounded-0 card-teal">
+	<div class="card card-outline rounded-0 card-dark">
 		<div class="card-header">
 			<h5 class="card-title">Stock Notification</h5>
 		</div>

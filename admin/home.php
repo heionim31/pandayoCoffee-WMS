@@ -1,7 +1,7 @@
 
 <style>
   #system-cover{
-    background:brown;
+    background:white;
     width:100%;
     height:45em;
     object-fit:cover;

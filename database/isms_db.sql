@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2023 at 08:08 PM
+-- Generation Time: Feb 17, 2023 at 07:28 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -144,9 +144,9 @@ CREATE TABLE `system_info` (
 INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
 (1, 'name', 'Pandayo Coffee Warehouse Management System'),
 (6, 'short_name', 'PCWMS'),
-(11, 'logo', 'uploads/logo.png?v=1676459057'),
+(11, 'logo', 'uploads/logo.png?v=1676614012'),
 (13, 'user_avatar', 'uploads/user_avatar.jpg'),
-(14, 'cover', 'uploads/cover.png?v=1676459181'),
+(14, 'cover', 'uploads/cover.png?v=1676608208'),
 (17, 'phone', '456-987-1231'),
 (18, 'mobile', '09123456987 / 094563212222 '),
 (19, 'email', 'info@musicschool.com'),
