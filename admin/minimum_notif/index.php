@@ -41,15 +41,15 @@
 					 <input type="text" class="form-control form-control-sm" name="_stock" id="minimum_stock" placeholder="Enter stock range"> <!--value="php echo $_settings->info('name') -->
 				</div>
 
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label for="low_stock" class="control-label">Low Stock</label>
-					<input type="text" class="form-control form-control-sm" name="low_stock" id="low_stock" placeholder="Enter stock range"> <!--value="php echo $_settings->info('name') -->
+					<input type="text" class="form-control form-control-sm" name="low_stock" id="low_stock" placeholder="Enter stock range">
 				</div>
 
 				<div class="form-group">
 					<label for="out_of_stock" class="control-label">Out of Stock</label>
-					<input type="text" class="form-control form-control-sm" name="out_of_stock" id="out_of_stock" placeholder="Enter stock range"> <!--value="php echo $_settings->info('name') -->
-				</div>
+					<input type="text" class="form-control form-control-sm" name="out_of_stock" id="out_of_stock" placeholder="Enter stock range">
+				</div> -->
           
                 <div class="form-group">
 					<label for="date_updated" class="control-label">Date Updated</label>
@@ -68,81 +68,3 @@
 
 	</div>
 </div>
-<script>
-	function displayImg(input,_this) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	        	$('#cimg').attr('src', e.target.result);
-	        	_this.siblings('.custom-file-label').html(input.files[0].name)
-	        }
-
-	        reader.readAsDataURL(input.files[0]);
-	    }
-	}
-	function displayImg2(input,_this) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	        	_this.siblings('.custom-file-label').html(input.files[0].name)
-	        	$('#cimg2').attr('src', e.target.result);
-	        }
-
-	        reader.readAsDataURL(input.files[0]);
-	    }
-	}
-	function displayImg3(input,_this) {
-		var fnames = [];
-		Object.keys(input.files).map(function(k){
-			fnames.push(input.files[k].name)
-
-		})
-		_this.siblings('.custom-file-label').html(fnames.join(", "))
-	}
-	function delete_img($path){
-        start_loader()
-        
-        $.ajax({
-            url: _base_url_+'classes/Master.php?f=delete_img',
-            data:{path:$path},
-            method:'POST',
-            dataType:"json",
-            error:err=>{
-                console.log(err)
-                alert_toast("An error occured while deleting an Image","error");
-                end_loader()
-            },
-            success:function(resp){
-                $('.modal').modal('hide')
-                if(typeof resp =='object' && resp.status == 'success'){
-                    $('[data-path="'+$path+'"]').closest('.img-item').hide('slow',function(){
-                        $('[data-path="'+$path+'"]').closest('.img-item').remove()
-                    })
-                    alert_toast("Image Successfully Deleted","success");
-                }else{
-                    console.log(resp)
-                    alert_toast("An error occured while deleting an Image","error");
-                }
-                end_loader()
-            }
-        })
-    }
-	$(document).ready(function(){
-		$('.rem_img').click(function(){
-            _conf("Are sure to delete this image permanently?",'delete_img',["'"+$(this).attr('data-path')+"'"])
-        })
-		 $('.summernote').summernote({
-			height: 200,
-			toolbar: [
-				[ 'style', [ 'style' ] ],
-				[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-				[ 'fontname', [ 'fontname' ] ],
-				[ 'fontsize', [ 'fontsize' ] ],
-				[ 'color', [ 'color' ] ],
-				[ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-				[ 'table', [ 'table' ] ],
-				[ 'view', [ 'undo', 'redo', 'fullscreen', 'help' ] ]
-			]
-		})
-	})
-</script>

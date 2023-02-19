@@ -2,7 +2,7 @@
 $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
 ?>
 <div class="content py-5 px-3 bg-gradient-dark">
-    <h2>Monthly Stock-In Reports</h2>
+    <h2 class="text-white">Monthly Stock-In Reports</h2>
 </div>
 <div class="row flex-column mt-4 justify-content-center align-items-center mt-lg-n4 mt-md-3 mt-sm-0">
     <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
