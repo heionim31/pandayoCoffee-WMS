@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2023 at 07:28 AM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.10
+-- Generation Time: Feb 19, 2023 at 12:06 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `isms_db`
+-- Database: `pandayocoffee_wms_db`
 --
 
 -- --------------------------------------------------------
@@ -36,7 +36,7 @@ CREATE TABLE `category_list` (
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `category_list`
@@ -64,7 +64,7 @@ CREATE TABLE `item_list` (
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `item_list`
@@ -74,7 +74,9 @@ INSERT INTO `item_list` (`id`, `category_id`, `name`, `unit`, `description`, `st
 (1, 1, 'Onion Large', 'pcs', 'Duis nec nulla egestas, porta nibh vitae, interdum massa. Duis blandit quam mauris, vel fermentum libero pulvinar ac. Sed vel tempor urna.', 1, 0, '2022-05-28 09:56:19', '2022-05-28 09:56:19'),
 (2, 1, 'String Onions', 'pcs', 'Morbi ligula lorem, blandit ac nisl non, facilisis eleifend nunc. Nunc placerat sem dolor, eu bibendum mauris tincidunt et. Suspendisse est ex, vehicula sed cursus nec, pulvinar eu massa.', 1, 0, '2022-05-28 09:57:51', '2022-05-28 09:57:51'),
 (3, 1, 'Garlic Large', 'pcs', 'Sed sollicitudin, est at semper pellentesque, arcu elit malesuada ex, vel pulvinar nisi quam sed ante.', 1, 0, '2022-05-28 09:59:26', '2022-05-28 09:59:26'),
-(4, 2, 'Black Pepper (Powder)', 'Pack', 'Praesent posuere tortor sit amet faucibus commodo. Ut luctus sem sit amet turpis ullamcorper, ut ultricies tortor sollicitudin.', 1, 0, '2022-05-28 10:00:05', '2022-05-28 10:00:05');
+(4, 2, 'Black Pepper (Powder)', 'Pack', 'Praesent posuere tortor sit amet faucibus commodo. Ut luctus sem sit amet turpis ullamcorper, ut ultricies tortor sollicitudin.', 1, 0, '2022-05-28 10:00:05', '2022-05-28 10:00:05'),
+(6, 4, 'sample item', 'liter', 'jasbdashdhuk', 1, 0, '2023-02-19 12:09:19', '2023-02-19 12:09:19'),
+(7, 3, 'test prod #2', 'kg', 'asdeag drgdr', 1, 0, '2023-02-19 12:09:51', '2023-02-19 12:09:51');
 
 -- --------------------------------------------------------
 
@@ -90,7 +92,7 @@ CREATE TABLE `stockin_list` (
   `remarks` text NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `stockin_list`
@@ -99,7 +101,8 @@ CREATE TABLE `stockin_list` (
 INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `date_updated`) VALUES
 (2, 4, '2022-05-28', 25.00, 'Sample', '2022-05-28 10:48:35', '2022-05-28 10:50:30'),
 (4, 4, '2022-05-13', 35.00, 'Test #101', '2022-05-28 10:57:15', '2022-05-28 10:57:15'),
-(5, 3, '2022-05-19', 35.00, 'Sample', '2022-05-28 11:27:48', '2022-05-28 11:27:48');
+(5, 3, '2022-05-19', 35.00, 'Sample', '2022-05-28 11:27:48', '2022-05-28 11:27:48'),
+(6, 4, '2023-02-19', 5.00, 'goods', '2023-02-19 18:28:25', '2023-02-19 18:28:25');
 
 -- --------------------------------------------------------
 
@@ -115,7 +118,7 @@ CREATE TABLE `stockout_list` (
   `remarks` text NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `stockout_list`
@@ -123,7 +126,8 @@ CREATE TABLE `stockout_list` (
 
 INSERT INTO `stockout_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `date_updated`) VALUES
 (2, 4, '2022-05-28', 10.00, 'Used', '2022-05-28 10:59:58', '2022-05-28 10:59:58'),
-(3, 3, '2022-05-27', 2.00, 'test', '2022-05-28 11:27:58', '2022-05-28 11:27:58');
+(3, 3, '2022-05-27', 2.00, 'test', '2022-05-28 11:27:58', '2022-05-28 11:27:58'),
+(4, 4, '2023-02-19', 10.00, 'sample', '2023-02-19 15:07:36', '2023-02-19 15:07:36');
 
 -- --------------------------------------------------------
 
@@ -135,18 +139,18 @@ CREATE TABLE `system_info` (
   `id` int(30) NOT NULL,
   `meta_field` text NOT NULL,
   `meta_value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `system_info`
 --
 
 INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
-(1, 'name', 'Pandayo Coffee Warehouse Management System'),
-(6, 'short_name', 'PCWMS'),
-(11, 'logo', 'uploads/logo.png?v=1676614012'),
+(1, 'name', 'Pandayo Coffee WMS'),
+(6, 'short_name', 'Pandayo Coffee - WMS'),
+(11, 'logo', 'uploads/logo.png?v=1676774105'),
 (13, 'user_avatar', 'uploads/user_avatar.jpg'),
-(14, 'cover', 'uploads/cover.png?v=1676608208'),
+(14, 'cover', 'uploads/cover.png?v=1676798038'),
 (17, 'phone', '456-987-1231'),
 (18, 'mobile', '09123456987 / 094563212222 '),
 (19, 'email', 'info@musicschool.com'),
@@ -170,14 +174,14 @@ CREATE TABLE `users_list` (
   `type` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='2';
 
 --
 -- Dumping data for table `users_list`
 --
 
 INSERT INTO `users_list` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
-(1, 'Admin', '', 'Manager', 'admin', '0192023a7bbd73250516f069df18b500', 'uploads/avatars/1.png?v=1676554601', NULL, 1, '2021-01-20 14:02:37', '2023-02-16 22:06:42'),
+(1, 'Manager', '', 'User', 'manager', '0795151defba7a4b5dfa89170de46277', 'uploads/avatars/1.png?v=1676554601', NULL, 1, '2021-01-20 14:02:37', '2023-02-17 22:26:40'),
 (2, 'John Carlo', '', 'Moral', 'john', '1254737c076cf867dc53d60a0364f38e', 'uploads/avatars/2.png?v=1676554943', NULL, 2, '2022-05-28 13:17:24', '2023-02-16 21:42:23'),
 (4, 'Noah james', 'sample', 'Mainit', 'noah', '890db99ccec89d1b57d7684142788780', NULL, NULL, 2, '2023-02-17 01:45:53', '2023-02-17 01:45:53'),
 (5, 'Test1', 'Test2', 'Test3', 'test1', '098f6bcd4621d373cade4e832627b4f6', NULL, NULL, 2, '2023-02-17 01:46:52', '2023-02-17 01:46:52'),
@@ -198,7 +202,7 @@ CREATE TABLE `waste_list` (
   `remarks` text NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `waste_list`
@@ -271,19 +275,19 @@ ALTER TABLE `category_list`
 -- AUTO_INCREMENT for table `item_list`
 --
 ALTER TABLE `item_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `stockin_list`
 --
 ALTER TABLE `stockin_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `stockout_list`
 --
 ALTER TABLE `stockout_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `system_info`

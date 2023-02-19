@@ -15379,9 +15379,12 @@ body.text-sm .control-sidebar {
   background-color: #f8f9fa;
 }
 
+/* MODIFIED */
 .navbar-dark {
-  background-color: #343a40;
-  border-color: #4b545c;
+  /* background-color: #343a40;
+  border-color: #4b545c; */
+  background-color: #010100;
+  border-color: #010100;
 }
 
 .navbar-primary {
@@ -15414,6 +15417,14 @@ body.text-sm .control-sidebar {
 
 .navbar-navy {
   background-color: #001f3f;
+}
+
+.navbar-new-orange {
+  background-color: #ac7238;
+}
+
+.navbar-new-grey {
+  background-color: #66544d;
 }
 
 .navbar-olive {
@@ -15452,8 +15463,10 @@ body.text-sm .control-sidebar {
   background-color: #dc3545;
 }
 
+/* MODIFIED */
 .navbar-orange {
-  background-color: #fd7e14;
+  /* background-color: #fd7e14; */
+  background-color: #F8DE7E;
 }
 
 .navbar-yellow {
@@ -15472,7 +15485,9 @@ body.text-sm .control-sidebar {
   background-color: #17a2b8;
 }
 
+/* MODIFIED */
 .navbar-white {
+  background-color: #F8DE7E;
   background-color: #fff;
 }
 
@@ -35707,7 +35722,7 @@ blockquote.quote-gray-dark h6 {
 }
 
 .bg-gradient-pink {
-  background: #e83e8c linear-gradient(180deg, #eb5b9d, #e83e8c) repeat-x !important;
+  background: #121416 linear-gradient(180deg, #eb5b9d, #e83e8c) repeat-x !important;
   color: #fff;
 }
 
