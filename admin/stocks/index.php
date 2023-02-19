@@ -17,22 +17,25 @@
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
-			<table class="table table-hover table-striped table-bordered" id="list">
+			<table class="table table-hover table-striped table-bordered text-center" id="list">
 				<colgroup>
 					<col width="5%">
-					<col width="20%">
+					<col width="10%">
 					<col width="30%">
 					<col width="15%">
-					<col width="15%">
 					<col width="10%">
+					<col width="10%">
+					<col width="20%">
 				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Date Created</th>
+						<!-- <th>Date Created</th> -->
+						<th>Item Code</th>
 						<th>Item</th>
 						<th>Unit</th>
-						<th>Available</th>
+						<th>Current Stock</th>
+						<th>Reorder Level</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -43,8 +46,9 @@
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
-							<td class="text-center"><?php echo $i++; ?></td>
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
+							<td><?php echo $i++; ?></td>
+							<td></td>
+							<!-- <td><php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td> -->
 							<td class="">
 								<div style="line-height:1em">
 									<div><?= $row['name'] ?> [<?= $row['unit'] ?>]</div>
@@ -52,9 +56,12 @@
 								</div>
 							</td>
 							<td class=""><?= $row['unit'] ?></td>
-							<td class="text-right"><?= format_num($row['available']) ?></td>
-							<td align="center">
-				                    <a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
+							<td><?= format_num($row['available']) ?></td>
+							<td></td>
+							<td>
+								<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
+
+								<a class="btn btn-flat btn-sm btn-light bg-gradient-danger border"> <span class="fa fa-eye text-dark"></span> Dead Stock</a>
 							</td>
 						</tr>
 					<?php endwhile; ?>
