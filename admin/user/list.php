@@ -49,11 +49,15 @@
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
+							<!-- ID -->
 							<td class="text-center"><?php echo $i++; ?></td>
+							<!-- Date Updated -->
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
+							<!-- Avatar -->
 							<td class="text-center">
                                 <img src="<?= validate_image($row['avatar']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
                             </td>
+							<!-- name -->
 							<td><?php echo $row['name'] ?></td>
 							<td><?php echo $row['username'] ?></td>
 							<td class="text-center">

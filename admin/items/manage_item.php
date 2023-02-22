@@ -13,6 +13,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 	<form action="" id="item-form">
 		<input type="hidden" name ="id" value="<?php echo isset($id) ? $id : '' ?>">
 		<div class="form-group">
+			<!-- Category -->
 			<label for="category_id" class="control-label">Category</label>
 			<select name="category_id" id="category_id" class="form-control form-control-sm rounded-0" required="required">
 				<option value="" <?= isset($category_id) ? 'selected' : '' ?>></option>
@@ -24,19 +25,46 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 				<?php endwhile; ?>
 			</select>
 		</div>
+			<!-- Picture -->
+		<div class="form-group">
+			<label for="code" class="control-label">Image</label>
+					<div class="custom-file">
+		              <input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))" accept="image/png, image/jpeg">
+		              <label class="custom-file-label" for="customFile">Choose file</label>
+		            </div>
+				</div>
+				<div class="form-group d-flex justify-content-center">
+					<img src="<?php echo validate_image(isset($meta['image']) ? $meta['image'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+				</div>
+			<!-- Item Code -->
+		<div class="form-group">
+			<label for="code" class="control-label">Item code</label>
+			<input type="text" name="code" id="code" class="form-control form-control-sm rounded-0" value="<?= gen_using_uniqid() ?>" readonly/>
+					<?php 
+							function gen_using_uniqid($length = 8){
+								$code = uniqid(rand(), true);
+								$code = substr($code, 0, $length);
+								return $code;
+							}
+							?>
+		</div>
+		<!-- name -->
 		<div class="form-group">
 			<label for="name" class="control-label">Name</label>
 			<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
 		</div>
 		<div class="form-group">
+			<!-- Unit -->
 			<label for="unit" class="control-label">Unit</label>
 			<input type="text" name="unit" id="unit" class="form-control form-control-sm rounded-0" value="<?php echo isset($unit) ? $unit : ''; ?>"  required/>
 		</div>
 		<div class="form-group">
+			<!-- Description -->
 			<label for="description" class="control-label">Description</label>
 			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" required><?php echo isset($description) ? $description : ''; ?></textarea>
 		</div>
 		<div class="form-group">
+			<!-- Status -->
 			<label for="status" class="control-label">Status</label>
 			<select name="status" id="status" class="form-control form-control-sm rounded-0" required="required">
 				<option value="1" <?= isset($status) && $status == 1 ? 'selected' : '' ?>>Active</option>
@@ -45,6 +73,16 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 		</div>
 	</form>
 </div>
+<!-- Picture Style -->
+<style>
+	img#cimg{
+		height: 15vh;
+		width: 15vh;
+		object-fit: cover;
+		border-radius: 100% 100%;
+	}
+</style>
+
 <script>
 	$(document).ready(function(){
 		$('#uni_modal').on('shown.bs.modal', function(){
@@ -100,3 +138,20 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 
 	})
 </script>
+
+<!-- Picture Script -->
+<script>
+	function displayImg(input,_this) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	        	$('#cimg').attr('src', e.target.result);
+	        }
+
+	        reader.readAsDataURL(input.files[0]);
+	    }else{
+			$('#cimg').attr('src', "<?php echo validate_image(isset($meta['img']) ? $meta['img'] :'') ?>");
+		}
+	}
+</script>
+

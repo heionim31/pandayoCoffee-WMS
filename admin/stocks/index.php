@@ -47,7 +47,9 @@
 					?>
 						<tr>
 							<td><?php echo $i++; ?></td>
-							<td></td>
+							<!-- Item Code -->
+							<td class="text-center"> <p class="mb-0 truncate-1"><?= ($row['code']) ?></p></td>
+							
 							<!-- <td><php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td> -->
 							<td class="">
 								<div style="line-height:1em">
