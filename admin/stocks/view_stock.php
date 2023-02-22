@@ -40,15 +40,15 @@
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Item Name</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Unit</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Available</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border">Available</div>
                             <div class="col-8 m-0 p-1 border font-weight-bolder"><?= isset($available) ? format_num($available) : '' ?></div>
                         </div>
                     </fieldset>
