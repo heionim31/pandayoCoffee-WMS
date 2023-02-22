@@ -2,19 +2,33 @@
 <style>
   .sidebar a.nav-link.active{
     color:#fff !important;
+    
+    
+   
   }
 
   .logos {
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 5%;
+    height: 5%; 
+   
+    
+    
+    
+    
+ 
   }
 
   .logos .logo-img {
-    width: 80px !important;
-    height: 80px !important;
+    max-width: 100px;
+    height: 100px !important;
     max-height: unset;
+    
+    
+    
+   
+
   }
 
   .shortName {
@@ -37,13 +51,17 @@
 
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-white navbar-dark elevation-4 sidebar-no-expand dark-bg">
+
   <!-- Brand Logo -->
+
+
   <a href="<?php echo base_url ?>admin" class="brand-link bg-white text-sm">
     <div class="logos">
-      <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 50%; height: 100%;">
+      <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 55% ; height: 100%; "> 
       <span class="brand-text font-normal shortName"><?php echo $_settings->info('short_name') ?></span>
     </div>
   </a>
+
   </br>
   
   <!-- Sidebar -->
