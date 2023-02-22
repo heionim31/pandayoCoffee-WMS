@@ -16,7 +16,6 @@
     padding: 0.20rem;
     text-align: center;
   }
-
 </style>
 
 <h1 class="text-white text-center">Welcome, <?php echo $_settings->userdata('firstname')." ".$_settings->userdata('lastname') ?>!</h1>
@@ -27,83 +26,95 @@
   <!-- TOTAL USERS -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-user-alt" style="font-size:60px"></i></span>
+      
       <div class="info-box-content">
-      <a href="<?php echo base_url ?>admin/?page=user/list" style="color:black;"> 
-        <span class="info-box-text">Users</span>
-        
-        <span class="info-box-number text-right h5">
+        <a href="<?php echo base_url ?>admin/?page=user/list" style="color:black;"> 
           
-         <?php 
-            $user = $conn->query("SELECT * FROM users_list")->num_rows;
-            echo format_num($user);
-          ?>
-          <?php ?>
-        </span>
+          <span class="info-box-number h5">
+            <?php 
+                $user = $conn->query("SELECT * FROM users_list")->num_rows;
+                echo format_num($user);
+              ?>
+          </span>
+          <span class="info-box-text">Users</span>
+
         </a>
       </div>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-user-alt" style="font-size:60px"></i></span>
+
     </div>
   </div>
+
 
   <!-- TOTAL CATEGORIES -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-th-list" style="font-size:60px; weigth:60px;"></i></span>
+      
       <div class="info-box-content">
-      <a href="<?php echo base_url ?>admin/?page=categories/index" style="color:black;"> 
-        <span class="info-box-text">Categories</span>
-        <span class="info-box-number text-right h5">
-       
-          <?php 
-            $category = $conn->query("SELECT * FROM category_list where delete_flag = 0 and `status` = 1")->num_rows;
-            echo format_num($category);
-          ?>
-          <?php ?>
-        </span>
+        <a href="<?php echo base_url ?>admin/?page=categories/index" style="color:black;"> 
+          
+          <span class="info-box-number h5">
+            <?php 
+              $category = $conn->query("SELECT * FROM category_list where delete_flag = 0 and `status` = 1")->num_rows;
+              echo format_num($category);
+              ?>
+          </span>
+          <span class="info-box-text">Categories</span>
+
         </a> 
       </div>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-th-list" style="font-size:60px; weigth:60px;"></i></span>
+
     </div>
   </div>
  
+
   <!-- TOTAL ITEMS -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-cubes" style="font-size:60px"></i></span>
+      
       <div class="info-box-content">
-      <a href="<?php echo base_url ?>admin/?page=items/index" style="color:black;"> 
-        <span class="info-box-text">Items</b></span>
-        <span class="info-box-number text-right  h5">
-          <?php 
-            $items = $conn->query("SELECT id FROM item_list where delete_flag = 0 and `status` = 1")->num_rows;
-            echo format_num($items);
-          ?>
-          <?php ?>
-        </span>
+        <a href="<?php echo base_url ?>admin/?page=items/index" style="color:black;"> 
+          
+          <span class="info-box-number h5">
+            <?php 
+              $items = $conn->query("SELECT id FROM item_list where delete_flag = 0 and `status` = 1")->num_rows;
+              echo format_num($items);
+            ?>
+          </span>
+          <span class="info-box-text">Items</b></span>
+
         </a>
       </div>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-cubes" style="font-size:60px"></i></span>
+
     </div>
   </div>
+
 
   <!-- TOTAL STOCKS -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      
       <div class="info-box-content">
         <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
-          <span class= "info-box-text">Stocks </span>
-
-          <span class="info-box-number text-right h5">
-          <?php 
+          
+          <span class="info-box-number h5">
+            <?php 
               $stock = $conn->query("SELECT * FROM item_list")->num_rows;
               echo format_num($stock);
             ?>
-            <?php ?>
           </span>
+          <span class= "info-box-text">Stocks </span>
+
         </a>
       </div>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      
     </div>
   </div>
 </div>
+
 
   <!-- STOCK NOTIF -->
   <!-- <div class="row">
@@ -121,32 +132,57 @@
 
 
 
-<?php
-  // Retrieve the 5 most recent items
-  $sql = "SELECT * FROM item_list ORDER BY date_created DESC LIMIT 5";
-  $result = $conn->query($sql);
-  
-  // Create an array to store the recent items
-  $recent_items = array();
-  if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-      $recent_items[] = $row;
-    }
-  }
-?>
 
 
 <div class="container-fluid">
   <div class="row">
+
+  <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">&nbsp;</h5>
+        </div>
+        <div class="card-body">
+          &nbsp;
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">&nbsp;</h5>
+        </div>
+        <div class="card-body">
+          &nbsp;
+        </div>
+      </div>
+    </div>
+
+    
+    <?php
+      // Retrieve the 5 most recent items
+      $sql = "SELECT * FROM item_list ORDER BY date_created DESC LIMIT 5";
+      $result = $conn->query($sql);
+      
+      // Create an array to store the recent items
+      $recent_items = array();
+      if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+          $recent_items[] = $row;
+        }
+      }
+    ?>
+
     <div class="col-md-4">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">Recently Added Items</h5>
         </div>
         <div class="card-body">
-          <table class="table">
+          <table class="table table-hover table-bordered">
             <thead>
-              <tr>
+              <tr class="table-active">
                 <th>Name</th>
                 <th>Category</th>
                 <th>Date Created</th>
@@ -155,8 +191,8 @@
             <tbody>
               <?php foreach($recent_items as $item): ?>
               <tr>
-                <td><?php echo $item['name']; ?></td>
-                <td>
+                <td class="align-middle"><?php echo $item['name']; ?></td>
+                <td class="align-middle">
                   <?php 
                     // Retrieve the category name based on the category ID
                     $category_id = $item['category_id'];
@@ -165,7 +201,8 @@
                     echo $category['name']; 
                   ?>
                 </td>
-                <td><?php echo date('Y-m-d', strtotime($item['date_created'])); ?></td>
+                <td class="align-middle"><?php echo date('Y-m-d H:i:s', strtotime($item['date_created'])); ?></td>
+
               </tr>
               <?php endforeach; ?>
             </tbody>
@@ -174,27 +211,7 @@
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">&nbsp;</h5>
-        </div>
-        <div class="card-body">
-          &nbsp;
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">&nbsp;</h5>
-        </div>
-        <div class="card-body">
-          &nbsp;
-        </div>
-      </div>
-    </div>
+    
 
   </div>
 </div>

@@ -65,14 +65,14 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                             <tr>
                                 <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
                                 <td class="px-1 py-1 align-middle"><?= date("F d, Y", strtotime($row['date'])) ?></td>
-                                <td class="px-1 py-1 align-middle">
+                                <td class="px-1 py-1 align-middle text-center">
                                     <div line-height="1em">
                                         <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
                                         <div class="font-weight-light"><?= $row['category'] ?></div>
                                     </div>
                                 </td>
-                                <td class="px-1 py-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                                <td class="px-1 py-1 align-middle"><?= $row['remarks'] ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
                                 
                             </tr>
                             <?php endwhile; ?>

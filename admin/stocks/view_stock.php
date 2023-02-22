@@ -1,20 +1,25 @@
 <?php 
-if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
-    if($qry->num_rows > 0){
-        foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+        
+        if($qry->num_rows > 0){
+            foreach($qry->fetch_assoc() as $k => $v){
+                $$k=$v;
+            }
+        }else{
+            echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
         }
+
     }else{
-		echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
-	}
-}else{
-	echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
-}
+        echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
+    }
 ?>
+
+
 <div class="content bg-gradient-dark py-5 px-4">
     <h3 class="font-weight-bolder">Stock Details</h3>
 </div>
+
 <div class="row mt-n4 justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
         <div class="card rounded-0 shadow">
@@ -31,19 +36,19 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 <div class="container-fluid">
                     <fieldset>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Category</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Category</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Name</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Unit</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Available</div>
+                            <div class="col-4 bg-gradient-orange m-0 p-1 border text-light text-bold">Available</div>
                             <div class="col-8 m-0 p-1 border font-weight-bolder"><?= isset($available) ? format_num($available) : '' ?></div>
                         </div>
                     </fieldset>
@@ -75,9 +80,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $stockins->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockin" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
@@ -115,9 +120,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $stockouts->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockout" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
@@ -155,9 +160,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $wastes->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_waste" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
