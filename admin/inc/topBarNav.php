@@ -22,17 +22,21 @@
 </style>
 
 
-<!-- Navbar -->
+<!-- Navbar --> 
 <nav class="main-header navbar navbar-expand navbar-new-grey text-sm">
+
+
 
   <!-- Left navbar links -->
   <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link topBarContent" data-widget="pushmenu" href="#" role="button"><i class="fas fa-solid fa-arrow-left"></i></a>
+        <a class="nav-link topBarContent" data-widget="pushmenu" href="#" role="button"><i class="fa">&#xf0c9;</i></a>
       </li>
 
       <!-- Display Current Page Name -->
-      <li class="nav-item d-none d-sm-inline-block ">
+  
+    <li class="nav-item d-none d-sm-inline-block ">
+     
         <?php 
           $pageTitle = '';
           if(isset($_GET['page'])) {
@@ -71,6 +75,7 @@
             $pageTitle = 'Dashboard';
           }
         ?>
+
 
         <a class="topBarContent" href="./?page=<?php echo isset($_GET['page']) ? $_GET['page'] : 'dashboard'; ?>">
           <?php echo $pageTitle; ?>
