@@ -5,9 +5,9 @@
 <?php endif;?>
 <style>
 	.item-img{
-		width:3em;
-		height:3em;
-		object-fit:cover;
+		width:1em;
+		height:1em;
+		object-fit:;
 		object-position:center center;
 	}
 </style>
@@ -23,6 +23,8 @@
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
 				<colgroup>
 					<col width="5%">
+					<col width="8%">
+					<col width="10%">
 					<col width="15%">
 					<col width="25%">
 					<col width="35%">
@@ -32,6 +34,8 @@
 				<thead>
 					<tr>
 						<th>#</th>
+						<th>Picture</th>
+						<th>Item code</th>
 						<th>Date Created</th>
 						<th>Item</th>
 						<th>Description</th>
@@ -46,22 +50,37 @@
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
+							
+							<!-- Id -->
 							<td class="text-center"><?php echo $i++; ?></td>
+							<!-- Picture -->
+							<td class="text-center">
+                                <img src="<?= validate_image($row['image']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
+                            </td>
+							<!-- Item code -->
+							<td class="text-center"> <p class="mb-0 truncate-1"><?= ($row['code']) ?></p></td>
+							<!-- Date Created -->
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
+
+							<!-- Item -->
 							<td class="">
 								<div style="line-height:1em">
 									<div><?= $row['name'] ?> [<?= $row['unit'] ?>]</div>
 									<div><small class="text-muted"><?= $row['category'] ?></small></div>
 								</div>
 							</td>
+							
+							<!-- Item Description -->
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
 							<td class="text-center">
+								<!--  -->
                                 <?php if($row['status'] == 1): ?>
                                     <span class="badge badge-success px-3 rounded-pill">Active</span>
                                 <?php else: ?>
                                     <span class="badge badge-danger px-3 rounded-pill">Inactive</span>
                                 <?php endif; ?>
                             </td>
+							<!-- Action -->
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
 				                  		Action
