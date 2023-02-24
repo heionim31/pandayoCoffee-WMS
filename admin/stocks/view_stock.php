@@ -35,10 +35,6 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Code</div>
-                            <div class="col-8 m-0 p-1 border"><?= isset($code) ? $code: '' ?></div>
-                            </div>
-                        <div class="d-flex w-100">
                             <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>

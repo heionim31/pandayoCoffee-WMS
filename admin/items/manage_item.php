@@ -25,29 +25,6 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 				<?php endwhile; ?>
 			</select>
 		</div>
-			<!-- Picture -->
-		<div class="form-group">
-			<label for="code" class="control-label">Image</label>
-					<div class="custom-file">
-		              <input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))" accept="image/png, image/jpeg">
-		              <label class="custom-file-label" for="customFile">Choose file</label>
-		            </div>
-				</div>
-				<div class="form-group d-flex justify-content-center">
-					<img src="<?php echo validate_image(isset($meta['image']) ? $meta['image'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
-				</div>
-			<!-- Item Code -->
-		<div class="form-group">
-			<label for="code" class="control-label">Item code</label>
-			<input type="text" name="code" id="code" class="form-control form-control-sm rounded-0" value="<?= gen_using_uniqid() ?>" readonly/>
-					<?php 
-							function gen_using_uniqid($length = 8){
-								$code = uniqid(rand(), true);
-								$code = substr($code, 0, $length);
-								return $code;
-							}
-							?>
-		</div>
 		<!-- name -->
 		<div class="form-group">
 			<label for="name" class="control-label">Name</label>
@@ -73,15 +50,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 		</div>
 	</form>
 </div>
-<!-- Picture Style -->
-<style>
-	img#cimg{
-		height: 15vh;
-		width: 15vh;
-		object-fit: cover;
-		border-radius: 100% 100%;
-	}
-</style>
+
 
 <script>
 	$(document).ready(function(){
@@ -139,19 +108,4 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 	})
 </script>
 
-<!-- Picture Script -->
-<script>
-	function displayImg(input,_this) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	        	$('#cimg').attr('src', e.target.result);
-	        }
-
-	        reader.readAsDataURL(input.files[0]);
-	    }else{
-			$('#cimg').attr('src', "<?php echo validate_image(isset($meta['img']) ? $meta['img'] :'') ?>");
-		}
-	}
-</script>
 
