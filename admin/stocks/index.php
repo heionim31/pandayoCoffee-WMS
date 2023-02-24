@@ -20,7 +20,6 @@
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
 				<colgroup>
 					<col width="5%">
-					<col width="10%">
 					<col width="30%">
 					<col width="15%">
 					<col width="10%">
@@ -31,7 +30,6 @@
 					<tr>
 						<th>#</th>
 						<!-- <th>Date Created</th> -->
-						<th>Item Code</th>
 						<th>Item</th>
 						<th>Unit</th>
 						<th>Current Stock</th>
@@ -47,9 +45,6 @@
 					?>
 						<tr>
 							<td><?php echo $i++; ?></td>
-							<!-- Item Code -->
-							<td class="text-center"> <p class="mb-0 truncate-1"><?= ($row['code']) ?></p></td>
-							
 							<!-- <td><php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td> -->
 							<td class="">
 								<div style="line-height:1em">
@@ -63,7 +58,7 @@
 							<td>
 								<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
 
-								<a class="btn btn-flat btn-sm btn-light bg-gradient-danger border"> <span class="fa fa-eye text-dark"></span> Dead Stock</a>
+								
 							</td>
 						</tr>
 					<?php endwhile; ?>

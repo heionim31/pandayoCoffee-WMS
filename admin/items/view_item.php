@@ -21,11 +21,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 <div class="container-fluid">
 	<dl>
 		<dt class="text-muted">Category</dt>
-		<dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
-		<dt class="text-muted">Image</dt>
-		<dd class="pl-4"><?= isset($image) ? $image : "" ?></dd>
-		<dt class="text-muted">Code</dt>
-		<dd class="pl-4"><?= isset($code) ? $code : "" ?></dd>	
+		<dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>	
 		<dt class="text-muted">Name</dt>
 		<dd class="pl-4"><?= isset($name) ? $name : "" ?></dd>
 		<dt class="text-muted">Unit</dt>
