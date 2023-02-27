@@ -38,6 +38,10 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                             <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
+                            <div class="d-flex w-100">
+                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Expiration Date</div>
+                            <div class="col-8 m-0 p-1 border"><?= isset($date_expiration) ? $date_expiration : '' ?></div>
+                        </div>
                         <div class="d-flex w-100">
                             <div class="col-4 bg-gradient-dark m-0 p-1 border">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
@@ -64,8 +68,10 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         <tr>
                             <th class="p-1 text-center">Date</th>
                             <th class="p-1 text-center">Quantity</th>
+                            <th class="p-1 text-center">Expiration</th>
                             <th class="p-1 text-center">Remarks</th>
                             <th class="p-1 text-center">Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -75,9 +81,15 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $stockins->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <!-- Date -->
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <!-- Quantity -->
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <!-- Expiration -->
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['expire_date'])) ?></td>
+                            <!-- Remarks -->
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
+                            <!-- Action -->
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockin" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>

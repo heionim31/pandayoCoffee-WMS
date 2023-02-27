@@ -24,6 +24,8 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 		<dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>	
 		<dt class="text-muted">Name</dt>
 		<dd class="pl-4"><?= isset($name) ? $name : "" ?></dd>
+		<dt class="text-muted">Expiration</dt>
+		<dd class="pl-4"><?= isset($date_expiration) ? $date_expiration : "" ?></dd>
 		<dt class="text-muted">Unit</dt>
 		<dd class="pl-4"><?= isset($unit) ? $unit : "" ?></dd>
 		<dt class="text-muted">Description</dt>
