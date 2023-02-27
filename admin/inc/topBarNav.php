@@ -14,6 +14,7 @@
 
   .topBarContent {
     color: white;
+    top: -15%;
   }
 
   .topBarContent:hover {
@@ -25,8 +26,6 @@
 <!-- Navbar --> 
 <nav class="main-header navbar navbar-expand navbar-new-grey text-sm">
 
-
-
   <!-- Left navbar links -->
   <ul class="navbar-nav">
       <li class="nav-item">
@@ -34,9 +33,7 @@
       </li>
 
       <!-- Display Current Page Name -->
-  
-    <li class="nav-item d-none d-sm-inline-block ">
-     
+      <li class="nav-item d-none d-sm-inline-block">
         <?php 
           $pageTitle = '';
           if(isset($_GET['page'])) {
@@ -45,13 +42,16 @@
                 $pageTitle = 'Categories';
                 break;
               case 'items':
-                $pageTitle = 'Item List';
+                $pageTitle = 'Stock List';
                 break;
               case 'stocks':
                 $pageTitle = 'Stock Manager';
                 break;
-              case 'minimum_notif':
-                $pageTitle = 'Stock Notifications';
+              case 'setNotif':
+                $pageTitle = 'Set Stock Notifications';
+                break;
+              case 'stockStatus':
+                $pageTitle = 'Stock Status';
                 break;
               case 'reports/stockin':
                 $pageTitle = 'Reports / Stock-In Reports';
@@ -75,7 +75,6 @@
             $pageTitle = 'Dashboard';
           }
         ?>
-
 
         <a class="topBarContent" href="./?page=<?php echo isset($_GET['page']) ? $_GET['page'] : 'dashboard'; ?>">
           <?php echo $pageTitle; ?>
@@ -133,4 +132,3 @@
     </li> -->
   </ul>
 </nav>
-<!-- /.navbar -->

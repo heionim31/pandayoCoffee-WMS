@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2023 at 09:32 AM
+-- Generation Time: Feb 22, 2023 at 01:28 PM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,6 +58,8 @@ CREATE TABLE `item_list` (
   `id` int(30) NOT NULL,
   `category_id` int(30) NOT NULL,
   `name` text NOT NULL,
+  `image` varchar(1000) NOT NULL,
+  `code` varchar(1000) NOT NULL,
   `unit` varchar(250) NOT NULL,
   `description` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
@@ -70,14 +72,20 @@ CREATE TABLE `item_list` (
 -- Dumping data for table `item_list`
 --
 
-INSERT INTO `item_list` (`id`, `category_id`, `name`, `unit`, `description`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(1, 1, 'Onion Large', 'pcs', 'Duis nec nulla egestas, porta nibh vitae, interdum massa. Duis blandit quam mauris, vel fermentum libero pulvinar ac. Sed vel tempor urna.', 1, 0, '2022-05-28 09:56:19', '2023-02-18 09:56:19'),
-(2, 1, 'String Onions', 'pcs', 'Morbi ligula lorem, blandit ac nisl non, facilisis eleifend nunc. Nunc placerat sem dolor, eu bibendum mauris tincidunt et. Suspendisse est ex, vehicula sed cursus nec, pulvinar eu massa.', 1, 0, '2022-05-28 09:57:51', '2023-02-18 09:57:51'),
-(3, 1, 'Garlic Large', 'pcs', 'Sed sollicitudin, est at semper pellentesque, arcu elit malesuada ex, vel pulvinar nisi quam sed ante.', 1, 0, '2022-05-28 09:59:26', '2023-02-19 20:44:55'),
-(4, 2, 'Black Pepper (Powder)', 'Pack', 'Praesent posuere tortor sit amet faucibus commodo. Ut luctus sem sit amet turpis ullamcorper, ut ultricies tortor sollicitudin.', 1, 0, '2022-05-28 10:00:05', '2023-02-18 10:00:05'),
-(8, 4, 'Beef steak', 'Pack ', 'Raw meat ', 1, 0, '2023-02-20 18:20:26', '2023-02-20 18:20:26'),
-(9, 3, 'Soy beans', '(Pack)', 'sample 1 ', 1, 0, '2023-02-20 23:23:00', '2023-02-20 23:23:00'),
-(18, 3, 'sample low', 'kg', 'dsdczeqw', 1, 0, '2023-02-24 23:54:18', '2023-02-24 23:54:18');
+INSERT INTO `item_list` (`id`, `category_id`, `name`, `image`, `code`, `unit`, `description`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
+(1, 1, 'Onion Large', '', '', 'pcs', 'Duis nec nulla egestas, porta nibh vitae, interdum massa. Duis blandit quam mauris, vel fermentum libero pulvinar ac. Sed vel tempor urna.', 1, 0, '2022-05-28 09:56:19', '2023-02-18 09:56:19'),
+(2, 1, 'String Onions', '', '', 'pcs', 'Morbi ligula lorem, blandit ac nisl non, facilisis eleifend nunc. Nunc placerat sem dolor, eu bibendum mauris tincidunt et. Suspendisse est ex, vehicula sed cursus nec, pulvinar eu massa.', 1, 0, '2022-05-28 09:57:51', '2023-02-18 09:57:51'),
+(3, 1, 'Garlic Large', '', '', 'pcs', 'Sed sollicitudin, est at semper pellentesque, arcu elit malesuada ex, vel pulvinar nisi quam sed ante.', 1, 0, '2022-05-28 09:59:26', '2023-02-19 20:44:55'),
+(4, 2, 'Black Pepper (Powder)', '', '', 'Pack', 'Praesent posuere tortor sit amet faucibus commodo. Ut luctus sem sit amet turpis ullamcorper, ut ultricies tortor sollicitudin.', 1, 0, '2022-05-28 10:00:05', '2023-02-18 10:00:05'),
+(6, 4, 'sample item', '', '', 'liter', 'jasbdashdhuk', 1, 1, '2023-02-19 12:09:19', '2023-02-21 00:13:41'),
+(7, 3, 'test prod #2', '', '', 'kg', 'asdeag drgdr', 1, 1, '2023-02-19 12:09:51', '2023-02-21 00:13:31'),
+(8, 4, 'Beef steak', '', '131224668163f349', 'Pack ', 'Raw meat ', 1, 0, '2023-02-20 18:20:26', '2023-02-20 18:20:26'),
+(9, 3, 'Soy beans', '', '12805256', '(Pack)', 'sample 1 ', 1, 0, '2023-02-20 23:23:00', '2023-02-20 23:23:00'),
+(10, 3, 'Test 1', '', '15706193', '(sample)', 'Test', 1, 1, '2023-02-20 23:33:59', '2023-02-21 00:13:29'),
+(11, 1, '', '', '', '', '', 1, 1, '2023-02-20 23:46:14', '2023-02-20 23:46:53'),
+(15, 3, 'test', '', '74796829', 'pack', 'sample 1', 1, 1, '2023-02-21 00:13:14', '2023-02-21 00:13:26'),
+(16, 4, 'sample', '', '93303062', 'sample', 'sample', 1, 0, '2023-02-22 18:02:08', '2023-02-22 18:02:08'),
+(17, 3, 'sample 1', '', '13743984', 'sample', '23232', 1, 0, '2023-02-22 18:03:56', '2023-02-22 18:17:28');
 
 -- --------------------------------------------------------
 
@@ -105,10 +113,7 @@ INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `dat
 (5, 3, '2022-05-19', 35.00, 'Sample', '2022-05-28 11:27:48', '2023-02-20 11:27:48'),
 (6, 4, '2023-02-19', 5.00, 'goods', '2023-02-19 18:28:25', '2023-02-19 18:28:25'),
 (7, 3, '2023-02-19', 5.00, 'add new 5 garlic', '2023-02-19 20:43:25', '2023-02-19 20:43:25'),
-(8, 8, '2023-02-20', 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '2023-02-20 20:19:13'),
-(9, 3, '2023-02-24', 100.00, 'add fresh', '2023-02-24 23:05:56', '2023-02-24 23:05:56'),
-(10, 18, '2023-02-24', 5.00, 'asda', '2023-02-24 23:54:50', '2023-02-24 23:54:50'),
-(11, 1, '2023-02-25', 5.00, 'zs', '2023-02-25 10:48:10', '2023-02-25 10:48:10');
+(8, 8, '2023-02-20', 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '2023-02-20 20:19:13');
 
 -- --------------------------------------------------------
 
@@ -135,26 +140,6 @@ INSERT INTO `stockout_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `da
 (3, 3, '2022-05-27', 2.00, 'test', '2023-02-20 11:27:58', '2023-02-20 11:27:58'),
 (4, 4, '2023-02-19', 10.00, 'sample', '2023-02-19 15:07:36', '2023-02-20 15:07:36'),
 (5, 3, '2023-02-19', 3.00, 'Expired yung tatlo', '2023-02-19 20:42:22', '2023-02-19 20:42:22');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `stock_notif`
---
-
-CREATE TABLE `stock_notif` (
-  `id` int(11) NOT NULL,
-  `min_stock` int(11) NOT NULL,
-  `max_stock` int(11) NOT NULL,
-  `date_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `stock_notif`
---
-
-INSERT INTO `stock_notif` (`id`, `min_stock`, `max_stock`, `date_updated`) VALUES
-(1, 50, 100, '2023-02-27 08:21:01');
 
 -- --------------------------------------------------------
 
@@ -210,6 +195,8 @@ CREATE TABLE `users_list` (
 INSERT INTO `users_list` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
 (1, 'Manager', '', 'User', 'manager', '0795151defba7a4b5dfa89170de46277', 'uploads/avatars/1.png?v=1676554601', NULL, 1, '2023-01-20 14:02:37', '2023-02-22 20:04:44'),
 (2, 'John Carlo', '', 'Moral', 'john', '1254737c076cf867dc53d60a0364f38e', 'uploads/avatars/2.png?v=1676554943', NULL, 2, '2023-05-28 13:17:24', '2023-02-22 20:05:27'),
+(4, 'Noah james', 'sample', 'Mainit', 'noah', '890db99ccec89d1b57d7684142788780', NULL, NULL, 2, '2023-02-17 01:45:53', '2023-02-17 01:45:53'),
+(5, 'Test1', 'Test2', 'Test3', 'test1', '098f6bcd4621d373cade4e832627b4f6', NULL, NULL, 2, '2023-02-17 01:46:52', '2023-02-17 01:46:52'),
 (6, 'testadmin', 'testadmin2', 'testadmin3', 'testadmin', '54f822514144d7bb14d70ca0ca1e5fa3', NULL, NULL, 1, '2023-02-17 01:49:30', '2023-02-17 01:49:30'),
 (7, 'Darryl', '', 'Panis', 'darryl123', '0a1871d3d800c50075a6b8806d05c0e2', NULL, NULL, 2, '2023-02-17 02:02:04', '2023-02-17 02:02:04');
 
@@ -269,12 +256,6 @@ ALTER TABLE `stockout_list`
   ADD KEY `item_id` (`item_id`);
 
 --
--- Indexes for table `stock_notif`
---
-ALTER TABLE `stock_notif`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `system_info`
 --
 ALTER TABLE `system_info`
@@ -307,25 +288,19 @@ ALTER TABLE `category_list`
 -- AUTO_INCREMENT for table `item_list`
 --
 ALTER TABLE `item_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `stockin_list`
 --
 ALTER TABLE `stockin_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `stockout_list`
 --
 ALTER TABLE `stockout_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `stock_notif`
---
-ALTER TABLE `stock_notif`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `system_info`

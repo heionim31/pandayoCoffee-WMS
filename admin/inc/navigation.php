@@ -1,10 +1,6 @@
-
 <style>
   .sidebar a.nav-link.active{
     color:#fff !important;
-    
-    
-   
   }
 
   .logos {
@@ -12,23 +8,12 @@
     align-items: center;
     flex-direction: column;
     height: 5%; 
-   
-    
-    
-    
-    
- 
   }
 
   .logos .logo-img {
     max-width: 100px;
     height: 100px !important;
     max-height: unset;
-    
-    
-    
-   
-
   }
 
   .shortName {
@@ -53,8 +38,6 @@
 <aside class="main-sidebar sidebar-white navbar-dark elevation-4 sidebar-no-expand dark-bg">
 
   <!-- Brand Logo -->
-
-
   <a href="<?php echo base_url ?>admin" class="brand-link bg-white text-sm">
     <div class="logos">
       <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 55% ; height: 100%; "> 
@@ -106,31 +89,60 @@
                 </a>
               </li> 
 
-              <li class="nav-item dropdown">
-                <a href="./?page=items" class="nav-link nav-items">
-                  <i class="nav-icon fa fa-cubes"></i>
-                  <p style="color:white">
-                    Item List
-                  </p>
-                </a>
-              </li> 
-
-              <li class="nav-item dropdown">
-                <a href="./?page=stocks" class="nav-link nav-stocks">
+              <!-- STOCKS DROP-DOWN -->
+              <li class="nav-item">
+                <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-warehouse"></i>
                   <p style="color:white">
-                    Stock Manager
+                    Stocks
+                    <i class="right fas fa-angle-left"></i>
+                    <?php
+                      $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i INNER JOIN category_list c ON i.category_id = c.id INNER JOIN stock_notif s ON s.id = 1 WHERE i.delete_flag = 0 AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) <= s.min_stock OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) >= s.max_stock)");
+                      $count = $qry_count->fetch_assoc()['count'];
+                      
+                      // wrap the badge element with an if statement
+                      if (!isset($_GET['page']) || $_GET['page'] != 'items') {
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      }
+                    ?>
                   </p>
                 </a>
-              </li>
-              
-              <li class="nav-item dropdown">
-                <a href="./?page=minimum_notif" class="nav-link nav-minimum_stocks">
-                <i class="nav-icon fas fa-bell"></i>
-                  <p style="color:white">
-                    Stock Notifications
-                  </p>
-                </a>
+
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="./?page=items" class="nav-link tree-item nav-items">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Stock List</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=stocks" class="nav-link tree-item nav-stocks">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Stock Manager</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=setNotif" class="nav-link tree-item nav-setNotif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Set Stock Notification</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Stock Status</p>
+                      <?php
+                        // display the badge element inside the list item
+                        if (!isset($_GET['page']) || $_GET['page'] != 'items') {
+                          echo '<span class="badge badge-danger">'.$count.'</span>';
+                        }
+                      ?>
+                    </a>
+                  </li>
+                </ul>
               </li>
 
               <?php if($_settings->userdata('type') == 1): ?>
@@ -196,7 +208,6 @@
     </div>
 
     
-
     <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
       <div class="os-scrollbar-track">
         <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>
@@ -210,10 +221,7 @@
     </div>
 
     <div class="os-scrollbar-corner"></div>
-
   </div>
-
-
 </aside>
      
      
@@ -240,4 +248,26 @@
     // ACTIVE HOVER
     $('.nav-link.active').addClass('bg-gradient-orange')
   })
+
+  // TO SHOW NUMBERS BESIDES DROPDOWN WHEN NOT ACTIVE AND HIDE WHEN THE DROPDOWN IS INACTIVE
+  $(document).ready(function(){
+  // Hide the child menus by default
+    $(".nav-treeview").hide();
+
+    // Handle click event on parent item
+    $(".nav-link").click(function(){
+        // Toggle child menu visibility
+        $(this).next(".nav-treeview").toggle();
+
+        // If child menu is now visible, hide the badge on parent item
+        if ($(this).next(".nav-treeview").is(":visible")) {
+            $(this).find(".badge").hide();
+        }
+        // If child menu is not visible, show the badge on parent item
+        else {
+            $(this).find(".badge").show();
+        }
+      });
+  });
+
 </script>
