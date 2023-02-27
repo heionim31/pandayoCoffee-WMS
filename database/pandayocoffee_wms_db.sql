@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2023 at 09:32 AM
+-- Generation Time: Feb 27, 2023 at 05:27 PM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -61,6 +61,7 @@ CREATE TABLE `item_list` (
   `unit` varchar(250) NOT NULL,
   `description` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
+  `date_expiration` date NOT NULL,
   `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -70,14 +71,14 @@ CREATE TABLE `item_list` (
 -- Dumping data for table `item_list`
 --
 
-INSERT INTO `item_list` (`id`, `category_id`, `name`, `unit`, `description`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(1, 1, 'Onion Large', 'pcs', 'Duis nec nulla egestas, porta nibh vitae, interdum massa. Duis blandit quam mauris, vel fermentum libero pulvinar ac. Sed vel tempor urna.', 1, 0, '2022-05-28 09:56:19', '2023-02-18 09:56:19'),
-(2, 1, 'String Onions', 'pcs', 'Morbi ligula lorem, blandit ac nisl non, facilisis eleifend nunc. Nunc placerat sem dolor, eu bibendum mauris tincidunt et. Suspendisse est ex, vehicula sed cursus nec, pulvinar eu massa.', 1, 0, '2022-05-28 09:57:51', '2023-02-18 09:57:51'),
-(3, 1, 'Garlic Large', 'pcs', 'Sed sollicitudin, est at semper pellentesque, arcu elit malesuada ex, vel pulvinar nisi quam sed ante.', 1, 0, '2022-05-28 09:59:26', '2023-02-19 20:44:55'),
-(4, 2, 'Black Pepper (Powder)', 'Pack', 'Praesent posuere tortor sit amet faucibus commodo. Ut luctus sem sit amet turpis ullamcorper, ut ultricies tortor sollicitudin.', 1, 0, '2022-05-28 10:00:05', '2023-02-18 10:00:05'),
-(8, 4, 'Beef steak', 'Pack ', 'Raw meat ', 1, 0, '2023-02-20 18:20:26', '2023-02-20 18:20:26'),
-(9, 3, 'Soy beans', '(Pack)', 'sample 1 ', 1, 0, '2023-02-20 23:23:00', '2023-02-20 23:23:00'),
-(18, 3, 'sample low', 'kg', 'dsdczeqw', 1, 0, '2023-02-24 23:54:18', '2023-02-24 23:54:18');
+INSERT INTO `item_list` (`id`, `category_id`, `name`, `unit`, `description`, `status`, `date_expiration`, `delete_flag`, `date_created`, `date_updated`) VALUES
+(1, 1, 'Onion Large', 'pcs', 'Duis nec nulla egestas, porta nibh vitae, interdum massa. Duis blandit quam mauris, vel fermentum libero pulvinar ac. Sed vel tempor urna.', 1, '0000-00-00', 0, '2022-05-28 09:56:19', '2023-02-18 09:56:19'),
+(2, 1, 'String Onions', 'pcs', 'Morbi ligula lorem, blandit ac nisl non, facilisis eleifend nunc. Nunc placerat sem dolor, eu bibendum mauris tincidunt et. Suspendisse est ex, vehicula sed cursus nec, pulvinar eu massa.', 1, '0000-00-00', 0, '2022-05-28 09:57:51', '2023-02-18 09:57:51'),
+(3, 1, 'Garlic Large', 'pcs', 'Sed sollicitudin, est at semper pellentesque, arcu elit malesuada ex, vel pulvinar nisi quam sed ante.', 1, '0000-00-00', 0, '2022-05-28 09:59:26', '2023-02-19 20:44:55'),
+(4, 2, 'Black Pepper (Powder)', 'Pack', 'Praesent posuere tortor sit amet faucibus commodo. Ut luctus sem sit amet turpis ullamcorper, ut ultricies tortor sollicitudin.', 1, '0000-00-00', 0, '2022-05-28 10:00:05', '2023-02-18 10:00:05'),
+(8, 4, 'Beef steak', 'Pack ', 'Raw meat ', 1, '0000-00-00', 0, '2023-02-20 18:20:26', '2023-02-20 18:20:26'),
+(9, 3, 'Soy beans', '(Pack)', 'sample 1 ', 1, '0000-00-00', 0, '2023-02-20 23:23:00', '2023-02-20 23:23:00'),
+(18, 3, 'sample low', 'kg', 'dsdczeqw', 1, '0000-00-00', 0, '2023-02-24 23:54:18', '2023-02-24 23:54:18');
 
 -- --------------------------------------------------------
 
@@ -92,6 +93,7 @@ CREATE TABLE `stockin_list` (
   `quantity` float(12,2) NOT NULL DEFAULT 0.00,
   `remarks` text NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `expire_date` date NOT NULL,
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -99,16 +101,16 @@ CREATE TABLE `stockin_list` (
 -- Dumping data for table `stockin_list`
 --
 
-INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `date_updated`) VALUES
-(2, 4, '2022-05-28', 25.00, 'Sample', '2022-05-28 10:48:35', '2023-02-20 10:50:30'),
-(4, 4, '2022-05-13', 35.00, 'Test #101', '2022-05-28 10:57:15', '2023-02-20 10:57:15'),
-(5, 3, '2022-05-19', 35.00, 'Sample', '2022-05-28 11:27:48', '2023-02-20 11:27:48'),
-(6, 4, '2023-02-19', 5.00, 'goods', '2023-02-19 18:28:25', '2023-02-19 18:28:25'),
-(7, 3, '2023-02-19', 5.00, 'add new 5 garlic', '2023-02-19 20:43:25', '2023-02-19 20:43:25'),
-(8, 8, '2023-02-20', 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '2023-02-20 20:19:13'),
-(9, 3, '2023-02-24', 100.00, 'add fresh', '2023-02-24 23:05:56', '2023-02-24 23:05:56'),
-(10, 18, '2023-02-24', 5.00, 'asda', '2023-02-24 23:54:50', '2023-02-24 23:54:50'),
-(11, 1, '2023-02-25', 5.00, 'zs', '2023-02-25 10:48:10', '2023-02-25 10:48:10');
+INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `expire_date`, `date_updated`) VALUES
+(2, 4, '2022-05-28', 25.00, 'Sample', '2022-05-28 10:48:35', '0000-00-00', '2023-02-20 10:50:30'),
+(4, 4, '2022-05-13', 35.00, 'Test #101', '2022-05-28 10:57:15', '0000-00-00', '2023-02-20 10:57:15'),
+(5, 3, '2022-05-19', 35.00, 'Sample', '2022-05-28 11:27:48', '0000-00-00', '2023-02-20 11:27:48'),
+(6, 4, '2023-02-19', 5.00, 'goods', '2023-02-19 18:28:25', '0000-00-00', '2023-02-19 18:28:25'),
+(7, 3, '2023-02-19', 5.00, 'add new 5 garlic', '2023-02-19 20:43:25', '0000-00-00', '2023-02-19 20:43:25'),
+(8, 8, '2023-02-20', 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '0000-00-00', '2023-02-20 20:19:13'),
+(9, 3, '2023-02-24', 100.00, 'add fresh', '2023-02-24 23:05:56', '0000-00-00', '2023-02-24 23:05:56'),
+(10, 18, '2023-02-24', 5.00, 'asda', '2023-02-24 23:54:50', '0000-00-00', '2023-02-24 23:54:50'),
+(11, 1, '2023-02-25', 5.00, 'zs', '2023-02-25 10:48:10', '0000-00-00', '2023-02-25 10:48:10');
 
 -- --------------------------------------------------------
 
