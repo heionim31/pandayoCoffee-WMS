@@ -15,12 +15,17 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         <input type="hidden" name="item_id" value="<?= isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '') ?>">
         <div class="form-group">
             <label for="date" class="control-label">Date</label>
-            <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($date) ? $date : '' ?>" max="<?= date("Y-m-d") ?>" required>
+            <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($date) ? $date : '' ?>" max="<?= date("m-d-Y") ?>" required>
         </div>
         <div class="form-group">
             <label for="quantity" class="control-label">Quantity</label>
             <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0 text-right" value="<?= isset($quantity) ? format_num($quantity) : '' ?>" required>
         </div>
+        <div class="form-group">
+        <label for="date" class="control-label">Expiration</label>
+			<input type="date" name="expire_date" class="form-control form-control-sm rounded-0 " value="<?= isset($expire_date) ? $expire_date : '' ?>" max="<?= date("m-d-Y") ?>" required>
+        </div>
+       
         <div class="form-group">
             <label for="remarks" class="control-label">Remarks</label>
             <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" required><?= isset($remarks) ? ($remarks) : '' ?></textarea>

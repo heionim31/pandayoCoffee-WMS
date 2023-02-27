@@ -36,6 +36,12 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 			<input type="text" name="unit" id="unit" class="form-control form-control-sm rounded-0" value="<?php echo isset($unit) ? $unit : ''; ?>"  required/>
 		</div>
 		<div class="form-group">
+			<!-- Expiration -->
+			<label for="date" class="control-label">Expiration</label>
+			<input type="date" name="date_expiration" class="form-control">
+		</div>
+		
+		<div class="form-group">
 			<!-- Description -->
 			<label for="description" class="control-label">Description</label>
 			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" required><?php echo isset($description) ? $description : ''; ?></textarea>

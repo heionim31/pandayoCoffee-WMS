@@ -25,6 +25,7 @@
 					<col width="5%">
 					<col width="15%">
 					<col width="25%">
+					<col width="15%">
 					<col width="35%">
 					<col width="10%">
 					<col width="10%">
@@ -34,6 +35,7 @@
 						<th>#</th>
 						<th>Date Created</th>
 						<th>Item</th>
+						<th>Expiration</th>
 						<th>Description</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -51,7 +53,6 @@
 							<td class="text-center"><?php echo $i++; ?></td>
 							<!-- Date Created -->
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
-
 							<!-- Item -->
 							<td class="">
 								<div style="line-height:1em">
@@ -59,7 +60,8 @@
 									<div><small class="text-muted"><?= $row['category'] ?></small></div>
 								</div>
 							</td>
-							
+							<!-- Expiration -->
+							<td> <?php echo date("m-d-Y",strtotime($row['date_expiration'])) ?> </td>	
 							<!-- Item Description -->
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
 							<td class="text-center">
