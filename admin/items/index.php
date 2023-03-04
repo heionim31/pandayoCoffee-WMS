@@ -24,10 +24,9 @@
 				<colgroup>
 					<col width="5%">
 					<col width="15%">
-					<col width="25%">
-					<col width="15%">
+					<col width="20%">
 					<col width="35%">
-					<col width="10%">
+					<col width="15%">
 					<col width="10%">
 				</colgroup>
 				<thead>
@@ -35,7 +34,6 @@
 						<th>#</th>
 						<th>Date Created</th>
 						<th>Item</th>
-						<th>Expiration</th>
 						<th>Description</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -60,8 +58,6 @@
 									<div><small class="text-muted"><?= $row['category'] ?></small></div>
 								</div>
 							</td>
-							<!-- Expiration -->
-							<td> <?php echo date("m-d-Y",strtotime($row['date_expiration'])) ?> </td>	
 							<!-- Item Description -->
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
 							<td class="text-center">

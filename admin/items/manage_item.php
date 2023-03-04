@@ -1,13 +1,13 @@
 <?php
-require_once('./../../config.php');
-if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `item_list` where id = '{$_GET['id']}' and `delete_flag` = 0 ");
-    if($qry->num_rows > 0){
-        foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
-        }
-    }
-}
+	require_once('./../../config.php');
+	if(isset($_GET['id']) && $_GET['id'] > 0){
+		$qry = $conn->query("SELECT * from `item_list` where id = '{$_GET['id']}' and `delete_flag` = 0 ");
+		if($qry->num_rows > 0){
+			foreach($qry->fetch_assoc() as $k => $v){
+				$$k=$v;
+			}
+		}
+	}
 ?>
 <div class="container-fluid">
 	<form action="" id="item-form">
@@ -35,11 +35,11 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 			<label for="unit" class="control-label">Unit</label>
 			<input type="text" name="unit" id="unit" class="form-control form-control-sm rounded-0" value="<?php echo isset($unit) ? $unit : ''; ?>"  required/>
 		</div>
-		<div class="form-group">
-			<!-- Expiration -->
+
+		<!-- <div class="form-group">
 			<label for="date" class="control-label">Expiration</label>
 			<input type="date" name="date_expiration" class="form-control">
-		</div>
+		</div> -->
 		
 		<div class="form-group">
 			<!-- Description -->

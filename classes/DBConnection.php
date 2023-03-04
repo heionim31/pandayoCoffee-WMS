@@ -29,5 +29,3 @@ class DBConnection{
     }
 }
 ?>
-
-<!-- Create a new connection for bit.io -->

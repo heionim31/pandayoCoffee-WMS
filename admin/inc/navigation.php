@@ -95,16 +95,24 @@
                   <i class="nav-icon fas fa-warehouse"></i>
                   <p style="color:white">
                     Stocks
-                    <i class="right fas fa-angle-left"></i>
                     <?php
+                      // Count the total number of items with stock status level and expired items
+                      $count = 0;
+
+                      // Count items with stock status level
                       $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i INNER JOIN category_list c ON i.category_id = c.id INNER JOIN stock_notif s ON s.id = 1 WHERE i.delete_flag = 0 AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) <= s.min_stock OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) >= s.max_stock)");
-                      $count = $qry_count->fetch_assoc()['count'];
-                      
-                      // wrap the badge element with an if statement
-                      if (!isset($_GET['page']) || $_GET['page'] != 'items') {
+                      $count += $qry_count->fetch_assoc()['count'];
+
+                      // Count expired items
+                      $qry_count = $conn->query("SELECT COUNT(*) AS count FROM stockin_list WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'");
+                      $count += $qry_count->fetch_assoc()['count'];
+
+                      // Display the total count if there are items with stock status level or expired items
+                      if ($count > 0) {
                         echo '<span class="badge badge-danger">'.$count.'</span>';
                       }
                     ?>
+                    <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
 
@@ -112,14 +120,14 @@
                   <li class="nav-item">
                     <a href="./?page=items" class="nav-link tree-item nav-items">
                       <i class="far fa-circle nav-icon"></i>
-                      <p style="color:white">Stock List</p>
+                      <p style="color:white">Stock Information</p>
                     </a>
                   </li>
 
                   <li class="nav-item">
                     <a href="./?page=stocks" class="nav-link tree-item nav-stocks">
                       <i class="far fa-circle nav-icon"></i>
-                      <p style="color:white">Stock Manager</p>
+                      <p style="color:white">Stock Adjustment</p>
                     </a>
                   </li>
 
@@ -133,18 +141,44 @@
                   <li class="nav-item">
                     <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
                       <i class="far fa-circle nav-icon"></i>
-                      <p style="color:white">Stock Status</p>
+                      <p style="color:white">Stock Status Level</p>
                       <?php
                         // display the badge element inside the list item
-                        if (!isset($_GET['page']) || $_GET['page'] != 'items') {
-                          echo '<span class="badge badge-danger">'.$count.'</span>';
-                        }
+                        $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i INNER JOIN category_list c ON i.category_id = c.id INNER JOIN stock_notif s ON s.id = 1 WHERE i.delete_flag = 0 AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) <= s.min_stock OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) >= s.max_stock)");
+                        $count = $qry_count->fetch_assoc()['count'];
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
                       ?>
                     </a>
                   </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=stockExpiration" class="nav-link tree-item nav-stockExpiration">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p style="color:white">Expired Stocks</p>
+                        <?php
+                        // Count the number of expired items in the database
+                        $expired_items_count = $conn->query("
+                        SELECT COUNT(*) AS count
+                        FROM stockin_list
+                        WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'
+                        
+                        ");
+                        $expired_items_count = $expired_items_count->fetch_assoc()['count'];
+
+                        // Display the badge if there are expired items
+                        if ($expired_items_count > 0) {
+                            echo '<span class="badge badge-danger">'.$expired_items_count.'</span>';
+                        }
+                        ?>
+                      </a>
+                  </li>
+
                 </ul>
               </li>
 
+
+
+              <!-- REPORTS DROPDOWN -->
               <?php if($_settings->userdata('type') == 1): ?>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
@@ -250,24 +284,5 @@
   })
 
   // TO SHOW NUMBERS BESIDES DROPDOWN WHEN NOT ACTIVE AND HIDE WHEN THE DROPDOWN IS INACTIVE
-  $(document).ready(function(){
-  // Hide the child menus by default
-    $(".nav-treeview").hide();
-
-    // Handle click event on parent item
-    $(".nav-link").click(function(){
-        // Toggle child menu visibility
-        $(this).next(".nav-treeview").toggle();
-
-        // If child menu is now visible, hide the badge on parent item
-        if ($(this).next(".nav-treeview").is(":visible")) {
-            $(this).find(".badge").hide();
-        }
-        // If child menu is not visible, show the badge on parent item
-        else {
-            $(this).find(".badge").show();
-        }
-      });
-  });
 
 </script>
