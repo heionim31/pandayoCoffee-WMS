@@ -214,9 +214,9 @@ Class Master extends DBConnection {
 			$cid = !empty($id) ? $id : $this->conn->insert_id;
 			$resp['status'] = 'success';
 			if(empty($id))
-				$this->settings->set_flashdata('success'," Stock-in Data has been added successfully.");
+				$this->settings->set_flashdata('success'," Item has been added successfully.");
 			else
-				$this->settings->set_flashdata('success'," Stock-in Data successfully updated");
+				$this->settings->set_flashdata('success'," Item successfully updated");
 			
 		}else{
 			$resp['status'] = 'failed';
@@ -229,7 +229,7 @@ Class Master extends DBConnection {
 		$del = $this->conn->query("DELETE FROM `stockin_list` where id = '{$id}'");
 		if($del){
 			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success'," Stock-in Data has been deleted successfully.");
+			$this->settings->set_flashdata('success'," Item has been deleted successfully.");
 		}else{
 			$resp['status'] = 'failed';
 			$resp['error'] = $this->conn->error;

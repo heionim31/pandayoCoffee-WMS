@@ -36,14 +36,15 @@
 						<th>Item</th>
 						<th>Unit</th>
 						<th>Current Stock</th>
-						<th>EMPTY</th>
+						<th>Date Updated</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.date_updated desc ");
+						$qry = $conn->query("SELECT i.*, c.name as `category`, (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0)) as `available`, (SELECT date_updated FROM `stockin_list` where item_id = i.id ORDER BY date_updated DESC LIMIT 1) as `last_updated` from `item_list` i inner join category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.date_updated desc ");
+
 
 						while($row = $qry->fetch_assoc()):
 							$name = $row['name'];
@@ -60,9 +61,9 @@
 							</td>
 							<td><?= $row['unit'] ?></td>
 							<td><?= (int)$row['available'] ?></td>
-							<td></td>
+							<td><?php echo !empty($row['last_updated']) ? date('M d, Y h:i A', strtotime($row['last_updated'])) : ''; ?></td>
 							<td>
-								<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
+								<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> Adjust</a>
 							</td>
 						</tr>
 					<?php endwhile; ?>
