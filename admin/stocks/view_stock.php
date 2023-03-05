@@ -12,15 +12,24 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 	echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
 }
 ?>
-<div class="content bg-gradient-dark py-5 px-4">
-    <h3 class="font-weight-bolder">Stock Details</h3>
-</div>
+<div class="row mt-n4 justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+        <div class="card card-outline card-dark rounded-0 shadow printout">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <h3 class="font-weight-bolder text-center">Stock Details</h3>
+                </div>
+            </div>
+        </div>          
+    </div>
+</div>          
+
 <div class="row mt-n4 justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
         <div class="card rounded-0 shadow">
             <div class="card-footer py-1 text-center">
-                <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
                 <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
+                <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
             </div>
         </div>
         <div class="card card-outline card-dark rounded-0 shadow printout">
@@ -31,20 +40,20 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 <div class="container-fluid">
                     <fieldset>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Category</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Category</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Name</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
                             
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Unit</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Available</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Available</div>
                             <div class="col-8 m-0 p-1 border font-weight-bolder"><?= isset($available) ? format_num($available) : '' ?></div>
                         </div>
                     </fieldset>

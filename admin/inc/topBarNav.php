@@ -42,17 +42,20 @@
                 $pageTitle = 'Categories';
                 break;
               case 'items':
-                $pageTitle = 'Stock List';
+                $pageTitle = 'Stock Information';
                 break;
               case 'stocks':
-                $pageTitle = 'Stock Manager';
+                $pageTitle = 'Stock Adjustment';
                 break;
               case 'setNotif':
                 $pageTitle = 'Set Stock Notifications';
                 break;
               case 'stockStatus':
-                $pageTitle = 'Stock Status';
+                $pageTitle = 'Stock Status Level';
                 break;
+                case 'stockExpiration':
+                  $pageTitle = 'Expired Stocks';
+                  break;
               case 'reports/stockin':
                 $pageTitle = 'Reports / Stock-In Reports';
                 break;

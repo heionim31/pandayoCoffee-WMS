@@ -29,7 +29,7 @@
       <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-user-alt" style="font-size:60px"></i></span>
       <div class="info-box-content">
       <a href="<?php echo base_url ?>admin/?page=user/list" style="color:black;"> 
-        <span class="info-box-text">Users</span>
+        <span class="info-box-text text-right">Total Users</span>
         
         <span class="info-box-number text-right h5">
           
@@ -50,7 +50,7 @@
       <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-th-list" style="font-size:60px; weigth:60px;"></i></span>
       <div class="info-box-content">
       <a href="<?php echo base_url ?>admin/?page=categories/index" style="color:black;"> 
-        <span class="info-box-text">Categories</span>
+        <span class="info-box-text text-right">Total Categories</span>
         <span class="info-box-number text-right h5">
           <?php 
             $category = $conn->query("SELECT * FROM category_list where delete_flag = 0 and `status` = 1")->num_rows;
@@ -69,7 +69,7 @@
       <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-cubes" style="font-size:60px"></i></span>
       <div class="info-box-content">
       <a href="<?php echo base_url ?>admin/?page=items/index" style="color:black;"> 
-        <span class="info-box-text">Items</b></span>
+        <span class="info-box-text text-right">Total Items</b></span>
         <span class="info-box-number text-right  h5">
           <?php 
             $items = $conn->query("SELECT id FROM item_list where delete_flag = 0 and `status` = 1")->num_rows;
@@ -88,7 +88,7 @@
       <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
       <div class="info-box-content">
         <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
-          <span class= "info-box-text">Over Stocks</span>
+          <span class= "info-box-text text-right">Total Over stocks</span>
 
           <span class="info-box-number text-right h5">
             <?php 
@@ -125,6 +125,156 @@
 
               // Output the count of overstock items
               echo format_num($overstock_count);
+            ?>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL OF LOW STOCK -->
+  <div class="col-12 col-sm-4 col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      <div class="info-box-content">
+        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
+          <span class= "info-box-text text-right">Total Low stocks</span>
+
+          <span class="info-box-number text-right h5">
+            <?php 
+              // Define the query to retrieve the latest stockin_list records for each item_id
+              $query = "SELECT item_list.id, item_list.name, 
+                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
+                  (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
+                  ORDER BY date DESC LIMIT 1) AS latest_quantity,
+                  (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+              FROM item_list 
+              ORDER BY date_updated DESC";
+
+              // Execute the query
+              $result = mysqli_query($conn, $query);
+
+              // Initialize counter for low stock items
+              $lowstock_count = 0;
+
+              // Loop through each item
+              while ($row = mysqli_fetch_assoc($result)) {
+                $name = $row['name'];
+                $min_stock = $row['min_stock'];
+                $max_stock = $row['max_stock'];
+                $available_quantity = (int)$row['available'];
+
+                // Check if item is low stocked
+                if ($available_quantity <= $min_stock && $available_quantity != 0) {
+                  $lowstock_count++;
+                }
+              }
+
+              // Output the count of low stock items
+              echo format_num($lowstock_count);
+            ?>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL OF OUT OF STOCK -->
+  <div class="col-12 col-sm-4 col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      <div class="info-box-content">
+        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
+          <span class= "info-box-text text-right">Total Out of stocks</span>
+
+          <span class="info-box-number text-right h5">
+            <?php 
+              // Define the query to retrieve the latest stockin_list records for each item_id
+              $query = "SELECT item_list.id, item_list.name, 
+                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
+                  (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
+                  ORDER BY date DESC LIMIT 1) AS latest_quantity,
+                  (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+              FROM item_list 
+              ORDER BY date_updated DESC";
+
+              // Execute the query
+              $result = mysqli_query($conn, $query);
+
+              // Initialize counter for Out of Stock items
+              $outofstock_count = 0;
+
+              // Loop through each item
+              while ($row = mysqli_fetch_assoc($result)) {
+                $name = $row['name'];
+                $min_stock = $row['min_stock'];
+                $max_stock = $row['max_stock'];
+                $available_quantity = (int)$row['available'];
+
+                // Check if item is Out of Stocked
+                if ($available_quantity == 0 ) {
+                  $outofstock_count++;
+                }
+              }
+
+              // Output the count of Out of Stock items
+              echo format_num($outofstock_count);
+            ?>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL OF EXPIRED ITEMS -->
+  <div class="col-12 col-sm-4 col-md-3">
+    <div class="info-box">
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      <div class="info-box-content">
+        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
+          <span class= "info-box-text text-right">Total Out of stocks</span>
+
+          <span class="info-box-number text-right h5">
+            <?php 
+              // Define the query to retrieve the latest stockin_list records for each item_id
+              $query = "SELECT item_list.id, item_list.name, 
+                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
+                  (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
+                  ORDER BY date DESC LIMIT 1) AS latest_quantity,
+                  (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+              FROM item_list 
+              ORDER BY date_updated DESC";
+
+              // Execute the query
+              $result = mysqli_query($conn, $query);
+
+              // Initialize counter for Out of Stock items
+              $outofstock_count = 0;
+
+              // Loop through each item
+              while ($row = mysqli_fetch_assoc($result)) {
+                $name = $row['name'];
+                $min_stock = $row['min_stock'];
+                $max_stock = $row['max_stock'];
+                $available_quantity = (int)$row['available'];
+
+                // Check if item is Out of Stocked
+                if ($available_quantity == 0 ) {
+                  $outofstock_count++;
+                }
+              }
+
+              // Output the count of Out of Stock items
+              echo format_num($outofstock_count);
             ?>
           </span>
         </a>
