@@ -12,6 +12,7 @@
 					<col width="10%">
 					<col width="20%">
 					<col width="30%">
+					<col width="20%">
 				</colgroup>
 				<thead>
 					<tr>
@@ -21,6 +22,7 @@
 						<th>Current Stock</th>
 						<th>Status Level</th>
 						<th>Message</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -66,6 +68,8 @@
 							<td><?= (int)$row['available'] ?></td>
 							<td class="<?= $class ?>"><strong><?= $title ?></strong></td>
 							<td><?= $message ?></td>
+							<td><a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> Adjust</a>
+ </td>
 						</tr>
 				<?php endwhile; ?>
 				</tbody>

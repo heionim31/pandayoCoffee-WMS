@@ -95,6 +95,7 @@
                   <i class="nav-icon fas fa-warehouse"></i>
                   <p style="color:white">
                     Stocks
+                    <i class="right fas fa-angle-left"></i>
                     <?php
                       // Count the total number of items with stock status level and expired items
                       $count = 0;
@@ -112,7 +113,7 @@
                         echo '<span class="badge badge-danger">'.$count.'</span>';
                       }
                     ?>
-                    <i class="right fas fa-angle-left"></i>
+                    
                   </p>
                 </a>
 
