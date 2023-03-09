@@ -200,7 +200,7 @@
 
                     <li class="nav-item">
                       <a href="./?page=reports/stockout" class="nav-link tree-item nav-reports_stockout">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="far fa-circle nav-icon flex-direction: column" ></i>
                         <p style="color:white">Monthly Stock-Out Report</p>
                       </a>
                     </li>
@@ -219,7 +219,7 @@
 
                 <li class="nav-item dropdown">
                   <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link  nav-user_list" >
-                    <i class="nav-icon fas fa-users-cog" ></i>
+                    <i class="nav-icon fas fa-users-cog flex-direction: column" ></i>
                     <p style="color:white">
                       User List
                     </p>
