@@ -7,18 +7,20 @@
             <table class="table table-hover table-striped table-bordered text-center" id="list">
                 <colgroup>
                     <col width="5%">
+                    <!-- <col width="5%"> -->
                     <col width="15%">
                     <col width="5%">
-                    <col width="5%">
+                    <col width="10%">
+                    <col width="10%">
                     <col width="10%">
                     <col width="15%">
-                    <col width="10%">
                     <col width="30%">
                     <col width="10%">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th class="d-none">Item ID</th>
                         <th>Item</th>
                         <th>Unit</th>
                         <th>Current Stock</th>
@@ -31,10 +33,47 @@
                 </thead>
                 <tbody>
                     <?php
+                        // Insert and update data if form is submitted
+                        if (isset($_POST['submit'])) {
+                            $item_id = $_POST['item_id'];
+                            $quantity = $_POST['quantity'];
+                            $expiry_date = $_POST['expiry_date'];
+                            $remarks = $_POST['remarks'];
+                            $date = date('Y-m-d');
+                            $id = $_POST['id'];
+                            
+                            // Insert data in waste_list table
+                            $sql = "INSERT INTO waste_list (item_id, quantity, date, remarks, date_created, date_updated)
+                                    SELECT item_id, quantity, '$expiry_date', '$remarks', NOW(), NOW() FROM stockin_list 
+                                    WHERE id = $id";
+                            $result = mysqli_query($conn, $sql);
+
+                            // Copy the deleted row to stockin_list_deleted table
+                            $sql = "INSERT INTO stockin_list_deleted (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
+                            SELECT id, item_id, date, quantity, remarks, date_created, expire_date, date_updated FROM stockin_list 
+                            WHERE id = $id";
+                            
+                            $result = mysqli_query($conn, $sql);
+
+                            if ($result) {
+                                // Delete data from stockin_list table
+                                $sql = "DELETE FROM stockin_list WHERE id = $id";
+                                $result = mysqli_query($conn, $sql);
+
+                                if ($result) {
+                                    echo "Data saved successfully.";
+                                } else {
+                                    echo "Error: " . mysqli_error($conn);
+                                }
+                            } else {
+                                echo "Error: " . mysqli_error($conn);
+                            }
+                        }
+
                         // Get the stock items that have expired, will expire today, or will expire tomorrow
                         $today = date('Y-m-d');
                         $tomorrow = date('Y-m-d', strtotime('+1 day'));
-                        $stock_items = $conn->query("SELECT s.*, i.name, i.unit FROM stockin_list s INNER JOIN item_list i ON s.item_id = i.id WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') AND s.expire_date != '0000-00-00'");
+                        $stock_items = $conn->query("SELECT s.*, i.name, i.unit, i.id AS item_id FROM stockin_list s INNER JOIN item_list i ON s.item_id = i.id WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') AND s.expire_date != '0000-00-00'");
 
                         // Initialize the ID variable
                         $id = 1;
@@ -72,19 +111,27 @@
                             // Display the item if it has expired or will expire today or tomorrow
                             if ($expiry_status)?>
                                 <tr>
-                                    <td><?= $id ?></td>
-                                    <td><?= $item['name'] ?></td>
-                                    <td><?= $item['unit'] ?></td>
-                                    <td><?= (int)$item['quantity'] ?></td>
-                                    <td><?= date('m-d-Y', strtotime($item['date'])) ?></td>
-                                    <td><?= date('m-d-Y', strtotime($item['expire_date'])) ?></td>
-                                    <td class="<?= $expiry_class ?>"><?= $expiry_status ?></td>
-                                    <td><?= $message ?></td>
-                                    <td>
+                                  <td><?= $id ?></td>
+                                  <td class="d-none"><?= $item['item_id'] ?></td>
+                                  <td><?= $item['name'] ?></td>
+                                  <td><?= $item['unit'] ?></td>
+                                  <td><?= (int)$item['quantity'] ?></td>
+                                  <td><?= date('m-d-Y', strtotime($item['date'])) ?></td>
+                                  <td><?= date('m-d-Y', strtotime($item['expire_date'])) ?></td>
+                                  <td class="<?= $expiry_class ?>"><?= $expiry_status ?></td>
+                                  <td><?= $message ?></td>
+                                  <td>
                                     <?php if ($expiry_status !== "Expires Tomorrow"): ?>
-                                        <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-item-name="<?= $item['name'] ?>" data-expiration-date="<?= $item['expire_date'] ?>" data-quantity="<?= intval($item['quantity']) ?>">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                                        <form method="post">
+                                        <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                                            <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>">
+                                            <input type="hidden" name="quantity" value="<?= intval($item['quantity']) ?>">
+                                            <input type="hidden" name="expiry_date" value="<?= $item['expire_date'] ?>">
+                                            <input type="text" name="remarks" placeholder="Enter remarks here">
+                                            <button type="submit" name="submit" class="btn btn-danger btn-sm">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     <?php endif; ?>
                                     </td>
                                 </tr>
@@ -99,41 +146,40 @@
 
 
 <!-- MODAL FORM -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Do you want to throw away this item?</h5>
       </div>
       <div class="modal-body">
-        <form>
+        <form method="post" action="save_waste.php">
           <div class="form-group">
             <label for="item-name" class="col-form-label">Item Name:</label>
-            <input type="text" class="form-control" id="item-name" disabled>
+            <input type="text" class="form-control" id="item-name" name="item_name" disabled>
           </div>
           <div class="form-group">
             <label for="quantity" class="col-form-label">Quantity:</label>
-            <input type="text" class="form-control" id="quantity" disabled>
+            <input type="text" class="form-control" id="quantity" name="quantity" disabled>
           </div>
           <div class="form-group">
             <label for="expiration-date" class="col-form-label">Expiration Date:</label>
-            <input type="text" class="form-control" id="expiration-date" disabled>
+            <input type="text" class="form-control" id="expiration-date" name="expiration_date" disabled>
           </div>
           <div class="form-group">
             <label for="remarks" class="col-form-label">Remarks:</label>
-            <textarea class="form-control" id="remarks"></textarea>
+            <textarea class="form-control" id="remarks" name="remarks"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Waste</button>
+        <button type="button" class="btn btn-danger" onclick="saveWaste()">Waste</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL FORM SCRIPT -->
 <script>
     $('#exampleModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
@@ -145,7 +191,7 @@
         modal.find('.modal-body #expiration-date').val(expirationDate)
         modal.find('.modal-body #quantity').val(quantity)
     })
-</script>
+</script> -->
 
 
 

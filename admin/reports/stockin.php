@@ -40,18 +40,20 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                 <div class="container-fluid" id="printout">
                     <table class="table table-bordered">
                         <colgroup>
-                            <col width="10%">
+                            <col width="5%">
+                            <col width="20%">
+                            <col width="5%">
                             <col width="15%">
-                            <col width="30%">
                             <col width="15%">
-                            <col width="30%">
+                            <col width="40%">
                         </colgroup>
                         <thead>
                             <tr>
                                 <th class="px-1 py-1 text-center">#</th>
-                                <th class="px-1 py-1 text-center">Date</th>
                                 <th class="px-1 py-1 text-center">Item</th>
                                 <th class="px-1 py-1 text-center">Quantity</th>
+                                <th class="px-1 py-1 text-center">Manufactured Date</th>
+                                <th class="px-1 py-1 text-center">Expiration Date</th>
                                 <th class="px-1 py-1 text-center">Remarks</th>
                             </tr>
                         </thead>
@@ -59,12 +61,22 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                             <?php 
                             $g_total = 0;
                             $i = 1;
-                            $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit FROM `stockin_list` s inner join `item_list` i on s.item_id = i.id inner join category_list c on i.category_id = c.id where date_format(s.date, '%Y-%m') = '{$month}' order by date(s.`date`) asc");
+                            $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit, s.date, s.expire_date 
+                                FROM `stockin_list` s 
+                                INNER JOIN `item_list` i ON s.item_id = i.id 
+                                INNER JOIN `category_list` c ON i.category_id = c.id 
+                                WHERE date_format(s.date_created, '%Y-%m') = '{$month}' 
+                                UNION ALL
+                                SELECT s.*, i.name as `item`, c.name as `category`, i.unit, s.date, s.expire_date 
+                                FROM `stockin_list_deleted` s 
+                                INNER JOIN `item_list` i ON s.item_id = i.id 
+                                INNER JOIN `category_list` c ON i.category_id = c.id 
+                                WHERE date_format(s.date_created, '%Y-%m') = '{$month}'
+                                ORDER BY date_created DESC");
                             while($row = $stock->fetch_assoc()):
                             ?>
                             <tr>
                                 <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
-                                <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['date'])) ?></td>
                                 <td class="px-1 py-1 align-middle text-center">
                                     <div line-height="1em">
                                         <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
@@ -72,13 +84,14 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                                     </div>
                                 </td>
                                 <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['date'])) ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['expire_date'])) ?></td>
                                 <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                                
                             </tr>
                             <?php endwhile; ?>
                             <?php if($stock->num_rows <= 0): ?>
                                 <tr>
-                                    <td class="py-1 text-center" colspan="5">No records found</td>
+                                    <td class="py-1 text-center" colspan="6">No records found</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

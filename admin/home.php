@@ -320,9 +320,8 @@
                 (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
                 (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                 ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
-                COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+                (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = item_list.id),0) - 
+                COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = item_list.id),0)) AS `available`
             FROM item_list 
             ORDER BY date_updated DESC LIMIT 5";
 
