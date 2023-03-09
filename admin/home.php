@@ -85,9 +85,9 @@
   <!-- TOTAL OF OVER STOCKS -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-chart-line text-info" style="font-size:60px"></i></span>
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
+        <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;" > 
           <span class= "info-box-text text-right">Total Over stocks</span>
 
           <span class="info-box-number text-right h5">
@@ -135,9 +135,9 @@
   <!-- TOTAL OF LOW STOCK -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fa fa-angle-double-down text-warning" style="font-size:60px"></i></span>
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
+        <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;" > 
           <span class= "info-box-text text-right">Total Low stocks</span>
 
           <span class="info-box-number text-right h5">
@@ -185,9 +185,9 @@
   <!-- TOTAL OF OUT OF STOCK -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse text-danger"  style="font-size:60px"></i></span>
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
+        <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;" > 
           <span class= "info-box-text text-right">Total Out of stocks</span>
 
           <span class="info-box-number text-right h5">
@@ -235,47 +235,26 @@
   <!-- TOTAL OF EXPIRED ITEMS -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
-      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-warehouse"  style="font-size:60px"></i></span>
-      <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stocks" style="color:black;" > 
-          <span class= "info-box-text text-right">Total Out of stocks</span>
+      <span class="info-box-icon bg-gradient-light elevation-1"><i class="fas fa-calendar-times"  style="font-size:60px"></i></span>
+        <div class="info-box-content">
+          <a href="<?php echo base_url ?>admin/?page=stockExpiration" style="color:black;" > 
+            <span class= "info-box-text text-right">Total Expired stocks</span>
 
-          <span class="info-box-number text-right h5">
-            <?php 
-              // Define the query to retrieve the latest stockin_list records for each item_id
-              $query = "SELECT item_list.id, item_list.name, 
-                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
-                  (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
-                  ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                  (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
-              FROM item_list 
-              ORDER BY date_updated DESC";
+              <span class="info-box-number text-right h5">
+                <?php
+                        // Count the number of expired items in the database
+                        $expired_items_count = $conn->query("
+                        SELECT COUNT(*) AS count
+                        FROM stockin_list
+                        WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'
+                        ");
+                        $expired_items_count = $expired_items_count->fetch_assoc()['count'];
 
-              // Execute the query
-              $result = mysqli_query($conn, $query);
-
-              // Initialize counter for Out of Stock items
-              $outofstock_count = 0;
-
-              // Loop through each item
-              while ($row = mysqli_fetch_assoc($result)) {
-                $name = $row['name'];
-                $min_stock = $row['min_stock'];
-                $max_stock = $row['max_stock'];
-                $available_quantity = (int)$row['available'];
-
-                // Check if item is Out of Stocked
-                if ($available_quantity == 0 ) {
-                  $outofstock_count++;
-                }
-              }
-
-              // Output the count of Out of Stock items
-              echo format_num($outofstock_count);
-            ?>
+                        // Display the badge if there are expired items
+                        if ($expired_items_count > 0) {
+                            echo '<span class="text">'.$expired_items_count.'</span>';
+                        }
+                        ?>
           </span>
         </a>
       </div>

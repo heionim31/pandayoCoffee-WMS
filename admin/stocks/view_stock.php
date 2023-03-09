@@ -134,9 +134,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $stockouts->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockout" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
@@ -174,9 +174,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $wastes->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_waste" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
