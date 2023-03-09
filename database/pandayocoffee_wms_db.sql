@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2023 at 02:27 AM
+-- Generation Time: Mar 09, 2023 at 02:52 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -110,15 +110,38 @@ INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `dat
 (8, 8, '2023-02-20', 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '0000-00-00', '2023-02-20 20:19:13'),
 (9, 3, '2023-02-24', 100.00, 'add fresh', '2023-02-24 23:05:56', '0000-00-00', '2023-02-24 23:05:56'),
 (11, 1, '2023-02-25', 5.00, 'zs', '2023-02-25 10:48:10', '0000-00-00', '2023-02-25 10:48:10'),
-(22, 18, '2023-01-01', 20.00, 'Expired 1 day ago', '2023-03-03 10:32:00', '2023-03-02', '2023-03-03 10:32:00'),
 (23, 18, '2023-01-01', 35.00, 'Expired 2 days ago', '2023-03-03 10:32:24', '2023-03-01', '2023-03-03 14:26:51'),
 (25, 18, '2023-01-01', 30.00, 'Expired soon', '2023-03-03 10:33:27', '2023-03-05', '2023-03-03 10:33:27'),
 (33, 18, '2023-01-03', 100.00, 'sdfsdfs', '2023-03-03 14:17:21', '2023-03-01', '2023-03-03 14:17:21'),
 (34, 18, '2023-01-01', 100.00, 'sa', '2023-03-03 15:21:23', '2023-03-04', '2023-03-03 15:21:23'),
-(35, 18, '2023-01-01', 50.00, 'asda', '2023-03-03 15:37:37', '2023-03-03', '2023-03-03 15:37:37'),
 (36, 18, '2023-01-01', 200.00, 'eyy\r\n', '2023-03-03 15:56:37', '2023-02-28', '2023-03-03 15:56:37'),
 (37, 18, '2023-01-01', 50.00, 'sdfsd', '2023-03-03 18:41:59', '2023-02-02', '2023-03-03 18:41:59'),
 (38, 18, '2023-01-01', 40.00, 'awea', '2023-03-03 18:48:42', '2023-02-12', '2023-03-03 18:48:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stockin_list_deleted`
+--
+
+CREATE TABLE `stockin_list_deleted` (
+  `id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `quantity` decimal(10,2) NOT NULL,
+  `remarks` text DEFAULT NULL,
+  `date_created` datetime NOT NULL,
+  `expire_date` date NOT NULL,
+  `date_updated` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `stockin_list_deleted`
+--
+
+INSERT INTO `stockin_list_deleted` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `expire_date`, `date_updated`) VALUES
+(22, 18, '2023-01-01', '20.00', 'Expired 1 day ago', '2023-03-03 10:32:00', '2023-03-02', '2023-03-03 10:32:00'),
+(35, 18, '2023-01-01', '50.00', 'asda', '2023-03-03 15:37:37', '2023-03-03', '2023-03-03 15:37:37');
 
 -- --------------------------------------------------------
 
@@ -245,7 +268,9 @@ CREATE TABLE `waste_list` (
 
 INSERT INTO `waste_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `date_updated`) VALUES
 (1, 4, '2022-05-28', 5.00, 'Rotten', '2023-02-20 11:03:06', '2023-02-22 20:08:18'),
-(2, 4, '2023-02-19', 10.00, 'Expired ', '2023-02-19 20:07:16', '2023-02-19 20:07:16');
+(2, 4, '2023-02-19', 10.00, 'Expired ', '2023-02-19 20:07:16', '2023-02-19 20:07:16'),
+(3, 18, '2023-03-02', 20.00, 'sample', '2023-03-08 22:21:20', '2023-03-08 22:21:20'),
+(4, 18, '2023-03-03', 50.00, 'dapat waste list', '2023-03-09 21:52:08', '2023-03-09 21:52:08');
 
 --
 -- Indexes for dumped tables
@@ -270,6 +295,12 @@ ALTER TABLE `item_list`
 ALTER TABLE `stockin_list`
   ADD PRIMARY KEY (`id`),
   ADD KEY `item_id` (`item_id`);
+
+--
+-- Indexes for table `stockin_list_deleted`
+--
+ALTER TABLE `stockin_list_deleted`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `stockout_list`
@@ -326,6 +357,12 @@ ALTER TABLE `stockin_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
+-- AUTO_INCREMENT for table `stockin_list_deleted`
+--
+ALTER TABLE `stockin_list_deleted`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
 -- AUTO_INCREMENT for table `stockout_list`
 --
 ALTER TABLE `stockout_list`
@@ -353,7 +390,7 @@ ALTER TABLE `users_list`
 -- AUTO_INCREMENT for table `waste_list`
 --
 ALTER TABLE `waste_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+    $qry = $conn->query("SELECT i.*, c.name as `category`, (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0)) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             $$k=$v;
@@ -12,6 +12,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 	echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
 }
 ?>
+
 <div class="row mt-n4 justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
         <div class="card card-outline card-dark rounded-0 shadow printout">
@@ -29,12 +30,14 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         <div class="card rounded-0 shadow">
             <div class="card-footer py-1 text-center">
                 <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
-                <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
             </div>
         </div>
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title"><b>Item Details</b></div>
+                <div class="card-tools">
+                    <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
+		        </div>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
