@@ -153,7 +153,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </table>
             </div>
         </div>
-        <div class="card card-outline card-dark rounded-0 shadow printout">
+        <!-- <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title">Waste History</div>
                 <div class="card-tools">
@@ -192,9 +192,11 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
+
+
 <noscript id="print-header">
     <div>
         <style>
@@ -217,6 +219,8 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         <hr>
     </div>
 </noscript>
+
+
 <script>
     var tbl1,tbl2, tbl3;
      function print_t(){
@@ -263,12 +267,12 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         ],
                         order:[0,'asc']
                     });
-                    tbl3 = $('#waste-tbl').dataTable({
-                        columnDefs: [
-                                { orderable: false, targets: [3] }
-                        ],
-                        order:[0,'asc']
-                    });
+                    // tbl3 = $('#waste-tbl').dataTable({
+                    //     columnDefs: [
+                    //             { orderable: false, targets: [3] }
+                    //     ],
+                    //     order:[0,'asc']
+                    // });
                 }, 200);
             }, 300);
     }
@@ -301,15 +305,15 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 		})
 
         // Waste
-        $('#add_waste').click(function(){
-            uni_modal("<i class='far fa-plus-square'></i> Add Waste Data", 'stocks/manage_waste.php?iid=<?= isset($id) ? $id : '' ?>')
-        })
-        $('.edit_waste').click(function(){
-            uni_modal("<i class='fa fa-edit'></i> Edit Waste Data", 'stocks/manage_waste.php?iid=<?= isset($id) ? $id : '' ?>&id=' + $(this).attr('data-id'))
-        })
-        $('.delete_waste').click(function(){
-			_conf("Are you sure to delete this Waste data permanently?","delete_waste",[$(this).attr('data-id')])
-		})
+        // $('#add_waste').click(function(){
+        //     uni_modal("<i class='far fa-plus-square'></i> Add Waste Data", 'stocks/manage_waste.php?iid=<?= isset($id) ? $id : '' ?>')
+        // })
+        // $('.edit_waste').click(function(){
+        //     uni_modal("<i class='fa fa-edit'></i> Edit Waste Data", 'stocks/manage_waste.php?iid=<?= isset($id) ? $id : '' ?>&id=' + $(this).attr('data-id'))
+        // })
+        // $('.delete_waste').click(function(){
+		// 	_conf("Are you sure to delete this Waste data permanently?","delete_waste",[$(this).attr('data-id')])
+		// })
 
         tbl1 = $('#stockin-tbl').dataTable({
 			columnDefs: [
@@ -323,12 +327,12 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 			],
 			order:[0,'asc']
 		});
-        tbl3 = $('#waste-tbl').dataTable({
-			columnDefs: [
-					{ orderable: false, targets: [3] }
-			],
-			order:[0,'asc']
-		});
+        // tbl3 = $('#waste-tbl').dataTable({
+		// 	columnDefs: [
+		// 			{ orderable: false, targets: [3] }
+		// 	],
+		// 	order:[0,'asc']
+		// });
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
         $('.dataTables_paginate .pagination>li>a').addClass('p-1');
         $('.dataTables_filter input').addClass('rounded-0 form-control-sm py-1');

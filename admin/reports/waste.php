@@ -61,22 +61,27 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                             <?php 
                                 $g_total = 0;
                                 $i = 1;
-                                $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit FROM `waste_list` s inner join `item_list` i on s.item_id = i.id inner join category_list c on i.category_id = c.id where date_format(s.date_created, '%Y-%m') = '{$month}' order by date(s.`date_created`) asc");
+                                $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit 
+                                                        FROM `waste_list` s 
+                                                        INNER JOIN `item_list` i ON s.item_id = i.id 
+                                                        INNER JOIN `category_list` c ON i.category_id = c.id 
+                                                        WHERE date_format(s.date_created, '%Y-%m') = '{$month}' 
+                                                        ORDER BY s.date_created DESC");
                                 while($row = $stock->fetch_assoc()):
-                                ?>
-                                <tr>
-                                    <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
-                                    <td class="px-1 py-1 align-middle text-center">
-                                        <div line-height="1em">
-                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
-                                            <div class="font-weight-light"><?= $row['category'] ?></div>
-                                        </div>
-                                    </td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                                    <td class="px-1 py-1 align-middle text-center"></td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['date'])) ?></td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                                </tr>
+                            ?>
+                            <tr>
+                                <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
+                                <td class="px-1 py-1 align-middle text-center">
+                                    <div line-height="1em">
+                                        <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
+                                        <div class="font-weight-light"><?= $row['category'] ?></div>
+                                    </div>
+                                </td>
+                                <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['date'])) ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['expire_date'])) ?></td>
+                                <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
+                            </tr>
                             <?php endwhile; ?>
                             <?php if($stock->num_rows <= 0): ?>
                                 <tr>

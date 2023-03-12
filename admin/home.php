@@ -1,3 +1,9 @@
+<!-- Bootstrap CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+
+<!-- Import Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
   #system-cover{
     background:white;
@@ -14,6 +20,44 @@
   th, td {
     padding: 0.20rem;
     text-align: center;
+  }
+
+  .alert-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+    z-index: 9999;
+  }
+
+  .alert-container .alert {
+    display: none;
+    position: relative;
+    padding: 10px;
+    color: #fff;
+    font-size: 16px;
+    width: 300px;
+    opacity: 0.8;
+  }
+
+  .alert-container .low-stock-alert {
+    background-color: #ff9800;
+  }
+
+  .alert-container .out-of-stock-alert {
+    background-color: #f44336;
+  }
+
+  .alert-container .over-stock-alert {
+    background-color: #3E92CC;
+  }
+
+  .alert-container .expired-alert {
+    background-color: #333333;
+  }
+
+  .alert-container .alert i {
+    margin-right: 10px;
   }
 </style>
 
@@ -99,8 +143,7 @@
                   (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
                   (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0)) as `available`
               FROM item_list 
               ORDER BY date_updated DESC";
 
@@ -149,8 +192,7 @@
                   (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
                   (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0)) as `available`
               FROM item_list 
               ORDER BY date_updated DESC";
 
@@ -199,8 +241,7 @@
                   (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
                   (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = item_list.id),0)) as `available`
+                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0)) as `available`
               FROM item_list 
               ORDER BY date_updated DESC";
 
@@ -261,38 +302,354 @@
     </div>
   </div>
 
+  
+  <!-- POP-UP ALERT BOX -->
+  <div class="alert-container">
+    <div class="out-of-stock-alert alert" style="<?php if ($outofstock_count == 0) { echo 'display:none;'; } ?>">
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($outofstock_count); ?> Out of Stock Items
+    </div>
+    <div class="low-stock-alert alert" style="<?php if ($lowstock_count == 0) { echo 'display:none;'; } ?>">
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($lowstock_count); ?> Low Stock Items
+    </div>
+    <div class="over-stock-alert alert" style="<?php if ($overstock_count == 0) { echo 'display:none;'; } ?>">
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($overstock_count); ?> Over Stock Items
+    </div>
+    <div class="expired-alert alert" style="<?php if ($expired_items_count == 0) { echo 'display:none;'; } ?>">
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($expired_items_count); ?> Expired Items
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      var overStockCount = <?php echo $overstock_count; ?>;
+      var lowStockCount = <?php echo $lowstock_count; ?>;
+      var outOfStockCount = <?php echo $outofstock_count; ?>;
+      var expiredStockCount = <?php echo $expired_items_count; ?>;
+
+      if (outOfStockCount > 0) {
+        $(".out-of-stock-alert").fadeIn().delay(3500).fadeOut();
+      }
+
+      if (lowStockCount > 0) {
+        setTimeout(function() {
+          $(".low-stock-alert").fadeIn().delay(3500).fadeOut();
+        }, 500);
+      }
+
+      if (overStockCount > 0) {
+        setTimeout(function() {
+        $(".over-stock-alert").fadeIn().delay(3500).fadeOut();
+        }, 1000);
+      }
+
+      if (expiredStockCount > 0) {
+        setTimeout(function() {
+        $(".expired-alert").fadeIn().delay(3500).fadeOut();
+        }, 1500);
+      }
+      
+    });
+  </script>
+
+</div>
+
+<!-- BAR CHART -->
+<div class="container-fluid">
+  <div class="row">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">TOP STOCK-IN LIST ITEMS</h5>
+              </div>
+              <div class="card-body">
+                <!-- Chart container -->
+                <canvas id="top-items-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- TABLE FOR RECENTLY ADDED ITEMS -->
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">Recently Added Items</h5>
+              </div>
+              <div class="card-body">
+                <table class="table table-hover table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Category</th>
+                      <th>Date Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                      // Retrieve the 5 most recent items
+                      $sql = "SELECT * FROM item_list ORDER BY date_created DESC LIMIT 5";
+                      $result = $conn->query($sql);
+                      
+                      // Create an array to store the recent items
+                      $recent_items = array();
+                      if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                          $recent_items[] = $row;
+                        }
+                      }
+                    ?>
+
+                    <?php $id = 1; foreach($recent_items as $item): ?>
+                    <tr>
+                      <td class="align-middle"><?php echo $id++; ?></td>
+                      <td class="align-middle"><?php echo $item['name']; ?></td>
+                      <td class="align-middle">
+                        <?php 
+                          // Retrieve the category name based on the category ID
+                          $category_id = $item['category_id'];
+                          $category_query = $conn->query("SELECT name FROM category_list WHERE id = $category_id");
+                          $category = $category_query->fetch_assoc();
+                          echo $category['name']; 
+                        ?>
+                      </td>
+                      <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($item['date_created'])); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
 </div>
 
 
-<?php
-  // Retrieve the 5 most recent items
-  $sql = "SELECT * FROM item_list ORDER BY date_created DESC LIMIT 5";
-  $result = $conn->query($sql);
+<!-- TOP 5 STOCK-IN ITEMS -->
+<div class="container-fluid">
+  <div class="row">
   
-  // Create an array to store the recent items
-  $recent_items = array();
-  if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-      $recent_items[] = $row;
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title">Top Stock-In Items</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Unit</th>
+                <th>Total Quantity</th>
+                <th>Date Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              // Execute the SQL query
+                $sql = "SELECT item_list.name AS item_name, item_list.unit, 
+                        IFNULL(stockin_list_deleted.total_quantity, 0) + IFNULL(stockin_list.total_quantity, 0) AS total_quantity, 
+                        MAX(IFNULL(stockin_list.date_updated, stockin_list_deleted.date_updated)) AS date_updated
+                        FROM item_list LEFT JOIN (SELECT item_id, SUM(quantity) AS total_quantity, MAX(date_updated) AS date_updated
+                        FROM stockin_list_deleted GROUP BY item_id) AS stockin_list_deleted ON item_list.id = stockin_list_deleted.item_id
+                        LEFT JOIN (SELECT item_id, SUM(quantity) AS total_quantity, MAX(date_updated) AS date_updated FROM stockin_list 
+                        GROUP BY item_id) AS stockin_list ON item_list.id = stockin_list.item_id GROUP BY item_list.id HAVING total_quantity > 0 
+                        ORDER BY total_quantity DESC LIMIT 5;";
+
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                  $i = 1;
+                  $items = array();
+                  while($row = $result->fetch_assoc()) {
+                      $item_name = $row['item_name'] ?? 'Unknown';
+                      $unit = $row['unit'] ?? 'Unknown';
+                      $total_quantity = floor($row['total_quantity']);
+                      $date_updated = $row['date_updated'];
+              
+                      ?>
+                      <tr>
+                        <td><?php echo $i; ?></td>
+                        <td><?php echo $item_name; ?></td>
+                        <td><?php echo $unit; ?></td>
+                        <td><?php echo $total_quantity; ?></td>
+                        <td><?php echo $date_updated; ?></td>
+                      </tr>
+                      <?php
+                      $i++;
+              
+                      $item = array(
+                          'name' => $item_name,
+                          'quantity' => (int)$total_quantity
+                      );
+                      array_push($items, $item);
+                  }
+              } else {
+                  // output no data message
+                  ?>
+                  <tr>
+                    <td colspan='5' class='text-center'>No data available</td>
+                  </tr>
+                  <?php
+              }
+              
+              ?>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Get the table data
+  let items = <?php echo json_encode($items); ?>;
+
+  // Create an array of item names and their quantities
+  let itemNames = items.map(item => item.name);
+  let itemQuantities = items.map(item => item.quantity);
+
+  // Create a chart using Chart.js
+  let ctx = document.getElementById('top-items-chart').getContext('2d');
+  let chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: itemNames,
+      datasets: [{
+        label: 'Top Stock-In Items',
+        data: itemQuantities,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
     }
-  }
-?>
+  });
+</script>
 
 
+<!-- TOP 5 STOCK-OUT ITEMS -->
 <div class="container-fluid">
   <div class="row">
 
-    <!-- TABLE FOR STOCK ALERTS -->
     <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Top Stock-Out Items</h5>
+          </div>
+          <div class="card-body">
+          
+          <table class="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Unit</th>
+                <th>Total Quantity</th>
+                <th>Date Created</th>
+              </tr>
+            </thead>
+            <tbody>
+             <?php
+              // Execute the SQL query
+              $sql = "SELECT item_list.name AS item_name, item_list.unit, SUM(IFNULL(stockout_list.quantity, 0)) AS total_quantity, MAX(IFNULL(stockout_list.date_updated, 'N/A')) AS date_updated
+              FROM item_list
+              LEFT JOIN stockout_list ON item_list.id = stockout_list.item_id
+              GROUP BY item_list.id
+              HAVING total_quantity > 0
+              ORDER BY total_quantity DESC
+              LIMIT 5;";
+
+              $result = $conn->query($sql);
+
+              if ($result->num_rows > 0) {
+                // output data of each row
+                $i = 1;
+                while($row = $result->fetch_assoc()) {
+                  $item_name = $row['item_name'] ?? 'Unknown';
+                  $unit = $row['unit'] ?? 'Unknown';
+                  $total_quantity = floor($row['total_quantity']);
+                  $date_updated = $row['date_updated'];
+
+                  ?>
+                  <tr>
+                    <td><?php echo $i; ?></td>
+                    <td><?php echo $item_name; ?></td>
+                    <td><?php echo $unit; ?></td>
+                    <td><?php echo $total_quantity; ?></td>
+                    <td><?php echo $date_updated; ?></td>
+                  </tr>
+                  <?php
+                  $i++;
+                }
+              } else {
+                // output no data message
+                ?>
+                <tr>
+                  <td colspan='5' class='text-center'>No data available</td>
+                </tr>
+                <?php
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- DASHBOARD IMAGE -->
+<!-- 
+<div class="container-fluid text-center">
+  <img src="<= validate_image($_settings->info('cover')) ?>" alt="system-cover" id="system-cover" class="img-fluid">
+</div> -->
+
+
+<!-- TABLE FOR STOCK ALERTS -->
+    <!-- <div class="col-md-8">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">Stock Alerts</h5>
           <div class="card-tools">
-            <a href="./?page=stockStatus" class="btn btn-flat btn-success"></span>View All</a>
+            <a href="./?page=stockStatus" class="btn btn-flat btn-success rounded"></span>View All</a>
           </div>
         </div>
         <div class="card-body">
-          <?php
+          <#php
             // Define the query to retrieve the latest stockin_list records for each item_id
             $query = "SELECT item_list.id, item_list.name, 
                 (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
@@ -306,9 +663,9 @@
 
             // Execute the query
             $result = mysqli_query($conn, $query);
-          ?>
+          #>
 
-          <?php while ($row = mysqli_fetch_assoc($result)) {
+          <#php while ($row = mysqli_fetch_assoc($result)) {
             $name = $row['name'];
             $min_stock = $row['min_stock'];
             $max_stock = $row['max_stock'];
@@ -333,54 +690,9 @@
             echo '<div class="' . $class . '">' .
                 '<strong>' . $message . '</strong>' .
                 '</div>';
-          } ?>
+          } #>
               
         </div>
       </div>
-    </div>
+    </div> -->
     
-    <!-- TABLE FOR RECENTLY ADDED ITEMS -->
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Recently Added Items</h5>
-        </div>
-        <div class="card-body">
-          <table class="table table-hover table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Date Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach($recent_items as $item): ?>
-              <tr>
-                <td class="align-middle"><?php echo $item['name']; ?></td>
-                <td class="align-middle">
-                  <?php 
-                    // Retrieve the category name based on the category ID
-                    $category_id = $item['category_id'];
-                    $category_query = $conn->query("SELECT name FROM category_list WHERE id = $category_id");
-                    $category = $category_query->fetch_assoc();
-                    echo $category['name']; 
-                  ?>
-                </td>
-                <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($item['date_created'])); ?></td>
-              </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- DASHBOARD IMAGE -->
-<!-- 
-<div class="container-fluid text-center">
-  <img src="<= validate_image($_settings->info('cover')) ?>" alt="system-cover" id="system-cover" class="img-fluid">
-</div> -->

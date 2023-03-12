@@ -19,7 +19,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         </div>
         <div class="form-group">
             <label for="quantity" class="control-label">Quantity</label>
-            <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0 text-right" value="<?= isset($quantity) ? format_num($quantity) : '' ?>" required>
+            <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0" value="<?= isset($quantity) ? format_num($quantity) : '' ?>" required>
         </div>
         <div class="form-group">
             <label for="remarks" class="control-label">Remarks</label>
