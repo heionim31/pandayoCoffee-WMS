@@ -43,8 +43,8 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                             <col width="5%">
                             <col width="20%">
                             <col width="5%">
-                            <col width="15%">
-                            <col width="15%">
+                            <col width="16%">
+                            <col width="14%">
                             <col width="40%">
                         </colgroup>
                         <thead>
@@ -59,21 +59,22 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                         </thead>
                         <tbody>
                             <?php 
-                            $g_total = 0;
-                            $i = 1;
-                            $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit, s.date, s.expire_date 
-                                FROM `stockin_list` s 
-                                INNER JOIN `item_list` i ON s.item_id = i.id 
-                                INNER JOIN `category_list` c ON i.category_id = c.id 
-                                WHERE date_format(s.date_created, '%Y-%m') = '{$month}' 
-                                UNION ALL
-                                SELECT s.*, i.name as `item`, c.name as `category`, i.unit, s.date, s.expire_date 
-                                FROM `stockin_list_deleted` s 
-                                INNER JOIN `item_list` i ON s.item_id = i.id 
-                                INNER JOIN `category_list` c ON i.category_id = c.id 
-                                WHERE date_format(s.date_created, '%Y-%m') = '{$month}'
-                                ORDER BY date_created DESC");
-                            while($row = $stock->fetch_assoc()):
+                                $g_total = 0;
+                                $i = 1;
+                                $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit, s.date, s.expire_date 
+                                                        FROM `stockin_list` s 
+                                                        INNER JOIN `item_list` i ON s.item_id = i.id 
+                                                        INNER JOIN `category_list` c ON i.category_id = c.id 
+                                                        WHERE date_format(s.date_created, '%Y-%m') = '{$month}' 
+                                                        UNION ALL
+                                                        SELECT s.*, i.name as `item`, c.name as `category`, i.unit, s.date, s.expire_date 
+                                                        FROM `stockin_list_deleted` s 
+                                                        INNER JOIN `item_list` i ON s.item_id = i.id 
+                                                        INNER JOIN `category_list` c ON i.category_id = c.id 
+                                                        WHERE date_format(s.date_created, '%Y-%m') = '{$month}'
+                                                        ORDER BY date_created DESC");
+
+                                while($row = $stock->fetch_assoc()):
                             ?>
                             <tr>
                                 <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
@@ -94,6 +95,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                                     <td class="py-1 text-center" colspan="6">No records found</td>
                                 </tr>
                             <?php endif; ?>
+
                         </tbody>
                     </table>
                 </div>

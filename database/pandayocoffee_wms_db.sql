@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2023 at 02:52 PM
+-- Generation Time: Mar 10, 2023 at 05:14 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -89,34 +89,34 @@ INSERT INTO `item_list` (`id`, `category_id`, `name`, `unit`, `description`, `st
 CREATE TABLE `stockin_list` (
   `id` int(30) NOT NULL,
   `item_id` int(30) NOT NULL,
-  `date` date NOT NULL,
   `quantity` float(12,2) NOT NULL DEFAULT 0.00,
   `remarks` text NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `expire_date` date NOT NULL,
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `date` date DEFAULT NULL,
+  `expire_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `stockin_list`
 --
 
-INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `expire_date`, `date_updated`) VALUES
-(2, 4, '2022-05-28', 25.00, 'Sample', '2022-05-28 10:48:35', '0000-00-00', '2023-02-20 10:50:30'),
-(4, 4, '2022-05-13', 35.00, 'Test #101', '2022-05-28 10:57:15', '0000-00-00', '2023-02-20 10:57:15'),
-(5, 3, '2022-05-19', 35.00, 'Sample', '2022-05-28 11:27:48', '0000-00-00', '2023-02-20 11:27:48'),
-(6, 4, '2023-02-19', 5.00, 'goods', '2023-02-19 18:28:25', '0000-00-00', '2023-02-19 18:28:25'),
-(7, 3, '2023-02-19', 5.00, 'add new 5 garlic', '2023-02-19 20:43:25', '0000-00-00', '2023-02-19 20:43:25'),
-(8, 8, '2023-02-20', 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '0000-00-00', '2023-02-20 20:19:13'),
-(9, 3, '2023-02-24', 100.00, 'add fresh', '2023-02-24 23:05:56', '0000-00-00', '2023-02-24 23:05:56'),
-(11, 1, '2023-02-25', 5.00, 'zs', '2023-02-25 10:48:10', '0000-00-00', '2023-02-25 10:48:10'),
-(23, 18, '2023-01-01', 35.00, 'Expired 2 days ago', '2023-03-03 10:32:24', '2023-03-01', '2023-03-03 14:26:51'),
-(25, 18, '2023-01-01', 30.00, 'Expired soon', '2023-03-03 10:33:27', '2023-03-05', '2023-03-03 10:33:27'),
-(33, 18, '2023-01-03', 100.00, 'sdfsdfs', '2023-03-03 14:17:21', '2023-03-01', '2023-03-03 14:17:21'),
-(34, 18, '2023-01-01', 100.00, 'sa', '2023-03-03 15:21:23', '2023-03-04', '2023-03-03 15:21:23'),
-(36, 18, '2023-01-01', 200.00, 'eyy\r\n', '2023-03-03 15:56:37', '2023-02-28', '2023-03-03 15:56:37'),
-(37, 18, '2023-01-01', 50.00, 'sdfsd', '2023-03-03 18:41:59', '2023-02-02', '2023-03-03 18:41:59'),
-(38, 18, '2023-01-01', 40.00, 'awea', '2023-03-03 18:48:42', '2023-02-12', '2023-03-03 18:48:42');
+INSERT INTO `stockin_list` (`id`, `item_id`, `quantity`, `remarks`, `date_created`, `date_updated`, `date`, `expire_date`) VALUES
+(2, 4, 25.00, 'Sample', '2022-05-28 10:48:35', '2023-02-20 10:50:30', '2022-05-28', '0000-00-00'),
+(4, 4, 35.00, 'Test #101', '2022-05-28 10:57:15', '2023-02-20 10:57:15', '2022-05-13', '0000-00-00'),
+(5, 3, 35.00, 'Sample', '2022-05-28 11:27:48', '2023-02-20 11:27:48', '2022-05-19', '0000-00-00'),
+(6, 4, 5.00, 'goods', '2023-02-19 18:28:25', '2023-02-19 18:28:25', '2023-02-19', '0000-00-00'),
+(7, 3, 5.00, 'add new 5 garlic', '2023-02-19 20:43:25', '2023-02-19 20:43:25', '2023-02-19', '0000-00-00'),
+(8, 8, 10.00, 'Fresh Beef Steak (4 pcs/Pack)', '2023-02-20 20:19:13', '2023-02-20 20:19:13', '2023-02-20', '0000-00-00'),
+(9, 3, 100.00, 'add fresh', '2023-02-24 23:05:56', '2023-02-24 23:05:56', '2023-02-24', '0000-00-00'),
+(11, 1, 5.00, 'zs', '2023-02-25 10:48:10', '2023-02-25 10:48:10', '2023-02-25', '0000-00-00'),
+(61, 18, 50.00, 'sdfsfs', '2023-03-10 11:48:16', '2023-03-10 11:48:16', '2023-01-01', '2023-02-02'),
+(62, 18, 100.00, 'sdasd', '2023-03-10 11:48:29', '2023-03-10 11:48:29', '2023-01-01', '2023-02-02'),
+(63, 18, 150.00, 'sadsdf', '2023-03-10 11:48:38', '2023-03-10 11:48:38', '2023-01-01', '2023-02-02'),
+(64, 18, 200.00, 'fdsfs', '2023-03-10 11:48:47', '2023-03-10 11:48:47', '2023-01-01', '2023-02-02'),
+(65, 18, 250.00, 'sdfsd', '2023-03-10 11:48:55', '2023-03-10 11:48:55', '2023-01-01', '2023-02-02'),
+(66, 18, 250.00, 'asdsd', '2023-03-10 11:49:05', '2023-03-10 11:49:05', '2023-01-01', '2023-02-02'),
+(67, 18, 400.00, 'dsfsfser', '2023-03-10 11:49:15', '2023-03-10 11:49:15', '2023-01-01', '2023-02-02');
 
 -- --------------------------------------------------------
 
@@ -127,21 +127,39 @@ INSERT INTO `stockin_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `dat
 CREATE TABLE `stockin_list_deleted` (
   `id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `date` date NOT NULL,
   `quantity` decimal(10,2) NOT NULL,
   `remarks` text DEFAULT NULL,
   `date_created` datetime NOT NULL,
-  `expire_date` date NOT NULL,
-  `date_updated` datetime NOT NULL
+  `date_updated` datetime NOT NULL,
+  `date` date DEFAULT NULL,
+  `expire_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `stockin_list_deleted`
 --
 
-INSERT INTO `stockin_list_deleted` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `expire_date`, `date_updated`) VALUES
-(22, 18, '2023-01-01', '20.00', 'Expired 1 day ago', '2023-03-03 10:32:00', '2023-03-02', '2023-03-03 10:32:00'),
-(35, 18, '2023-01-01', '50.00', 'asda', '2023-03-03 15:37:37', '2023-03-03', '2023-03-03 15:37:37');
+INSERT INTO `stockin_list_deleted` (`id`, `item_id`, `quantity`, `remarks`, `date_created`, `date_updated`, `date`, `expire_date`) VALUES
+(40, 18, '20.00', 'SDF', '2023-03-10 10:23:49', '2023-03-10 10:23:49', '2023-01-01', '2023-02-02'),
+(41, 18, '200.00', 'ADSAS', '2023-03-10 10:24:00', '2023-03-10 10:24:00', '2023-01-01', '2023-02-02'),
+(43, 18, '100.00', 'sdfs', '2023-03-10 10:38:50', '2023-03-10 10:38:50', '2023-01-01', '2023-02-02'),
+(44, 18, '100.00', 'sf', '2023-03-10 10:39:41', '2023-03-10 10:39:41', '2023-01-01', '2023-02-02'),
+(45, 18, '100.00', 'SDFSD', '2023-03-10 10:40:04', '2023-03-10 10:40:04', '2023-01-01', '2023-02-02'),
+(46, 18, '100.00', 'DFSDF', '2023-03-10 10:40:49', '2023-03-10 10:40:49', '2023-01-01', '2023-02-02'),
+(47, 18, '500.00', 'DFSDF', '2023-03-10 10:41:01', '2023-03-10 10:41:01', '2023-01-01', '2023-02-02'),
+(48, 18, '100.00', 'SDFSD', '2023-03-10 10:45:51', '2023-03-10 10:45:51', '2023-01-01', '2023-02-02'),
+(49, 18, '100.00', 'sdfs', '2023-03-10 10:53:50', '2023-03-10 10:53:50', '2023-01-01', '2023-02-02'),
+(50, 18, '1000.00', 'sdf', '2023-03-10 10:54:33', '2023-03-10 10:54:33', '2023-01-01', '2023-02-02'),
+(51, 18, '100.00', 'sdfs', '2023-03-10 10:55:44', '2023-03-10 10:55:44', '2023-01-01', '2023-02-02'),
+(52, 18, '10000.00', 'stockin remarks', '2023-03-10 10:57:03', '2023-03-10 10:57:03', '2023-01-01', '2023-02-03'),
+(53, 18, '100.00', 'STOCKIN', '2023-03-10 10:58:00', '2023-03-10 10:58:00', '2023-01-01', '2023-02-08'),
+(54, 18, '100.00', 'sdfsdfsdfsdf', '2023-03-10 10:59:07', '2023-03-10 10:59:07', '2023-01-01', '2023-02-02'),
+(55, 9, '5000.00', 'STOCKINNN', '2023-03-10 11:00:06', '2023-03-10 11:00:06', '2023-01-29', '2023-03-09'),
+(56, 18, '12345.00', 'fixxxx', '2023-03-10 11:01:41', '2023-03-10 11:01:41', '2023-01-01', '2023-02-02'),
+(57, 18, '20000.00', 'TANGENAAAMM', '2023-03-10 11:35:24', '2023-03-10 11:35:24', '2023-01-09', '2023-03-09'),
+(58, 18, '1.00', 'sef', '2023-03-10 11:39:14', '2023-03-10 11:39:14', '2023-01-01', '2023-02-02'),
+(59, 18, '2.00', 'sdfs', '2023-03-10 11:40:48', '2023-03-10 11:40:48', '2023-01-01', '2023-02-02'),
+(60, 18, '3.00', 'sdfsdfsdasdfsercwerwa4t34', '2023-03-10 11:44:31', '2023-03-10 11:44:31', '2023-01-01', '2023-02-02');
 
 -- --------------------------------------------------------
 
@@ -258,6 +276,7 @@ CREATE TABLE `waste_list` (
   `date` date NOT NULL,
   `quantity` float(12,2) NOT NULL DEFAULT 0.00,
   `remarks` text NOT NULL,
+  `expire_date` date DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -266,11 +285,16 @@ CREATE TABLE `waste_list` (
 -- Dumping data for table `waste_list`
 --
 
-INSERT INTO `waste_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `date_created`, `date_updated`) VALUES
-(1, 4, '2022-05-28', 5.00, 'Rotten', '2023-02-20 11:03:06', '2023-02-22 20:08:18'),
-(2, 4, '2023-02-19', 10.00, 'Expired ', '2023-02-19 20:07:16', '2023-02-19 20:07:16'),
-(3, 18, '2023-03-02', 20.00, 'sample', '2023-03-08 22:21:20', '2023-03-08 22:21:20'),
-(4, 18, '2023-03-03', 50.00, 'dapat waste list', '2023-03-09 21:52:08', '2023-03-09 21:52:08');
+INSERT INTO `waste_list` (`id`, `item_id`, `date`, `quantity`, `remarks`, `expire_date`, `date_created`, `date_updated`) VALUES
+(52, 18, '2023-01-01', 10000.00, 'stockin remarks', '2023-02-03', '2023-03-10 10:57:03', '2023-03-10 10:57:03'),
+(53, 18, '2023-01-01', 100.00, 'exp', '2023-02-08', '2023-03-10 10:58:00', '2023-03-10 10:58:00'),
+(54, 18, '2023-01-01', 100.00, 'new', '2023-02-02', '2023-03-10 10:59:07', '2023-03-10 10:59:07'),
+(55, 9, '2023-01-29', 5000.00, 'dapat sa expired', '2023-03-09', '2023-03-10 11:00:06', '2023-03-10 11:00:06'),
+(56, 18, '2023-01-01', 12345.00, 'not fixxx', '2023-02-02', '2023-03-10 11:01:41', '2023-03-10 11:01:41'),
+(57, 18, '2023-01-09', 20000.00, 'TANGENAAMMMMMMMMMM', '2023-03-09', '2023-03-10 11:35:24', '2023-03-10 11:35:24'),
+(58, 18, '2023-01-01', 1.00, 'sefff', '2023-02-02', '2023-03-10 11:39:14', '2023-03-10 11:39:14'),
+(59, 18, '2023-01-01', 2.00, 'w', '2023-02-02', '2023-03-10 11:40:48', '2023-03-10 11:40:48'),
+(60, 18, '2023-01-01', 3.00, 'tang', '2023-02-02', '2023-03-10 11:44:31', '2023-03-10 11:44:31');
 
 --
 -- Indexes for dumped tables
@@ -354,13 +378,13 @@ ALTER TABLE `item_list`
 -- AUTO_INCREMENT for table `stockin_list`
 --
 ALTER TABLE `stockin_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `stockin_list_deleted`
 --
 ALTER TABLE `stockin_list_deleted`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `stockout_list`
@@ -390,7 +414,7 @@ ALTER TABLE `users_list`
 -- AUTO_INCREMENT for table `waste_list`
 --
 ALTER TABLE `waste_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- Constraints for dumped tables

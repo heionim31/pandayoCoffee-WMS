@@ -45,8 +45,6 @@
 						$i = 1;
 						$qry = $conn->query("SELECT i.*, c.name as `category`, (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0)) as `available`, (SELECT date_updated FROM `stockin_list` where item_id = i.id ORDER BY date_updated DESC LIMIT 1) as `last_updated` from `item_list` i inner join category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.date_updated desc ");
 						
-
-
 						while($row = $qry->fetch_assoc()):
 							$name = $row['name'];
 							$available_quantity = (int)$row['available'];
