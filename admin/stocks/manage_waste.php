@@ -14,7 +14,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
         <input type="hidden" name="item_id" value="<?= isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '') ?>">
         <div class="form-group">
-            <label for="date" class="control-label">Date</label>
+            <label for="date" class="control-label">Expiration Date</label>
             <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($date) ? $date : '' ?>" max="<?= date("Y-m-d") ?>" required>
         </div>
         <div class="form-group">

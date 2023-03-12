@@ -1,4 +1,3 @@
-
 <style>
   .sidebar a.nav-link.active{
     color:#fff !important;
@@ -8,12 +7,12 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 5%;
+    height: 5%; 
   }
 
   .logos .logo-img {
-    width: 80px !important;
-    height: 80px !important;
+    max-width: 100px;
+    height: 100px !important;
     max-height: unset;
   }
 
@@ -37,13 +36,15 @@
 
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-white navbar-dark elevation-4 sidebar-no-expand dark-bg">
+
   <!-- Brand Logo -->
   <a href="<?php echo base_url ?>admin" class="brand-link bg-white text-sm">
     <div class="logos">
-      <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 50%; height: 100%;">
+      <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 55% ; height: 100%; "> 
       <span class="brand-text font-normal shortName"><?php echo $_settings->info('short_name') ?></span>
     </div>
   </a>
+
   </br>
   
   <!-- Sidebar -->
@@ -88,33 +89,97 @@
                 </a>
               </li> 
 
-              <li class="nav-item dropdown">
-                <a href="./?page=items" class="nav-link nav-items">
-                  <i class="nav-icon fa fa-cubes"></i>
-                  <p style="color:white">
-                    Item List
-                  </p>
-                </a>
-              </li> 
-
-              <li class="nav-item dropdown">
-                <a href="./?page=stocks" class="nav-link nav-stocks">
+              <!-- STOCKS DROP-DOWN -->
+              <li class="nav-item">
+                <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-warehouse"></i>
                   <p style="color:white">
-                    Stock Manager
+                    Stocks
+                    <i class="right fas fa-angle-left"></i>
+                    <?php
+                      // Count the total number of items with stock status level and expired items
+                      $count = 0;
+
+                      // Count items with stock status level
+                      $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i INNER JOIN category_list c ON i.category_id = c.id INNER JOIN stock_notif s ON s.id = 1 WHERE i.delete_flag = 0 AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) <= s.min_stock OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) >= s.max_stock)");
+                      $count += $qry_count->fetch_assoc()['count'];
+
+                      // Count expired items
+                      $qry_count = $conn->query("SELECT COUNT(*) AS count FROM stockin_list WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'");
+                      $count += $qry_count->fetch_assoc()['count'];
+
+                      // Display the total count if there are items with stock status level or expired items
+                      if ($count > 0) {
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      }
+                    ?>
+                    
                   </p>
                 </a>
-              </li>
-              
-              <li class="nav-item dropdown">
-                <a href="./?page=minimum_notif" class="nav-link nav-minimum_stocks">
-                <i class="nav-icon fas fa-bell"></i>
-                  <p style="color:white">
-                    Stock Notifications
-                  </p>
-                </a>
+
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="./?page=items" class="nav-link tree-item nav-items">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Stock Information</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=stocks" class="nav-link tree-item nav-stocks">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Stock Adjustment</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=setNotif" class="nav-link tree-item nav-setNotif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Set Stock Notification</p>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p style="color:white">Stock Status Level</p>
+                      <?php
+                        // display the badge element inside the list item
+                        $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i INNER JOIN category_list c ON i.category_id = c.id INNER JOIN stock_notif s ON s.id = 1 WHERE i.delete_flag = 0 AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) <= s.min_stock OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` WHERE item_id = i.id),0)) >= s.max_stock)");
+                        $count = $qry_count->fetch_assoc()['count'];
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      ?>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=stockExpiration" class="nav-link tree-item nav-stockExpiration">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p style="color:white">Expired Stocks</p>
+                        <?php
+                        // Count the number of expired items in the database
+                        $expired_items_count = $conn->query("
+                        SELECT COUNT(*) AS count
+                        FROM stockin_list
+                        WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'
+                        
+                        ");
+                        $expired_items_count = $expired_items_count->fetch_assoc()['count'];
+
+                        // Display the badge if there are expired items
+                        if ($expired_items_count > 0) {
+                            echo '<span class="badge badge-danger">'.$expired_items_count.'</span>';
+                        }
+                        ?>
+                      </a>
+                  </li>
+
+                </ul>
               </li>
 
+
+
+              <!-- REPORTS DROPDOWN -->
               <?php if($_settings->userdata('type') == 1): ?>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
@@ -135,7 +200,7 @@
 
                     <li class="nav-item">
                       <a href="./?page=reports/stockout" class="nav-link tree-item nav-reports_stockout">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="far fa-circle nav-icon flex-direction: column" ></i>
                         <p style="color:white">Monthly Stock-Out Report</p>
                       </a>
                     </li>
@@ -154,7 +219,7 @@
 
                 <li class="nav-item dropdown">
                   <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link  nav-user_list" >
-                    <i class="nav-icon fas fa-users-cog" ></i>
+                    <i class="nav-icon fas fa-users-cog flex-direction: column" ></i>
                     <p style="color:white">
                       User List
                     </p>
@@ -178,7 +243,6 @@
     </div>
 
     
-
     <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
       <div class="os-scrollbar-track">
         <div class="os-scrollbar-handle" style="width: 100%; transform: translate(0px, 0px);"></div>
@@ -192,10 +256,7 @@
     </div>
 
     <div class="os-scrollbar-corner"></div>
-
   </div>
-
-
 </aside>
      
      
@@ -222,4 +283,7 @@
     // ACTIVE HOVER
     $('.nav-link.active').addClass('bg-gradient-orange')
   })
+
+  // TO SHOW NUMBERS BESIDES DROPDOWN WHEN NOT ACTIVE AND HIDE WHEN THE DROPDOWN IS INACTIVE
+
 </script>

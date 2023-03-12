@@ -14,6 +14,7 @@
 
   .topBarContent {
     color: white;
+    top: -15%;
   }
 
   .topBarContent:hover {
@@ -22,17 +23,17 @@
 </style>
 
 
-<!-- Navbar -->
+<!-- Navbar --> 
 <nav class="main-header navbar navbar-expand navbar-new-grey text-sm">
 
   <!-- Left navbar links -->
   <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link topBarContent" data-widget="pushmenu" href="#" role="button"><i class="fas fa-solid fa-arrow-left"></i></a>
+        <a class="nav-link topBarContent" data-widget="pushmenu" href="#" role="button"><i class="fa">&#xf0c9;</i></a>
       </li>
 
       <!-- Display Current Page Name -->
-      <li class="nav-item d-none d-sm-inline-block ">
+      <li class="nav-item d-none d-sm-inline-block">
         <?php 
           $pageTitle = '';
           if(isset($_GET['page'])) {
@@ -41,14 +42,20 @@
                 $pageTitle = 'Categories';
                 break;
               case 'items':
-                $pageTitle = 'Item List';
+                $pageTitle = 'Stock Information';
                 break;
               case 'stocks':
-                $pageTitle = 'Stock Manager';
+                $pageTitle = 'Stock Adjustment';
                 break;
-              case 'minimum_notif':
-                $pageTitle = 'Stock Notifications';
+              case 'setNotif':
+                $pageTitle = 'Set Stock Notifications';
                 break;
+              case 'stockStatus':
+                $pageTitle = 'Stock Status Level';
+                break;
+                case 'stockExpiration':
+                  $pageTitle = 'Expired Stocks';
+                  break;
               case 'reports/stockin':
                 $pageTitle = 'Reports / Stock-In Reports';
                 break;
@@ -112,9 +119,9 @@
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" role="menu">
-              <a class="dropdown-item" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> My Account</a>
+              <a class="dropdown-item" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> Profile</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Logout</a>
+              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a>
             </div>
         </div>
     </li>
@@ -128,4 +135,3 @@
     </li> -->
   </ul>
 </nav>
-<!-- /.navbar -->

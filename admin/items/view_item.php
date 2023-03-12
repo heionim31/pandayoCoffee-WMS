@@ -21,9 +21,11 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 <div class="container-fluid">
 	<dl>
 		<dt class="text-muted">Category</dt>
-		<dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>
+		<dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>	
 		<dt class="text-muted">Name</dt>
 		<dd class="pl-4"><?= isset($name) ? $name : "" ?></dd>
+		<dt class="text-muted">Expiration</dt>
+		<dd class="pl-4"><?= isset($date_expiration) ? $date_expiration : "" ?></dd>
 		<dt class="text-muted">Unit</dt>
 		<dd class="pl-4"><?= isset($unit) ? $unit : "" ?></dd>
 		<dt class="text-muted">Description</dt>

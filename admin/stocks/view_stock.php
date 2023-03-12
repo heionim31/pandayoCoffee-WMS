@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT i.*, c.name as `category`,( COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `waste_list` where item_id = i.id),0) ) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+    $qry = $conn->query("SELECT i.*, c.name as `category`, (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0)) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
     if($qry->num_rows > 0){
         foreach($qry->fetch_assoc() as $k => $v){
             $$k=$v;
@@ -12,38 +12,51 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 	echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
 }
 ?>
-<div class="content bg-gradient-dark py-5 px-4">
-    <h3 class="font-weight-bolder">Stock Details</h3>
-</div>
+
+<div class="row mt-n4 justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+        <div class="card card-outline card-dark rounded-0 shadow printout">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <h3 class="font-weight-bolder text-center">Stock Details</h3>
+                </div>
+            </div>
+        </div>          
+    </div>
+</div>          
+
 <div class="row mt-n4 justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
         <div class="card rounded-0 shadow">
             <div class="card-footer py-1 text-center">
-                <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
                 <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
             </div>
         </div>
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
                 <div class="card-title"><b>Item Details</b></div>
+                <div class="card-tools">
+                    <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
+		        </div>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
                     <fieldset>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Category</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Category</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($category) ? $category : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Item Name</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
+                            
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Unit</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Unit</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($unit) ? $unit : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-dark m-0 p-1 border">Available</div>
+                            <div class="col-4 bg-gradient-orange text-bold text-white m-0 p-1 border">Available</div>
                             <div class="col-8 m-0 p-1 border font-weight-bolder"><?= isset($available) ? format_num($available) : '' ?></div>
                         </div>
                     </fieldset>
@@ -62,10 +75,13 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 <table class="table table-bordered table-stripped" id="stockin-tbl">
                     <thead>
                         <tr>
-                            <th class="p-1 text-center">Date</th>
+                            <!-- This is in DB column "Date" -->
                             <th class="p-1 text-center">Quantity</th>
+                            <th class="p-1 text-center">Manufactured Date</th> 
+                            <th class="p-1 text-center">Expiration Date</th>
                             <th class="p-1 text-center">Remarks</th>
                             <th class="p-1 text-center">Action</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -75,9 +91,15 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $stockins->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <!-- Quantity -->
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <!-- Date -->
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <!-- Expiration -->
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['expire_date'])) ?></td>
+                            <!-- Remarks -->
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
+                            <!-- Action -->
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockin" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
@@ -115,9 +137,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $stockouts->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockout" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
@@ -155,9 +177,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         while($row = $wastes->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-right"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
                                     <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_waste" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
