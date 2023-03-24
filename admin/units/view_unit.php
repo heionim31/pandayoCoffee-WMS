@@ -1,16 +1,16 @@
 <?php
-	require_once('./../../config.php');
+require_once('./../../config.php');
 	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT i.*, c.name as `category` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+		$qry = $conn->query("SELECT * from `unit_list` where id = '{$_GET['id']}' and delete_flag = 0 ");
 		if($qry->num_rows > 0){
 			foreach($qry->fetch_assoc() as $k => $v){
 				$$k=$v;
 			}
 		}else{
-			echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
+			echo '<script>alert("unit ID is not valid."); location.replace("./?page=units")</script>';
 		}
 	}else{
-		echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
+		echo '<script>alert("unit ID is Required."); location.replace("./?page=units")</script>';
 	}
 ?>
 
@@ -26,12 +26,8 @@
 	<dl>
 		<dt class="text-muted">Name</dt>
 		<dd class="pl-4"><?= isset($name) ? $name : "" ?></dd>
-		<dt class="text-muted">Category</dt>
-		<dd class="pl-4"><?= isset($category) ? $category : "" ?></dd>	
-		<dt class="text-muted">Item Type</dt>
-		<dd class="pl-4"><?= isset($item_type) ? $item_type : "" ?></dd>
-		<dt class="text-muted">Unit</dt>
-		<dd class="pl-4"><?= isset($unit) ? $unit : "" ?></dd>
+		<dt class="text-muted">Abbreviation</dt>
+		<dd class="pl-4"><?= isset($abbreviation) ? $abbreviation : "" ?></dd>
 		<dt class="text-muted">Description</dt>
 		<dd class="pl-4"><?= isset($description) ? str_replace(["\n\r", "\n", "\r"],"<br>", htmlspecialchars_decode($description)) : '' ?></dd>
 		<dt class="text-muted">Status</dt>
@@ -44,6 +40,7 @@
 		</dd>
 	</dl>
 </div>
+
 
 <hr class="mx-n3">
 

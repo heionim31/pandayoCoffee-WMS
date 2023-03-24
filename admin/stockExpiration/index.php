@@ -7,7 +7,6 @@
             <table class="table table-hover table-striped table-bordered text-center" id="list">
                 <colgroup>
                     <col width="5%">
-                    <!-- <col width="5%"> -->
                     <col width="15%">
                     <col width="5%">
                     <col width="10%">
@@ -23,7 +22,7 @@
                         <th class="d-none">Item ID</th>
                         <th>Item</th>
                         <th>Unit</th>
-                        <th>Current Stock</th>
+                        <th>Stocks</th>
                         <th>Manufactured Date</th>
                         <th>Expiration Date</th>
                         <th>Expiry Status</th>
@@ -151,8 +150,8 @@
                                     </td>
                                     <td><?= $item['unit'] ?></td>
                                     <td><?= (int)$item['quantity'] ?></td>
-                                    <td><?= date('m-d-Y', strtotime($item['date'])) ?></td>
-                                    <td><?= date('m-d-Y', strtotime($item['expire_date'])) ?></td>
+                                    <td><?= date("Y-m-d",strtotime($item['date'])) ?></td>
+                                    <td><?= date("Y-m-d",strtotime($item['expire_date'])) ?></td>
                                     <td class="<?= $expiry_class ?>"><?= $expiry_status ?></td>
                                     <td><?= $message ?></td>
                                     <td>
@@ -166,12 +165,12 @@
                                             <!-- <button type="submit" name="submit" class="btn btn-danger btn-sm">
                                                 <i class="fa fa-trash"></i>
                                             </button> -->
-                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal">
+                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal<?= $id ?>">
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                             
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <!-- MODAL FORM FOR EXPIRATION -->
+                                            <div class="modal fade" id="myModal<?= $id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                     <div class="modal-header">

@@ -1,6 +1,6 @@
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
-		<h3 class="card-title">Stock Status</h3>
+		<h3 class="card-title">Stock Status Level</h3>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
@@ -69,7 +69,7 @@
 							<td class="<?= $class ?>"><strong><?= $title ?></strong></td>
 							<td><?= $message ?></td>
 							<td><a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> Adjust</a>
- </td>
+ 							</td>
 						</tr>
 				<?php endwhile; ?>
 				</tbody>
