@@ -1,9 +1,11 @@
 
 <?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
+	<script>
+		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+	</script>
 <?php endif;?>
+
+
 <style>
     .user-avatar{
         width:3rem;
@@ -12,6 +14,8 @@
         object-position:center center;
     }
 </style>
+
+
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
 		<h3 class="card-title">List of Users</h3>
@@ -21,24 +25,24 @@
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
-			<table class="table table-hover table-striped table-bordered" id="list">
+			<table class="table table-hover table-striped table-bordered text-center" id="list">
 				<colgroup>
 					<col width="5%">
-					<col width="15%">
-					<col width="15%">
+					<col width="10%">
 					<col width="25%">
 					<col width="15%">
-					<col width="10%">
 					<col width="15%">
+					<col width="20%">
+					<col width="10%">
 				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Date Updated</th>
 						<th>Avatar</th>
 						<th>Name</th>
 						<th>Username</th>
 						<th>Type</th>
+						<th>Last Updated</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -49,15 +53,10 @@
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
-							<!-- ID -->
 							<td class="text-center"><?php echo $i++; ?></td>
-							<!-- Date Updated -->
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
-							<!-- Avatar -->
 							<td class="text-center">
                                 <img src="<?= validate_image($row['avatar']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
                             </td>
-							<!-- name -->
 							<td><?php echo $row['name'] ?></td>
 							<td><?php echo $row['username'] ?></td>
 							<td class="text-center">
@@ -69,6 +68,7 @@
 									N/A
                                 <?php endif; ?>
                             </td>
+							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])); ?></td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
 				                  		Action
@@ -87,6 +87,8 @@
 		</div>
 	</div>
 </div>
+
+
 <script>
 	$(document).ready(function(){
 		$('.delete_data').click(function(){
@@ -100,6 +102,7 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
+
 	function delete_user($id){
 		start_loader();
 		$.ajax({

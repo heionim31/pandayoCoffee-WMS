@@ -1,8 +1,10 @@
 <?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
+	<script>
+		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+	</script>
 <?php endif;?>
+
+
 <style>
 	.item-img{
 		width:1em;
@@ -11,9 +13,11 @@
 		object-position:center center;
 	}
 </style>
+
+
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
-		<h3 class="card-title">List of Items</h3>
+		<h3 class="card-title">Stock Information</h3>
 		<div class="card-tools">
 			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
 		</div>
@@ -24,51 +28,50 @@
 				<colgroup>
 					<col width="5%">
 					<col width="15%">
-					<col width="20%">
-					<col width="35%">
 					<col width="15%">
+					<col width="30%">
+					<col width="15%">
+					<col width="10%">
 					<col width="10%">
 				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Date Created</th>
+						
 						<th>Item</th>
+						<th>Item Type</th>
 						<th>Description</th>
+						<th>Date Created</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php 
-					$i = 1;
-						$qry = $conn->query("SELECT i.*, c.name as `category` from `item_list` i inner join category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.`name` asc ");
+						$i = 1;
+						$qry = $conn->query("SELECT i.*, c.name as `category`, i.item_type from `item_list` i inner join category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.`date_created` desc");
 						while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
-							
-							<!-- Id -->
 							<td class="text-center"><?php echo $i++; ?></td>
-							<!-- Date Created -->
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
-							<!-- Item -->
+							
 							<td class="">
 								<div style="line-height:1em">
 									<div><?= $row['name'] ?> [<?= $row['unit'] ?>]</div>
 									<div><small class="text-muted"><?= $row['category'] ?></small></div>
 								</div>
 							</td>
-							<!-- Item Description -->
+							<td><?= $row['item_type'] ?></td>
+
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
+							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
 							<td class="text-center">
-								<!-- Status -->
                                 <?php if($row['status'] == 1): ?>
                                     <span class="badge badge-success px-3 rounded-pill">Active</span>
                                 <?php else: ?>
                                     <span class="badge badge-danger px-3 rounded-pill">Inactive</span>
                                 <?php endif; ?>
                             </td>
-							<!-- Action -->
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
 				                  		Action
@@ -89,6 +92,8 @@
 		</div>
 	</div>
 </div>
+
+
 <script>
 	$(document).ready(function(){
 		$('.delete_data').click(function(){
