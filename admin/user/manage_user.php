@@ -1,16 +1,18 @@
 <?php 
-if(isset($_GET['id'])){
-    $user = $conn->query("SELECT * FROM users_list where id ='{$_GET['id']}' ");
-    foreach($user->fetch_array() as $k =>$v){
-        $meta[$k] = $v;
-    }
-}
+	if(isset($_GET['id'])){
+		$user = $conn->query("SELECT * FROM users_list where id ='{$_GET['id']}' ");
+		foreach($user->fetch_array() as $k =>$v){
+			$meta[$k] = $v;
+		}
+	}
 ?>
 <?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
+	<script>
+		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+	</script>
 <?php endif;?>
+
+
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-body">
 		<div class="container-fluid">
@@ -43,7 +45,7 @@ if(isset($_GET['id'])){
                 <div class="form-group">
                     <label for="type" class="control-label">Type</label>
                     <select name="type" id="type" class="form-control form-control-sm rounded-0" required>
-                    <option value="1" <?php echo isset($meta['type']) && $meta['type'] == 1 ? 'selected' : '' ?>>Administrator</option>
+                    <option value="1" <?php echo isset($meta['type']) && $meta['type'] == 1 ? 'selected' : '' ?>>Manager</option>
                     <option value="2" <?php echo isset($meta['type']) && $meta['type'] == 2 ? 'selected' : '' ?>>Staff</option>
                     </select>
                 </div>
@@ -61,14 +63,16 @@ if(isset($_GET['id'])){
 		</div>
 	</div>
 	<div class="card-footer">
-			<div class="col-md-12">
-				<div class="row">
-					<button class="btn btn-sm btn-primary rounded-0 mr-3" form="manage-user">Save User Details</button>
-					<a href="./?page=user/list" class="btn btn-sm btn-default border rounded-0" form="manage-user"><i class="fa fa-angle-left"></i> Cancel</a>
-				</div>
+		<div class="col-md-12">
+			<div class="row">
+				<button class="btn btn-sm btn-primary rounded-0 mr-3" form="manage-user">Save User Details</button>
+				<a href="./?page=user/list" class="btn btn-sm btn-default border rounded-0" form="manage-user"><i class="fa fa-angle-left"></i> Cancel</a>
 			</div>
 		</div>
+	</div>
 </div>
+
+
 <style>
 	img#cimg{
 		height: 15vh;
@@ -77,6 +81,8 @@ if(isset($_GET['id'])){
 		border-radius: 100% 100%;
 	}
 </style>
+
+
 <script>
 	function displayImg(input,_this) {
 	    if (input.files && input.files[0]) {
@@ -90,6 +96,7 @@ if(isset($_GET['id'])){
 			$('#cimg').attr('src', "<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>");
 		}
 	}
+
 	$('#manage-user').submit(function(e){
 		e.preventDefault();
 		start_loader()
@@ -111,5 +118,4 @@ if(isset($_GET['id'])){
 			}
 		})
 	})
-
 </script>

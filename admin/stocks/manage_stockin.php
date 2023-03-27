@@ -1,40 +1,58 @@
 <?php 
-require_once('../../config.php');
-if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `stockin_list` where id = '{$_GET['id']}' ");
-    if($qry->num_rows > 0){
-        foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+    require_once('../../config.php');
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = $conn->query("SELECT * from `stockin_list` where id = '{$_GET['id']}' ");
+        if($qry->num_rows > 0){
+            foreach($qry->fetch_assoc() as $k => $v){
+                $$k=$v;
+            }
         }
     }
-}
+
+    $item_type = "";
+    $item_id = isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '');
+    if(!empty($item_id)) {
+        $item_qry = $conn->query("SELECT item_type FROM `item_list` WHERE id = '$item_id'");
+        if($item_qry->num_rows > 0) {
+            $item_type = $item_qry->fetch_assoc()['item_type'];
+        }
+    }
 ?>
+
+
 <div class="container-fluid">
     <form action="" id="stockin-form">
         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
-        <input type="hidden" name="item_id" value="<?= isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '') ?>">
-        
+        <input type="hidden" name="item_id" value="<?= $item_id ?>">
+
         <div class="form-group">
             <label for="quantity" class="control-label">Quantity</label>
             <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($quantity) ? format_num($quantity) : '' ?>" required>
         </div>
 
         <div class="form-group">
-            <label for="date" class="control-label"> Manufactured Date</label>
+            <label for="date" class="control-label">Date of Receipt</label>
             <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($date) ? $date : '' ?>" max="<?= date("m-d-Y") ?>" required>
         </div>
         
+        <?php if ($item_type != "Non-Perishable"): ?>
         <div class="form-group">
-        <label for="date" class="control-label">Expiration Date</label>
-			<input type="date" name="expire_date" class="form-control form-control-sm rounded-0 " value="<?= isset($expire_date) ? $expire_date : '' ?>" max="<?= date("m-d-Y") ?>" required>
+            <label for="expire_date" class="control-label">Expiration Date</label>
+            <input type="date" name="expire_date" id="expire_date" class="form-control form-control-sm rounded-0 " value="<?= isset($expire_date) ? $expire_date : '' ?>" max="<?= date("m-d-Y") ?>" required>
         </div>
-       
+        <?php else: ?>
+        <input type="hidden" name="expire_date" value="">
+        <?php endif; ?>
+
         <div class="form-group">
             <label for="remarks" class="control-label">Remarks</label>
             <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" required><?= isset($remarks) ? ($remarks) : '' ?></textarea>
         </div>
     </form>
 </div>
+
+
+
 <script>
     $(function(){
         $('#stockin-form').submit(function(e){

@@ -10,6 +10,8 @@ Class Master extends DBConnection {
 	public function __destruct(){
 		parent::__destruct();
 	}
+
+	
 	function capture_err(){
 		if(!$this->conn->error)
 			return false;
@@ -20,6 +22,8 @@ Class Master extends DBConnection {
 			exit;
 		}
 	}
+
+	// IMAGE - DELETE
 	function delete_img(){
 		extract($_POST);
 		if(is_file($path)){
@@ -35,6 +39,9 @@ Class Master extends DBConnection {
 		}
 		return json_encode($resp);
 	}
+
+
+	// CATEGORY - SAVE
 	function save_category(){
 		extract($_POST);
 		$data = "";
@@ -76,6 +83,8 @@ Class Master extends DBConnection {
 		// 	$this->settings->set_flashdata('success',$resp['msg']);
 			return json_encode($resp);
 	}
+
+	// CATEGORY - DELETE
 	function delete_category(){
 		extract($_POST);
 		$del = $this->conn->query("UPDATE `category_list` set `delete_flag` = 1 where id = '{$id}'");
@@ -89,6 +98,66 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 
 	}
+
+
+	// UNIT - SAVE
+	function save_unit(){
+		extract($_POST);
+		$data = "";
+		foreach($_POST as $k =>$v){
+			if(!in_array($k,array('id'))){
+				if(!empty($data)) $data .=",";
+				$v = htmlspecialchars($this->conn->real_escape_string($v));
+				$data .= " `{$k}`='{$v}' ";
+			}
+		}
+		$check = $this->conn->query("SELECT * FROM `unit_list` where `name` = '{$name}' and delete_flag = 0 ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
+		if($this->capture_err())
+			return $this->capture_err();
+		if($check > 0){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "unit already exists.";
+			return json_encode($resp);
+			exit;
+		}
+		if(empty($id)){
+			$sql = "INSERT INTO `unit_list` set {$data} ";
+		}else{
+			$sql = "UPDATE `unit_list` set {$data} where id = '{$id}' ";
+		}
+			$save = $this->conn->query($sql);
+		if($save){
+			$cid = !empty($id) ? $id : $this->conn->insert_id;
+			$resp['cid'] = $cid;
+			$resp['status'] = 'success';
+			if(empty($id))
+				$resp['msg'] = "New Unit successfully saved.";
+			else
+				$resp['msg'] = "Unit successfully updated.";
+		}else{
+			$resp['status'] = 'failed';
+			$resp['err'] = $this->conn->error."[{$sql}]";
+		}
+		return json_encode($resp);
+	}
+	
+	// UNIT - DELETE
+	function delete_unit(){
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `unit_list` set `delete_flag` = 1 where id = '{$id}'");
+		if($del){
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success'," Unit successfully deleted.");
+		}else{
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+
+	}
+	
+
+	// ITEM - SAVE
 	function save_item(){
 		extract($_POST);
 		$data = "";
@@ -181,6 +250,8 @@ Class Master extends DBConnection {
 			$this->settings->set_flashdata('success',$resp['msg']);
 			return json_encode($resp);
 	}
+
+	// ITEM - DELETE
 	function delete_item(){
 		extract($_POST);
 		$del = $this->conn->query("UPDATE `item_list` set `delete_flag` = 1 where id = '{$id}'");
@@ -194,6 +265,9 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 
 	}
+
+
+	// STOCK-IN -  SAVE
 	function save_stockin(){
 		extract($_POST);
 		$data = "";
@@ -224,6 +298,8 @@ Class Master extends DBConnection {
 		}
 		return json_encode($resp);
 	}
+
+	// STOCK-IN - DELETE
 	function delete_stockin(){
 		extract($_POST);
 		$del = $this->conn->query("DELETE FROM `stockin_list` where id = '{$id}'");
@@ -237,12 +313,23 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 
 	}
+
+
+	// STOCK-OUT - SAVE
 	function save_stockout(){
 		extract($_POST);
 		$data = "";
-		foreach($_POST as $k =>$v){
+		foreach($_POST as $k => $v){
 			if(!in_array($k,array('id'))){
 				if(!empty($data)) $data .=",";
+				
+				// Check for negative or zero value
+				if($v <= 0){
+					$resp['status'] = 'failed';
+					$resp['err'] = "Invalid value for {$k}. Please enter a positive value.";
+					return json_encode($resp);
+				}
+				
 				$v = htmlspecialchars($this->conn->real_escape_string($v));
 				$data .= " `{$k}`='{$v}' ";
 			}
@@ -252,7 +339,7 @@ Class Master extends DBConnection {
 		}else{
 			$sql = "UPDATE `stockout_list` set {$data} where id = '{$id}' ";
 		}
-			$save = $this->conn->query($sql);
+		$save = $this->conn->query($sql);
 		if($save){
 			$cid = !empty($id) ? $id : $this->conn->insert_id;
 			$resp['status'] = 'success';
@@ -260,13 +347,14 @@ Class Master extends DBConnection {
 				$this->settings->set_flashdata('success'," Stock-out Data has been added successfully.");
 			else
 				$this->settings->set_flashdata('success'," Stock-out Data successfully updated");
-			
 		}else{
 			$resp['status'] = 'failed';
 			$resp['err'] = $this->conn->error."[{$sql}]";
 		}
 		return json_encode($resp);
 	}
+
+	// STOCK-OUT - DELETE
 	function delete_stockout(){
 		extract($_POST);
 		$del = $this->conn->query("DELETE FROM `stockout_list` where id = '{$id}'");
@@ -280,6 +368,9 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 
 	}
+
+
+	// WASTE - SAVE
 	function save_waste(){
 		extract($_POST);
 		$data = "";
@@ -310,6 +401,8 @@ Class Master extends DBConnection {
 		}
 		return json_encode($resp);
 	}
+
+	// WASTE - DELETE
 	function delete_waste(){
 		extract($_POST);
 		$del = $this->conn->query("DELETE FROM `waste_list` where id = '{$id}'");
@@ -325,45 +418,52 @@ Class Master extends DBConnection {
 	}
 }
 
-$Master = new Master();
-$action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
-$sysset = new SystemSettings();
-switch ($action) {
-	case 'delete_img':
-		echo $Master->delete_img();
-	break;
-	case 'save_category':
-		echo $Master->save_category();
-	break;
-	case 'delete_category':
-		echo $Master->delete_category();
-	break;
-	case 'save_item':
-		echo $Master->save_item();
-	break;
-	case 'delete_item':
-		echo $Master->delete_item();
-	break;
-	case 'save_stockin':
-		echo $Master->save_stockin();
-	break;
-	case 'delete_stockin':
-		echo $Master->delete_stockin();
-	break;
-	case 'save_stockout':
-		echo $Master->save_stockout();
-	break;
-	case 'delete_stockout':
-		echo $Master->delete_stockout();
-	break;
-	case 'save_waste':
-		echo $Master->save_waste();
-	break;
-	case 'delete_waste':
-		echo $Master->delete_waste();
-	break;
-	default:
-		// echo $sysset->index();
+
+	$Master = new Master();
+	$action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
+	$sysset = new SystemSettings();
+	switch ($action) {
+		case 'delete_img':
+			echo $Master->delete_img();
 		break;
-}
+		case 'save_category':
+			echo $Master->save_category();
+		break;
+		case 'delete_category':
+			echo $Master->delete_category();
+		break;
+		case 'save_unit':
+			echo $Master->save_unit();
+		break;
+		case 'delete_unit':
+			echo $Master->delete_unit();
+		break;
+		case 'save_item':
+			echo $Master->save_item();
+		break;
+		case 'delete_item':
+			echo $Master->delete_item();
+		break;
+		case 'save_stockin':
+			echo $Master->save_stockin();
+		break;
+		case 'delete_stockin':
+			echo $Master->delete_stockin();
+		break;
+		case 'save_stockout':
+			echo $Master->save_stockout();
+		break;
+		case 'delete_stockout':
+			echo $Master->delete_stockout();
+		break;
+		case 'save_waste':
+			echo $Master->save_waste();
+		break;
+		case 'delete_waste':
+			echo $Master->delete_waste();
+		break;
+		default:
+			// echo $sysset->index();
+			break;
+	}
 ?>

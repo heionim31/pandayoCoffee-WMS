@@ -9,11 +9,18 @@
 		}
 	}
 ?>
+
+
 <div class="container-fluid">
 	<form action="" id="item-form">
 		<input type="hidden" name ="id" value="<?php echo isset($id) ? $id : '' ?>">
+
 		<div class="form-group">
-			<!-- Category -->
+			<label for="name" class="control-label">Name</label>
+			<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
+		</div>
+
+		<div class="form-group">
 			<label for="category_id" class="control-label">Category</label>
 			<select name="category_id" id="category_id" class="form-control form-control-sm rounded-0" required="required">
 				<option value="" <?= isset($category_id) ? 'selected' : '' ?>></option>
@@ -25,29 +32,35 @@
 				<?php endwhile; ?>
 			</select>
 		</div>
-		<!-- name -->
+
 		<div class="form-group">
-			<label for="name" class="control-label">Name</label>
-			<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
-		</div>
-		<div class="form-group">
-			<!-- Unit -->
-			<label for="unit" class="control-label">Unit</label>
-			<input type="text" name="unit" id="unit" class="form-control form-control-sm rounded-0" value="<?php echo isset($unit) ? $unit : ''; ?>"  required/>
+			<label for="type_id" class="control-label">Item Type</label>
+			<select name="item_type" id="type_id" class="form-control form-control-sm rounded-0" required="required">
+				<option value="" <?= isset($item_type) ? 'selected' : '' ?>></option>
+				<option value="Perishable" <?php echo isset($item_type) && $item_type == 'Perishable' ? 'selected' : ''; ?>>Perishable</option>
+				<option value="Non-Perishable" <?php echo isset($item_type) && $item_type == 'Non-Perishable' ? 'selected' : ''; ?>>Non-Perishable</option>
+			</select>
 		</div>
 
-		<!-- <div class="form-group">
-			<label for="date" class="control-label">Expiration</label>
-			<input type="date" name="date_expiration" class="form-control">
-		</div> -->
+		<div class="form-group">
+			<label for="unit_id" class="control-label">Unit</label>
+			<select name="unit" id="unit_id" class="form-control form-control-sm rounded-0" required="required">
+				<option value="" <?= isset($unit_id) ? 'selected' : '' ?>></option>
+				<?php 
+				$items = $conn->query("SELECT * FROM `unit_list` where delete_flag = 0 and `status` = 1 ");
+				while($row= $items->fetch_assoc()):
+				?>
+				<option value="<?= $row['abbreviation'] ?>" <?= isset($unit_id) && $unit_id == $row['id'] ? 'selected' : '' ?>><?= $row['abbreviation'] ?></option>
+				<?php endwhile; ?>
+			</select>
+		</div>
 		
 		<div class="form-group">
-			<!-- Description -->
 			<label for="description" class="control-label">Description</label>
 			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" required><?php echo isset($description) ? $description : ''; ?></textarea>
 		</div>
+
 		<div class="form-group">
-			<!-- Status -->
 			<label for="status" class="control-label">Status</label>
 			<select name="status" id="status" class="form-control form-control-sm rounded-0" required="required">
 				<option value="1" <?= isset($status) && $status == 1 ? 'selected' : '' ?>>Active</option>
@@ -68,6 +81,25 @@
 				dropdownParent:$('#uni_modal')
 			})
 		})
+
+		$('#uni_modal').on('shown.bs.modal', function(){
+			$('#type_id').select2({
+				placeholder:"Select Item Type Here",
+				width:'100%',
+				containerCssClass:'form-control form-control-sm rounded-0',
+				dropdownParent:$('#uni_modal')
+			})
+		})
+
+		$('#uni_modal').on('shown.bs.modal', function(){
+			$('#unit_id').select2({
+				placeholder:"Select Unit Here",
+				width:'100%',
+				containerCssClass:'form-control form-control-sm rounded-0',
+				dropdownParent:$('#uni_modal')
+			})
+		})
+
 		$('#item-form').submit(function(e){
 			e.preventDefault();
             var _this = $(this)
@@ -91,10 +123,10 @@
 					if(typeof resp =='object' && resp.status == 'success'){
 						// location.reload()
 						alert_toast(resp.msg, 'success')
-						uni_modal("<i class='fa fa-th-list'></i> item Details ","items/view_item.php?id="+resp.iid)
-						$('#uni_modal').on('hide.bs.modal', function(){
-							location.reload()
-						})
+						// Delay the page reload by 2 seconds and redirect to item page
+                        setTimeout(function(){
+                          window.location.href = './?page=items';
+                        }, 1000);
 					}else if(resp.status == 'failed' && !!resp.msg){
                         var el = $('<div>')
                             el.addClass("alert alert-danger err-msg").text(resp.msg)
@@ -113,5 +145,3 @@
 
 	})
 </script>
-
-

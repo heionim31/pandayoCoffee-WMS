@@ -1,95 +1,103 @@
 <?php 
-$month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
+    $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
 ?>
-<div class="content py-5 px-3 bg-gradient-dark">
-    <h2>Monthly Waste Reports</h2>
-</div>
-<div class="row flex-column mt-4 justify-content-center align-items-center mt-lg-n4 mt-md-3 mt-sm-0">
-    <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
-        <div class="card rounded-0 mb-2 shadow">
-            <div class="card-body">
-                <fieldset>
-                    <legend>Filter</legend>
+
+
+<div class="container mt-4 ml-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+            <div class="card rounded-0 mb-2 shadow">
+                <div class="card-header bg-gradient-dark text-white py-3">
+                    <h2 class="card-title mb-0">Monthly Waste Reports</h2>
+                </div>
+                <div class="card-body">
                     <form action="" id="filter-form">
-                        <div class="row align-items-end">
-                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <label for="month" class="control-label">Choose Month</label>
-                                    <input type="month" class="form-control form-control-sm rounded-0" name="month" id="month" value="<?= $month ?>" required="required">
+                        <fieldset>
+                            <legend>Filter</legend>
+                            <div class="row align-items-end">
+                                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 mb-3">
+                                <label for="month" class="form-label">Choose Month</label>
+                                <input type="month" class="form-control form-control-sm rounded-0" name="month" id="month" value="<?= $month ?>" required>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 mb-3">
+                                <button class="btn btn-sm btn-primary bg-gradient-primary" type="submit"><i class="fa fa-filter"></i> Filter</button>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                                <div class="form-group">
-                                    <button class="btn btn-sm btn-flat btn-primary bg-gradient-primary"><i class="fa fa-filter"></i> Filter</button>
-                                </div>
-                            </div>
-                        </div>
+                        </fieldset>
                     </form>
-                </fieldset>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
-        <div class="card rounded-0 mb-2 shadow">
-            <div class="card-header py-1">
-                <div class="card-tools">
-                    <button class="btn btn-flat btn-sm btn-light bg-gradient-light border text-dark" type="button" id="print"><i class="fa fa-print"></i> Print</button>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="container-fluid" id="printout">
-                    <table class="table table-bordered">
-                        <colgroup>
-                            <col width="5%">
-                            <col width="20%">
-                            <col width="5%">
-                            <col width="16%">
-                            <col width="14%">
-                            <col width="40%">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th class="px-1 py-1 text-center">#</th>
-                                <th class="px-1 py-1 text-center">Item</th>
-                                <th class="px-1 py-1 text-center">Quantity</th>
-                                <th class="px-1 py-1 text-center">Manufactured Date</th>
-                                <th class="px-1 py-1 text-center">Expiration Date</th>
-                                <th class="px-1 py-1 text-center">Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                                $g_total = 0;
-                                $i = 1;
-                                $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit FROM `waste_list` s inner join `item_list` i on s.item_id = i.id inner join category_list c on i.category_id = c.id where date_format(s.date_created, '%Y-%m') = '{$month}' order by date(s.`date_created`) asc");
-                                while($row = $stock->fetch_assoc()):
-                                ?>
-                                <tr>
-                                    <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
-                                    <td class="px-1 py-1 align-middle text-center">
-                                        <div line-height="1em">
-                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
-                                            <div class="font-weight-light"><?= $row['category'] ?></div>
-                                        </div>
-                                    </td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                                    <td class="px-1 py-1 align-middle text-center"></td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= date("F d, Y", strtotime($row['date'])) ?></td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                            <?php if($stock->num_rows <= 0): ?>
-                                <tr>
-                                    <td class="py-1 text-center" colspan="5">No records found</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+        </div>
+        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+            <div class="card rounded-0 mb-2 shadow">
+                <div class="card-header bg-white py-2">
+                    <div class="card-tools">
+                        <button class="btn btn-sm btn-light bg-gradient-light border text-dark" type="button" id="print"><i class="fa fa-print"></i> Print</button>
+                    </div>
+                </div>
+                    <div class="card-body">
+                        <div class="container-fluid" id="printout">
+                            <table class="table table-bordered">
+                                <colgroup>
+                                    <col width="5%">
+                                    <col width="20%">
+                                    <col width="5%">
+                                    <col width="16%">
+                                    <col width="14%">
+                                    <col width="40%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="px-1 py-1 text-center">#</th>
+                                        <th class="px-1 py-1 text-center">Item</th>
+                                        <th class="px-1 py-1 text-center">Quantity</th>
+                                        <th class="px-1 py-1 text-center">Manufactured Date</th>
+                                        <th class="px-1 py-1 text-center">Expiration Date</th>
+                                        <th class="px-1 py-1 text-center">Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                        $g_total = 0;
+                                        $i = 1;
+                                        $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit 
+                                                                FROM `waste_list` s 
+                                                                INNER JOIN `item_list` i ON s.item_id = i.id 
+                                                                INNER JOIN `category_list` c ON i.category_id = c.id 
+                                                                WHERE date_format(s.date_created, '%Y-%m') = '{$month}' 
+                                                                ORDER BY s.date_created DESC");
+                                        while($row = $stock->fetch_assoc()):
+                                    ?>
+                                    <tr>
+                                        <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
+                                        <td class="px-1 py-1 align-middle text-center">
+                                            <div line-height="1em">
+                                                <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
+                                                <div class="font-weight-light"><?= $row['category'] ?></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                                        <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['date'])) ?></td>
+                                        <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['expire_date'])) ?></td>
+                                        <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
+                                    </tr>
+                                    <?php endwhile; ?>
+                                    <?php if($stock->num_rows <= 0): ?>
+                                        <tr>
+                                            <td class="py-1 text-center" colspan="5">No records found</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <noscript id="print-header">
     <div>
         <style>
@@ -112,6 +120,8 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
         <hr>
     </div>
 </noscript>
+
+
 <script>
     function print_r(){
         var h = $('head').clone()
@@ -132,6 +142,7 @@ $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
                 }, 200);
             }, 300);
     }
+
     $(function(){
         $('#filter-form').submit(function(e){
             e.preventDefault()

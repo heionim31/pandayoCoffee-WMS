@@ -1,14 +1,16 @@
 <?php 
-$user = $conn->query("SELECT * FROM users_list where id ='".$_settings->userdata('id')."'");
-foreach($user->fetch_array() as $k =>$v){
-	$meta[$k] = $v;
-}
-?>
+	$user = $conn->query("SELECT * FROM users_list where id ='".$_settings->userdata('id')."'");
+		foreach($user->fetch_array() as $k =>$v){
+			$meta[$k] = $v;
+		}
+	?>
 <?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
+	<script>
+		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+	</script>
 <?php endif;?>
+
+
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-body">
 		<div class="container-fluid">
@@ -50,13 +52,15 @@ foreach($user->fetch_array() as $k =>$v){
 		</div>
 	</div>
 	<div class="card-footer">
-			<div class="col-md-12">
-				<div class="row">
-					<button class="btn btn-sm btn-primary" form="manage-user">Update</button>
-				</div>
+		<div class="col-md-12">
+			<div class="row">
+				<button class="btn btn-sm btn-primary" form="manage-user">Update</button>
 			</div>
 		</div>
+	</div>
 </div>
+
+
 <style>
 	img#cimg{
 		height: 15vh;
@@ -65,6 +69,8 @@ foreach($user->fetch_array() as $k =>$v){
 		border-radius: 100% 100%;
 	}
 </style>
+
+
 <script>
 	function displayImg(input,_this) {
 	    if (input.files && input.files[0]) {
@@ -78,6 +84,7 @@ foreach($user->fetch_array() as $k =>$v){
 			$('#cimg').attr('src', "<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>");
 		}
 	}
+	
 	$('#manage-user').submit(function(e){
 		e.preventDefault();
 		start_loader()
@@ -99,5 +106,4 @@ foreach($user->fetch_array() as $k =>$v){
 			}
 		})
 	})
-
 </script>
