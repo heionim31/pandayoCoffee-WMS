@@ -1,32 +1,25 @@
-<?php 
-if(!defined('DB_SERVER')){
+<?php
+if (!defined('DB_SERVER')) {
     require_once("../initialize.php");
 }
-class DBConnection{
 
-    private $host = DB_SERVER;
-    private $username = DB_USERNAME;
-    private $password = DB_PASSWORD;
-    private $database = DB_NAME;
+class DBConnection{
+    private $connectionString = "postgresql://alucemajqcydoqcu:v2_42XaU_7Gg8RKamwJfzNvmjRGYwmmK@db.bit.io:5432/SBIT3HSIA/SIA";
     
     public $conn;
     
     public function __construct(){
-
         if (!isset($this->conn)) {
-            
-            $this->conn = new mysqli($this->host, $this->username, $this->password, $this->database);
-            
+            $this->conn = pg_connect($this->connectionString);
             if (!$this->conn) {
                 echo 'Cannot connect to database server';
                 exit;
             }            
         }    
-        
     }
+    
     public function __destruct(){
-        $this->conn->close();
+        pg_close($this->conn);
     }
 }
 ?>
- 

@@ -1,5 +1,5 @@
 <?php 
-include '../config.php'; 
+  include '../config.php'; 
 ?>
 
 <!DOCTYPE html>
@@ -19,8 +19,7 @@ include '../config.php';
 
       <!-- Content Wrapper. Contains page content -->
       <!-- <div style="height: 200px; color: red; position: fixed"></div> -->
-      <div class="content-wrapper mt-4 pt-5" style="min-height: 567.854px; background: rgb(255,255,255);
-background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(172,114,56,1) 72%);">
+      <div class="content-wrapper mt-4 pt-5" style="min-height: 567.854px; background: rgb(255,255,255); background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(172,114,56,1) 72%);">
     
         <!-- Main content -->
         <section class="content text-dark">
@@ -43,19 +42,18 @@ background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(172,114,56,1) 72%
         <!-- /.content -->
         <div class="modal fade" id="uni_modal" role='dialog'>
           <div class="modal-dialog modal-md modal-dialog-centered rounded-0" role="document">
-
             <div class="modal-content rounded-0">
+
               <div class="modal-header">
                 <h5 class="modal-title"></h5>
-                </div>
+              </div>
 
-                <div class="modal-body">
-                </div>
+              <div class="modal-body"></div>
 
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary rounded-0" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
-                  <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Cancel</button>
-                </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary rounded-0" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
+                <button type="button" class="btn btn-secondary rounded-0" data-dismiss="modal">Cancel</button>
+              </div>
 
               </div>
             </div>
@@ -64,8 +62,8 @@ background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(172,114,56,1) 72%
 
           <div class="modal fade" id="uni_modal_right" role='dialog'>
             <div class="modal-dialog modal-full-height  modal-md rounded-0" role="document">
-
               <div class="modal-content rounded-0">
+
                 <div class="modal-header">
                   <h5 class="modal-title"></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -73,8 +71,8 @@ background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(172,114,56,1) 72%
                   </button>
                 </div>
 
-                <div class="modal-body">
-                </div>
+                <div class="modal-body"></div>
+
               </div>
             </div>
           </div>
@@ -102,18 +100,19 @@ background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(172,114,56,1) 72%
         </div>
 
 
-          <div class="modal fade" id="viewer_modal" role='dialog'>
-            <div class="modal-dialog modal-md" role="document">
-              <div class="modal-content">
-                <button type="button" class="btn-close" data-dismiss="modal"><span class="fa fa-times"></span></button>
-                <img src="" alt="">
-              </div>
+        <div class="modal fade" id="viewer_modal" role='dialog'>
+          <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+              <button type="button" class="btn-close" data-dismiss="modal"><span class="fa fa-times"></span></button>
+              <img src="" alt="">
             </div>
           </div>
+        </div>
       </div>
+    </div>
 
 
       <!-- /.content-wrapper -->
-    <?php require_once('inc/footer.php') ?>
+      <?php require_once('inc/footer.php') ?>
   </body>
 </html>

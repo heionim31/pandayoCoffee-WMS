@@ -48,9 +48,9 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = $conn->query("SELECT * from `category_list` where delete_flag = 0 order by `date_created` desc");
-						while($row = $qry->fetch_assoc()):
-					?>
+						$qry = pg_query($conn, "SELECT * from category_list where delete_flag = 0 order by date_created desc");
+						while($row = pg_fetch_assoc($qry)):
+						?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
 							<td class=""><?= $row['name'] ?></td>
@@ -58,24 +58,24 @@
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
 							<td class="text-center">
-                                <?php if($row['status'] == 1): ?>
-                                    <span class="badge badge-success px-3 rounded-pill">Active</span>
-                                <?php else: ?>
-                                    <span class="badge badge-danger px-3 rounded-pill">Inactive</span>
-                                <?php endif; ?>
-                            </td>
+								<?php if($row['status'] == 1): ?>
+									<span class="badge badge-success px-3 rounded-pill">Active</span>
+								<?php else: ?>
+									<span class="badge badge-danger px-3 rounded-pill">Inactive</span>
+								<?php endif; ?>
+							</td>
 							<td align="center">
-								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-				                  		Action
-				                    <span class="sr-only">Toggle Dropdown</span>
-				                  </button>
-				                  <div class="dropdown-menu" role="menu">
-				                    <a class="dropdown-item view-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
-				                    <div class="dropdown-divider"></div>
-				                    <a class="dropdown-item edit-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
-				                    <div class="dropdown-divider"></div>
-				                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
-				                  </div>
+								<button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+										Action
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu" role="menu">
+									<a class="dropdown-item view-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item edit-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+								</div>
 							</td>
 						</tr>
 					<?php endwhile; ?>

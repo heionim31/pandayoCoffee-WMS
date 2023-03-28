@@ -12,24 +12,27 @@ class SystemSettings extends DBConnection{
 	function check_connection(){
 		return($this->conn);
 	}
+
+	// LOAD SYSTEM INFO
 	function load_system_info(){
-		// if(!isset($_SESSION['system_info'])){
-			$sql = "SELECT * FROM system_info";
-			$qry = $this->conn->query($sql);
-				while($row = $qry->fetch_assoc()){
-					$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
-				}
-		// }
+		$sql = "SELECT * FROM system_info";
+		$qry = pg_query($this->conn, $sql);
+		while($row = pg_fetch_assoc($qry)){
+			$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
+		}
 	}
+
+	// UPDATE SYSTEM INFO
 	function update_system_info(){
 		$sql = "SELECT * FROM system_info";
-		$qry = $this->conn->query($sql);
-			while($row = $qry->fetch_assoc()){
-				if(isset($_SESSION['system_info'][$row['meta_field']]))unset($_SESSION['system_info'][$row['meta_field']]);
-				$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
-			}
+		$qry = pg_query($this->conn, $sql);
+		while($row = pg_fetch_assoc($qry)){
+			if(isset($_SESSION['system_info'][$row['meta_field']])) unset($_SESSION['system_info'][$row['meta_field']]);
+			$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
+		}
 		return true;
 	}
+	
 	function update_settings_info(){
 		$data = "";
 		foreach ($_POST as $key => $value) {

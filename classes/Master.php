@@ -48,27 +48,31 @@ Class Master extends DBConnection {
 		foreach($_POST as $k =>$v){
 			if(!in_array($k,array('id'))){
 				if(!empty($data)) $data .=",";
-				$v = htmlspecialchars($this->conn->real_escape_string($v));
-				$data .= " `{$k}`='{$v}' ";
+				$v = pg_escape_string($v);
+				$data .= " {$k}='{$v}' ";
 			}
 		}
-		$check = $this->conn->query("SELECT * FROM `category_list` where `name` = '{$name}' and delete_flag = 0 ".(!empty($id) ? " and id != {$id} " : "")." ")->num_rows;
-		if($this->capture_err())
-			return $this->capture_err();
-		if($check > 0){
+		$check = pg_query($this->conn, "SELECT * FROM category_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
+		if(!$check){
+			$resp['status'] = 'failed';
+			$resp['err'] = pg_last_error($this->conn);
+			return json_encode($resp);
+			exit;
+		}
+		if(pg_num_rows($check) > 0){
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Category already exists.";
 			return json_encode($resp);
 			exit;
 		}
 		if(empty($id)){
-			$sql = "INSERT INTO `category_list` set {$data} ";
+			$sql = "INSERT INTO category_list (name, description, status) VALUES ('{$name}', '{$description}', '{$status}') ";
 		}else{
-			$sql = "UPDATE `category_list` set {$data} where id = '{$id}' ";
+			$sql = "UPDATE category_list SET {$data} WHERE id = '{$id}' ";
 		}
-			$save = $this->conn->query($sql);
+		$save = pg_query($this->conn, $sql);
 		if($save){
-			$cid = !empty($id) ? $id : $this->conn->insert_id;
+			$cid = !empty($id) ? $id : pg_last_oid($save);
 			$resp['cid'] = $cid;
 			$resp['status'] = 'success';
 			if(empty($id))
@@ -77,27 +81,28 @@ Class Master extends DBConnection {
 				$resp['msg'] = " Category successfully updated.";
 		}else{
 			$resp['status'] = 'failed';
-			$resp['err'] = $this->conn->error."[{$sql}]";
+			$resp['err'] = pg_last_error($this->conn);
 		}
 		// if($resp['status'] == 'success')
 		// 	$this->settings->set_flashdata('success',$resp['msg']);
 			return json_encode($resp);
 	}
 
+	
 	// CATEGORY - DELETE
 	function delete_category(){
 		extract($_POST);
-		$del = $this->conn->query("UPDATE `category_list` set `delete_flag` = 1 where id = '{$id}'");
+		$del = pg_query($this->conn, "UPDATE category_list SET delete_flag = 1 WHERE id = '{$id}'");
 		if($del){
 			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success'," Category successfully deleted.");
-		}else{
+			$this->settings->set_flashdata('success', "Category successfully deleted.");
+		} else {
 			$resp['status'] = 'failed';
-			$resp['error'] = $this->conn->error;
+			$resp['error'] = pg_last_error($this->conn);
 		}
 		return json_encode($resp);
-
 	}
+	
 
 
 	// UNIT - SAVE

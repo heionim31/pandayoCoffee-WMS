@@ -1,9 +1,11 @@
 <?php
 	require_once('./../../config.php');
 	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT * from `category_list` where id = '{$_GET['id']}' and `delete_flag` = 0 ");
-		if($qry->num_rows > 0){
-			foreach($qry->fetch_assoc() as $k => $v){
+		$id = pg_escape_string($conn, $_GET['id']);
+		$qry = pg_query($conn, "SELECT * FROM category_list WHERE id = $id AND delete_flag = 0");
+		if(pg_num_rows($qry) > 0){
+			$row = pg_fetch_assoc($qry);
+			foreach($row as $k => $v){
 				$$k=$v;
 			}
 		}
@@ -70,7 +72,7 @@
                             $("html, body").scrollTop(0);
                             end_loader()
                     }else{
-						alert_toast("An error occured",'error');
+						alert_toast("An error 2 occured",'error');
 						end_loader();
                         console.log(resp)
 					}
