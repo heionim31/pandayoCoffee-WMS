@@ -41,7 +41,7 @@
 						<th>Avatar</th>
 						<th>Name</th>
 						<th>Username</th>
-						<th>Type</th>
+						<th>Role</th>
 						<th>Last Updated</th>
 						<th>Action</th>
 					</tr>
@@ -49,26 +49,26 @@
 				<tbody>
 					<?php 
 					$i = 1;
-						$qry = $conn->query("SELECT *, concat(firstname,' ', coalesce(concat(middlename,' '), '') , lastname) as `name` from `users_list` where id != '{$_settings->userdata('id')}' order by concat(firstname,' ', lastname) asc ");
-						while($row = $qry->fetch_assoc()):
+						$qry = pg_query($conn, "SELECT * from users where department = 'warehouse' ORDER BY fullname ASC");
+						while($row = pg_fetch_assoc($qry)):
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
 							<td class="text-center">
-                                <img src="<?= validate_image($row['avatar']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
+                                <img src="<?= validate_image($row['imgurl']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
                             </td>
-							<td><?php echo $row['name'] ?></td>
+							<td><?php echo $row['fullname'] ?></td>
 							<td><?php echo $row['username'] ?></td>
 							<td class="text-center">
-                                <?php if($row['type'] == 1): ?>
+                                <?php if($row['role'] == 'warehouse_manager'): ?>
                                     Administrator
-                                <?php elseif($row['type'] == 2): ?>
+                                <?php elseif($row['role'] == 'warehouse_staff'): ?>
                                     Staff
                                 <?php else: ?>
 									N/A
                                 <?php endif; ?>
                             </td>
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])); ?></td>
+							<td><?php echo $row['email'] ?></td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
 				                  		Action

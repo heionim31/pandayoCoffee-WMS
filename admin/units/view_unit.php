@@ -1,17 +1,16 @@
 <?php
-require_once('./../../config.php');
-	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT * from `unit_list` where id = '{$_GET['id']}' and delete_flag = 0 ");
-		if($qry->num_rows > 0){
-			foreach($qry->fetch_assoc() as $k => $v){
-				$$k=$v;
-			}
-		}else{
-			echo '<script>alert("unit ID is not valid."); location.replace("./?page=units")</script>';
-		}
-	}else{
-		echo '<script>alert("unit ID is Required."); location.replace("./?page=units")</script>';
-	}
+    require_once('./../../config.php');
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = pg_query($conn, "SELECT * from unit_list where id = '{$_GET['id']}' and delete_flag = 0 ");
+        if(pg_num_rows($qry) > 0){
+            $result = pg_fetch_assoc($qry);
+            extract($result);
+        }else{
+            echo '<script>alert("unit ID is not valid."); location.replace("./?page=units")</script>';
+        }
+    }else{
+        echo '<script>alert("unit ID is Required."); location.replace("./?page=units")</script>';
+    }
 ?>
 
 

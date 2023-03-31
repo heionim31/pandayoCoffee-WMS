@@ -45,28 +45,28 @@
                             $sql = "INSERT INTO waste_list (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
                             SELECT id, item_id, date, quantity, '$remarks', date_created, expire_date, date_updated FROM stockin_list 
                             WHERE id = $id";
-                            $result = mysqli_query($conn, $sql);
+                            $result = pg_query($conn, $sql);
 
                             // Copy the deleted row to stockin_list_deleted table
                             $sql = "INSERT INTO stockin_list_deleted (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
                             SELECT id, item_id, date, quantity, remarks, date_created, expire_date, date_updated FROM stockin_list 
                             WHERE id = $id";
-                            
-                            $result = mysqli_query($conn, $sql);
+                            $result = pg_query($conn, $sql);
 
                             if ($result) {
                                 // Delete data from stockin_list table
                                 $sql = "DELETE FROM stockin_list WHERE id = $id";
-                                $result = mysqli_query($conn, $sql);
-                            
+                                $result = pg_query($conn, $sql);
+                                
                                 if ($result) {
                                     $notification_updated = true;
                                 } else {
-                                    $notification_error = mysqli_error($conn);
+                                    $notification_error = pg_last_error($conn);
                                 }
                             } else {
-                                $notification_error = mysqli_error($conn);
+                                $notification_error = pg_last_error($conn);
                             }
+                            
                             
                             if (isset($notification_updated) && $notification_updated) {
                                 echo '<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
@@ -98,11 +98,13 @@
                         // Get the stock items that have expired, will expire today, or will expire tomorrow
                         $today = date('Y-m-d');
                         $tomorrow = date('Y-m-d', strtotime('+1 day'));
-                        $stock_items = $conn->query("SELECT s.*, i.name, i.unit, i.id AS item_id, c.name AS category_name 
-                                                    FROM stockin_list s 
-                                                    INNER JOIN item_list i ON s.item_id = i.id 
-                                                    INNER JOIN category_list c ON i.category_id = c.id
-                                                    WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') AND s.expire_date != '0000-00-00'");
+                        $stock_items = pg_query($conn, "SELECT s.*, i.name, i.unit, i.id AS item_id, c.name AS category_name 
+                                FROM stockin_list s 
+                                INNER JOIN item_list i ON s.item_id = i.id 
+                                INNER JOIN category_list c ON i.category_id = c.id
+                                WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') 
+                                AND (s.expire_date IS NOT NULL)"); 
+                        $stock_items = pg_fetch_all($stock_items);
 
                         // Initialize the ID variable
                         $id = 1;

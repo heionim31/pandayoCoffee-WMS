@@ -1,4 +1,7 @@
 <?php
+    // Establish a connection to the database
+
+
     // Check if the "Set Notification" button was clicked
     if (isset($_POST['set_notification'])) {
         // Get the minimum and maximum stock values from the form
@@ -7,20 +10,20 @@
 
         // Update the values in the stock_notif table
         $sql = "UPDATE stock_notif SET min_stock='$min_stock', max_stock='$max_stock' WHERE id=1";
-        if ($conn->query($sql) === TRUE) {
+        $result = pg_query($conn, $sql);
+        if ($result) {
             $notification_updated = true;
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $sql . "<br>" . pg_last_error($conn);
         }
     }
 
     // Select the data from the stock_notif table
     $sql = "SELECT * FROM stock_notif WHERE id=1";
-    $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-        }
+    $result = pg_query($conn, $sql);
+    $row = pg_fetch_assoc($result);
 ?>
+
 
 
 <div class="col-lg-12">

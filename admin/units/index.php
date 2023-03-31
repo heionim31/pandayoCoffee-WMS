@@ -50,9 +50,8 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = $conn->query("SELECT * from `unit_list` where delete_flag = 0 ORDER BY date_created DESC");
-
-						while($row = $qry->fetch_assoc()):
+						$qry = pg_query($conn, "SELECT * from unit_list where delete_flag = 0 ORDER BY date_created DESC");
+						while($row = pg_fetch_assoc($qry)):
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>

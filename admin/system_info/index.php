@@ -1,8 +1,9 @@
 <?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
+	<script>
+		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+	</script>
 <?php endif;?>
+
 
 <style>
 	img#cimg{
@@ -18,6 +19,8 @@
 		/* border-radius: 100% 100%; */
 	}
 </style>
+
+
 <div class="col-lg-12">
 	<div class="card card-outline rounded-0 card-dark">
 		<div class="card-header">
@@ -77,6 +80,8 @@
 
 	</div>
 </div>
+
+
 <script>
 	function displayImg(input,_this) {
 	    if (input.files && input.files[0]) {
@@ -89,6 +94,7 @@
 	        reader.readAsDataURL(input.files[0]);
 	    }
 	}
+
 	function displayImg2(input,_this) {
 	    if (input.files && input.files[0]) {
 	        var reader = new FileReader();
@@ -100,6 +106,7 @@
 	        reader.readAsDataURL(input.files[0]);
 	    }
 	}
+
 	function displayImg3(input,_this) {
 		var fnames = [];
 		Object.keys(input.files).map(function(k){
@@ -108,6 +115,7 @@
 		})
 		_this.siblings('.custom-file-label').html(fnames.join(", "))
 	}
+	
 	function delete_img($path){
         start_loader()
         
@@ -136,6 +144,7 @@
             }
         })
     }
+	
 	$(document).ready(function(){
 		$('.rem_img').click(function(){
             _conf("Are sure to delete this image permanently?",'delete_img',["'"+$(this).attr('data-path')+"'"])

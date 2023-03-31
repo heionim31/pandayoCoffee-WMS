@@ -60,13 +60,13 @@
                                     <?php 
                                         $g_total = 0;
                                         $i = 1;
-                                        $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit 
-                                                                FROM `waste_list` s 
-                                                                INNER JOIN `item_list` i ON s.item_id = i.id 
-                                                                INNER JOIN `category_list` c ON i.category_id = c.id 
-                                                                WHERE date_format(s.date_created, '%Y-%m') = '{$month}' 
-                                                                ORDER BY s.date_created DESC");
-                                        while($row = $stock->fetch_assoc()):
+                                        $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit 
+                                                                    FROM waste_list s 
+                                                                    INNER JOIN item_list i ON s.item_id = i.id 
+                                                                    INNER JOIN category_list c ON i.category_id = c.id 
+                                                                    WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}' 
+                                                                    ORDER BY s.date_created DESC");
+                                        while($row = pg_fetch_assoc($stock)):
                                     ?>
                                     <tr>
                                         <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
@@ -82,7 +82,7 @@
                                         <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
                                     </tr>
                                     <?php endwhile; ?>
-                                    <?php if($stock->num_rows <= 0): ?>
+                                    <?php if(pg_num_rows($stock) <= 0): ?>
                                         <tr>
                                             <td class="py-1 text-center" colspan="5">No records found</td>
                                         </tr>
