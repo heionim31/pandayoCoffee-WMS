@@ -86,9 +86,6 @@
 
 <script>
 	$(document).ready(function(){
-		$('.delete_data').click(function(){
-			_conf("Are you sure to delete this enroll permanently?","delete_enroll",[$(this).attr('data-id')])
-		})
 		$('.table').dataTable({
 			columnDefs: [
 					{ orderable: false, targets: [5] }
@@ -97,26 +94,4 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
-	function delete_enroll($id){
-		start_loader();
-		$.ajax({
-			url:_base_url_+"classes/Master.php?f=delete_enroll",
-			method:"POST",
-			data:{id: $id},
-			dataType:"json",
-			error:err=>{
-				console.log(err)
-				alert_toast("An error occured.",'error');
-				end_loader();
-			},
-			success:function(resp){
-				if(typeof resp== 'object' && resp.status == 'success'){
-					location.reload();
-				}else{
-					alert_toast("An error occured.",'error');
-					end_loader();
-				}
-			}
-		})
-	}
 </script>

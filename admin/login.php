@@ -1,14 +1,17 @@
 <?php 
-require_once
-('../config.php') 
+    require_once
+    ('../config.php') 
 ?>
+
 <!DOCTYPE html>
 <html lang="en" class="" style="height: auto">
     <?php require_once('inc/header.php') ?>
+
     <body class="hold-transition login-page">
         <script>
             start_loader()
         </script>
+
         <style>
             body {
                 background-image: url("<?php echo validate_image($_settings->info('cover')) ?>");
@@ -23,11 +26,9 @@ require_once
                 background: #8080801c;
             }
         </style>
-        <h1 class="text-center text-white px-4 py-5" id="page-title">
-            <b><?php echo $_settings->info('name') ?></b>
-        </h1>
+
+        <h1 class="text-center text-white px-4 py-5" id="page-title"><b><?php echo $_settings->info('name') ?></b></h1>
         <div class="login-box">
-            <!-- /.login-logo -->
             <div class="card card-dark my-2">
                 <div class="card-body">
                     <p class="login-box-msg">Please enter your credentials</p>
@@ -61,31 +62,17 @@ require_once
                         </div>
                         <div class="row">
                             <div class="col-8">
-                                <!-- <a href="< ?php echo base_url ?>">Go to Website</a> -->
+                                <!-- FORGOT PASSWORD -->
                             </div>
-                            <!-- /.col -->
                             <div class="col-4">
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary btn-block"
-                                >
-                                    Sign In
-                                </button>
+                                <button type="submit" class="btn btn-primary btn-block"> Sign In</button>
                             </div>
-                            <!-- /.col -->
                         </div>
                     </form>
-                    <!-- /.social-auth-links -->
-
-                    <!-- <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
-      </p> -->
                 </div>
-                <!-- /.card-body -->
             </div>
-            <!-- /.card -->
         </div>
-        <!-- /.login-box -->
+
 
         <!-- jQuery -->
         <script src="<?= base_url ?>plugins/jquery/jquery.min.js"></script>
@@ -99,5 +86,6 @@ require_once
               end_loader();
             })
         </script>
+
     </body>
 </html>

@@ -1,9 +1,9 @@
 <?php
 	require_once('./../../config.php');
 	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT * from `item_list` where id = '{$_GET['id']}' and `delete_flag` = 0 ");
-		if($qry->num_rows > 0){
-			foreach($qry->fetch_assoc() as $k => $v){
+		$qry = pg_query($conn, "SELECT * FROM item_list where id = '{$_GET['id']}' and delete_flag = 0 ");
+		if(pg_num_rows($qry) > 0){
+			foreach(pg_fetch_assoc($qry) as $k => $v){
 				$$k=$v;
 			}
 		}
@@ -25,8 +25,8 @@
 			<select name="category_id" id="category_id" class="form-control form-control-sm rounded-0" required="required">
 				<option value="" <?= isset($category_id) ? 'selected' : '' ?>></option>
 				<?php 
-				$items = $conn->query("SELECT * FROM `category_list` where delete_flag = 0 and `status` = 1 ");
-				while($row= $items->fetch_assoc()):
+				$items = pg_query($conn, "SELECT * FROM category_list where delete_flag = 0 and status = 1 ");
+				while($row= pg_fetch_assoc($items)):
 				?>
 				<option value="<?= $row['id'] ?>" <?= isset($category_id) && $category_id == $row['id'] ? 'selected' : '' ?>><?= $row['name'] ?></option>
 				<?php endwhile; ?>
@@ -47,8 +47,8 @@
 			<select name="unit" id="unit_id" class="form-control form-control-sm rounded-0" required="required">
 				<option value="" <?= isset($unit_id) ? 'selected' : '' ?>></option>
 				<?php 
-				$items = $conn->query("SELECT * FROM `unit_list` where delete_flag = 0 and `status` = 1 ");
-				while($row= $items->fetch_assoc()):
+				$items = pg_query($conn, "SELECT * FROM unit_list where delete_flag = 0 and status = 1 ");
+				while($row= pg_fetch_assoc($items)):
 				?>
 				<option value="<?= $row['abbreviation'] ?>" <?= isset($unit_id) && $unit_id == $row['id'] ? 'selected' : '' ?>><?= $row['abbreviation'] ?></option>
 				<?php endwhile; ?>

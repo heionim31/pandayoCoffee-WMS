@@ -304,7 +304,6 @@
         <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-item"><i class="fas fa-plus-square"></i> Item</a>
         <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-category"><i class="fas fa-plus-square"></i> Category</a>
         <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-unit"><i class="fas fa-plus-square"></i> Unit</a>
-        <a class="dropdown-item global-add-dditem" href="./?page=user/manage_user" id="sc-new-unit"><i class="fas fa-plus-square"></i> User</a>
       </div>
     </div>
 

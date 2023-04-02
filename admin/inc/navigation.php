@@ -99,9 +99,6 @@
                 </a>
               </li> 
 
-              
-
-
               <!-- STOCKS DROP-DOWN -->
               <li class="nav-item">
                 <a href="#" class="nav-link">
@@ -202,10 +199,8 @@
                 </ul>
               </li>
 
-
-
               <!-- REPORTS DROPDOWN -->
-              <?php if($_settings->userdata('type') == 0): ?>
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-chart-bar"></i>

@@ -116,6 +116,7 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
+	
 	function delete_item($id){
 		start_loader();
 		$.ajax({

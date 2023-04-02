@@ -868,7 +868,6 @@
                       <td class="align-middle"><?php echo $id++; ?></td>
                       <td class="align-middle"><?php echo $units['name']; ?></td>
                       <td class="align-middle"><?php echo $units['abbreviation']; ?></td>
-
                       <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($units['date_created'])); ?></td>
                     </tr>
                     <?php endforeach; ?>
@@ -894,40 +893,25 @@
                       <th>#</th>
                       <th>Full Name</th>
                       <th>Type</th>
-                      <th>Date Created</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                        // Retrieve the 5 most recent items
-                        $sql = "SELECT * FROM users_list ORDER BY date_added DESC LIMIT 5";
-                        $result = pg_query($conn, $sql);
-
-                        // Create an array to store the recent items
-                        $recent_users = array();
-                        if (pg_num_rows($result) > 0) {
-                            while($row = pg_fetch_assoc($result)) {
-                                $recent_users[] = $row;
-                            }
-                        }
+                      // Retrieve the 5 most recent items
+                      $sql = "SELECT * FROM users WHERE role IN ('warehouse_manager', 'warehouse_staff') LIMIT 5";
+                      $result = pg_query($conn, $sql);
+                      // Create an array to store the recent users
+                      $recent_users = pg_fetch_all($result);
+                      // Initialize the ID counter
+                      $id = 1;
                     ?>
-                    <?php $id = 1; foreach($recent_users as $users): ?>
+                    <?php foreach($recent_users as $users): ?>
                       <tr>
-                          <td class="align-middle"><?php echo $id++; ?></td>
-                          <td class="align-middle">
-                              <?php 
-                                  $name = $users['firstname'];
-                                  if (!empty($users['middlename'])) {
-                                      $name .= ' ' . $users['middlename'] . '.';
-                                  }
-                                  $name .= ' ' . $users['lastname'];
-                                  echo $name;
-                              ?>
-                          </td>
-                          <td class="align-middle"><?php echo ($users['type'] == 1) ? "Manager" : "Staff"; ?></td>
-                          <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($users['date_added'])); ?></td>
+                        <td class="align-middle"><?php echo $id++; ?></td>
+                        <td class="align-middle"><?php echo $users['fullname']; ?></td>
+                        <td class="align-middle"><?php echo ($users['role'] == 'warehouse_manager') ? "Manager" : "Staff"; ?></td>
                       </tr>
-                      <?php endforeach; ?>
+                    <?php endforeach; ?>
                   </tbody>
                 </table>
               </div>
@@ -974,62 +958,3 @@
 <div class="container-fluid text-center">
   <img src="<= validate_image($_settings->info('cover')) ?>" alt="system-cover" id="system-cover" class="img-fluid">
 </div> -->
-
-
-<!-- TABLE FOR STOCK ALERTS -->
-    <!-- <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Stock Alerts</h5>
-          <div class="card-tools">
-            <a href="./?page=stockStatus" class="btn btn-flat btn-success rounded"></span>View All</a>
-          </div>
-        </div>
-        <div class="card-body">
-          <#php
-            // Define the query to retrieve the latest stockin_list records for each item_id
-            $query = "SELECT item_list.id, item_list.name, 
-                (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
-                (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
-                ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = item_list.id),0) - 
-                COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = item_list.id),0)) AS `available`
-            FROM item_list 
-            ORDER BY date_updated DESC LIMIT 5";
-
-            // Execute the query
-            $result = mysqli_query($conn, $query);
-          #>
-
-          <#php while ($row = mysqli_fetch_assoc($result)) {
-            $name = $row['name'];
-            $min_stock = $row['min_stock'];
-            $max_stock = $row['max_stock'];
-            $available_quantity = (int)$row['available'];
-
-            // Initialize variables
-            $message = '';
-            $class = '';
-
-            if ($available_quantity == 0) {
-              $message = "Out of Stock: " . $name . " is currently out of stock. Please consider ordering more.";
-              $class = "alert alert-danger";
-            } elseif ($available_quantity <= $min_stock ) {
-              $message = "Low Stock: Only " . $available_quantity . " of " . $name . " is available. Please consider ordering more.";
-              $class = "alert alert-warning";
-            } elseif ($available_quantity >= $max_stock) {
-              $message = "Over Stock: You have " . $available_quantity . " too many " . $name . ". Consider reducing your order to save costs.";
-              $class = "alert alert-info";
-            }
-
-            // Output row with status message
-            echo '<div class="' . $class . '">' .
-                '<strong>' . $message . '</strong>' .
-                '</div>';
-          } #>
-              
-        </div>
-      </div>
-    </div> -->
-    
