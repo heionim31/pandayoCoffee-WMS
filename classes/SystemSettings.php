@@ -18,21 +18,21 @@
 		}
 
 		// LOAD SYSTEM INFO
-		function load_system_info(){
-			$sql = "SELECT * FROM system_info";
+		function load_wh_system_info(){
+			$sql = "SELECT * FROM wh_system_info";
 			$qry = pg_query($this->conn, $sql);
 			while($row = pg_fetch_assoc($qry)){
-				$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
+				$_SESSION['wh_system_info'][$row['meta_field']] = $row['meta_value'];
 			}
 		}
 
 		// UPDATE SYSTEM INFO
-		function update_system_info(){
-			$sql = "SELECT * FROM system_info";
+		function update_wh_system_info(){
+			$sql = "SELECT * FROM wh_system_info";
 			$qry = pg_query($this->conn, $sql);
 			while($row = pg_fetch_assoc($qry)){
-				if(isset($_SESSION['system_info'][$row['meta_field']])) unset($_SESSION['system_info'][$row['meta_field']]);
-				$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
+				if(isset($_SESSION['wh_system_info'][$row['meta_field']])) unset($_SESSION['wh_system_info'][$row['meta_field']]);
+				$_SESSION['wh_system_info'][$row['meta_field']] = $row['meta_value'];
 			}
 			return true;
 		}
@@ -41,11 +41,11 @@
 			$data = "";
 			foreach ($_POST as $key => $value) {
 				if(!in_array($key,array("content")))
-				if(isset($_SESSION['system_info'][$key])){
+				if(isset($_SESSION['wh_system_info'][$key])){
 					$value = str_replace("'", "&apos;", $value);
-					$qry = pg_query($this->conn, "UPDATE system_info set meta_value = '{$value}' where meta_field = '{$key}' ");
+					$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = '{$value}' where meta_field = '{$key}' ");
 				}else{
-					$qry = pg_query($this->conn, "INSERT into system_info set meta_value = '{$value}', meta_field = '{$key}' ");
+					$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$value}', meta_field = '{$key}' ");
 				}
 			}
 
@@ -75,11 +75,11 @@
 				unlink(base_app.$fname);
 				$upload =imagepng($temp,base_app.$fname);
 				if($upload){
-					if(isset($_SESSION['system_info']['logo'])){
-						$qry = pg_query($this->conn, "UPDATE system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'logo' ");
-						if(is_file(base_app.$_SESSION['system_info']['logo'])) unlink(base_app.$_SESSION['system_info']['logo']);
+					if(isset($_SESSION['wh_system_info']['logo'])){
+						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'logo' ");
+						if(is_file(base_app.$_SESSION['wh_system_info']['logo'])) unlink(base_app.$_SESSION['wh_system_info']['logo']);
 					}else{
-						$qry = pg_query($this->conn, "INSERT into system_info set meta_value = '{$fname}',meta_field = 'logo' ");
+						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$fname}',meta_field = 'logo' ");
 					}
 				}
 				imagedestroy($temp);
@@ -105,11 +105,11 @@
 				unlink(base_app.$fname);
 				$upload =imagepng($temp,base_app.$fname);
 				if($upload){
-					if(isset($_SESSION['system_info']['cover'])){
-						$qry = pg_query($this->conn, "UPDATE system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'cover' ");
-						if(is_file(base_app.$_SESSION['system_info']['cover'])) unlink(base_app.$_SESSION['system_info']['cover']);
+					if(isset($_SESSION['wh_system_info']['cover'])){
+						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'cover' ");
+						if(is_file(base_app.$_SESSION['wh_system_info']['cover'])) unlink(base_app.$_SESSION['wh_system_info']['cover']);
 					}else{
-						$qry = pg_query($this->conn, "INSERT into system_info set meta_value = '{$fname}',meta_field = 'cover' ");
+						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$fname}',meta_field = 'cover' ");
 					}
 				}
 				imagedestroy($temp);
@@ -170,7 +170,7 @@
 				}
 			}
 			
-			$update = $this->update_system_info();
+			$update = $this->update_wh_system_info();
 			$flash = $this->set_flashdata('success','System Info Successfully Updated.');
 			if($update && $flash){
 				// var_dump($_SESSION);
@@ -233,8 +233,8 @@
 
 		function info($field=''){
 			if(!empty($field)){
-				if(isset($_SESSION['system_info'][$field]))
-					return $_SESSION['system_info'][$field];
+				if(isset($_SESSION['wh_system_info'][$field]))
+					return $_SESSION['wh_system_info'][$field];
 				else
 					return false;
 			}else{
@@ -244,7 +244,7 @@
 
 		function set_info($field='',$value=''){
 			if(!empty($field) && !empty($value)){
-				$_SESSION['system_info'][$field] = $value;
+				$_SESSION['wh_system_info'][$field] = $value;
 			}
 		}
 
@@ -270,7 +270,7 @@
 
 	
 	$_settings = new SystemSettings();
-	$_settings->load_system_info();
+	$_settings->load_wh_system_info();
 	$action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
 	$sysset = new SystemSettings();
 	switch ($action) {

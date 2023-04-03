@@ -343,7 +343,7 @@
 
           $query = "SELECT COUNT(*) AS count FROM item_list i 
                     INNER JOIN category_list c ON i.category_id = c.id 
-                    INNER JOIN stock_notif s ON s.id = 1 
+                    INNER JOIN wh_stock_notif s ON s.id = 1 
                     WHERE i.delete_flag = 0 
                     AND ((COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0) - 
                             COALESCE((SELECT SUM(quantity) FROM stockout_list WHERE item_id = i.id),0) - 

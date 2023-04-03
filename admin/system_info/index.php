@@ -36,34 +36,26 @@
 					<label for="short_name" class="control-label">System Short Name</label>
 					<input type="text" class="form-control form-control-sm" name="short_name" id="short_name" value="<?php echo  $_settings->info('short_name') ?>">
 				</div>
-			<!-- <div class="form-group">
-				<label for="" class="control-label">Welcome Content</label>
-	             <textarea name="content[welcome]" id="" cols="30" rows="2" class="form-control summernote">< ?php echo  is_file(base_app.'welcome.html') ? file_get_contents(base_app.'welcome.html') : "" ?></textarea>
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">About Us</label>
-	             <textarea name="content[about]" id="" cols="30" rows="2" class="form-control summernote">< ?php echo  is_file(base_app.'about.html') ? file_get_contents(base_app.'about.html') : "" ?></textarea>
-			</div> -->
-			<div class="form-group">
-				<label for="" class="control-label">System Logo</label>
-				<div class="custom-file">
-	              <input type="file" class="custom-file-input rounded-circle" id="customFile1" name="img" onchange="displayImg(this,$(this))">
-	              <label class="custom-file-label" for="customFile1">Choose file</label>
-	            </div>
-			</div>
-			<div class="form-group d-flex justify-content-center">
-				<img src="<?php echo validate_image($_settings->info('logo')) ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
-			</div>
-			<div class="form-group">
-				<label for="" class="control-label">Website Cover</label>
-				<div class="custom-file">
-	              <input type="file" class="custom-file-input rounded-circle" id="customFile2" name="cover" onchange="displayImg2(this,$(this))">
-	              <label class="custom-file-label" for="customFile2">Choose file</label>
-	            </div>
-			</div>
-			<div class="form-group d-flex justify-content-center">
-				<img src="<?php echo validate_image($_settings->info('cover')) ?>" alt="" id="cimg2" class="img-fluid img-thumbnail bg-gradient-dark border-dark">
-			</div>
+				<div class="form-group">
+					<label for="" class="control-label">System Logo</label>
+					<div class="custom-file">
+					<input type="file" class="custom-file-input rounded-circle" id="customFile1" name="img" onchange="displayImg(this,$(this))">
+					<label class="custom-file-label" for="customFile1">Choose file</label>
+					</div>
+				</div>
+				<div class="form-group d-flex justify-content-center">
+					<img src="<?php echo validate_image($_settings->info('logo')) ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+				</div>
+				<div class="form-group">
+					<label for="" class="control-label">Website Cover</label>
+					<div class="custom-file">
+					<input type="file" class="custom-file-input rounded-circle" id="customFile2" name="cover" onchange="displayImg2(this,$(this))">
+					<label class="custom-file-label" for="customFile2">Choose file</label>
+					</div>
+				</div>
+				<div class="form-group d-flex justify-content-center">
+					<img src="<?php echo validate_image($_settings->info('cover')) ?>" alt="" id="cimg2" class="img-fluid img-thumbnail bg-gradient-dark border-dark">
+				</div>
 			</form>
 		</div>
 		<div class="card-footer">

@@ -214,9 +214,9 @@
         <a href="<?php echo base_url ?>admin/?page=user/list" style="color:black;"> 
           <span class="info-box-number text-left h5">
             <?php 
-              $user = pg_query($conn, "SELECT * FROM users_list");
+              $user = pg_query($conn, "SELECT * FROM users WHERE role IN ('warehouse_manager', 'warehouse_staff')");
               $num_user = pg_num_rows($user);
-              echo number_format($num_user);
+              echo number_format($num_user);              
             ?>
           </span>
           <span class="info-box-text text-left">Total Users</span>
@@ -234,8 +234,8 @@
           <span class="info-box-number text-left h5">
             <?php 
               $query = "SELECT item_list.id, item_list.name, 
-                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
+                  (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
                   (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
                   (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = item_list.id),0) - 
@@ -275,8 +275,8 @@
           <span class="info-box-number text-left h5">
             <?php
               $query = "SELECT item_list.id, item_list.name, 
-                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
+                  (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
                   (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
                   (COALESCE((SELECT SUM(quantity) FROM stockin_list where item_id = item_list.id),0) - 
@@ -315,8 +315,8 @@
           <span class="info-box-number text-left h5">
             <?php 
               $query = "SELECT item_list.id, item_list.name, 
-                        (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                        (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
+                        (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                        (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
                         (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
                         ORDER BY date DESC LIMIT 1) AS latest_quantity,
                         (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = item_list.id),0) - 

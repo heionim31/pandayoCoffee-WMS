@@ -9,7 +9,7 @@
         $max_stock = $_POST['max_stock'];
 
         // Update the values in the stock_notif table
-        $sql = "UPDATE stock_notif SET min_stock='$min_stock', max_stock='$max_stock' WHERE id=1";
+        $sql = "UPDATE wh_stock_notif SET min_stock='$min_stock', max_stock='$max_stock' WHERE id=1";
         $result = pg_query($conn, $sql);
         if ($result) {
             $notification_updated = true;
@@ -19,7 +19,7 @@
     }
 
     // Select the data from the stock_notif table
-    $sql = "SELECT * FROM stock_notif WHERE id=1";
+    $sql = "SELECT * FROM wh_stock_notif WHERE id=1";
     $result = pg_query($conn, $sql);
     $row = pg_fetch_assoc($result);
 ?>

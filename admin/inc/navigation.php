@@ -113,7 +113,7 @@
                       // Count items with stock status level
                       $qry_count = pg_query($conn, "SELECT COUNT(*) as count FROM item_list i 
                           INNER JOIN category_list c ON i.category_id = c.id 
-                          INNER JOIN stock_notif s ON s.id = 1 
+                          INNER JOIN wh_stock_notif s ON s.id = 1 
                           WHERE i.delete_flag = 0 
                           AND ((COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
                           OR (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) >= s.max_stock)");
@@ -161,7 +161,7 @@
                               // Count the items marked as overstock, lowstock, and out of stock
                               $count_query = "SELECT COUNT(*) as count FROM item_list i 
                                               INNER JOIN category_list c ON i.category_id = c.id 
-                                              INNER JOIN stock_notif s ON s.id = 1 
+                                              INNER JOIN wh_stock_notif s ON s.id = 1 
                                               WHERE i.delete_flag = 0 
                                               AND ((COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
                                               OR (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) >= s.max_stock)";
