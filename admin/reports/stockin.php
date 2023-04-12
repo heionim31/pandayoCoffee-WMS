@@ -61,15 +61,15 @@
                                 $g_total = 0;
                                 $i = 1;
                                 $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit, s.date, s.expire_date 
-                                                        FROM stockin_list s 
-                                                        INNER JOIN item_list i ON s.item_id = i.id 
-                                                        INNER JOIN category_list c ON i.category_id = c.id 
+                                                        FROM wh_stockin_list s 
+                                                        INNER JOIN wh_item_list i ON s.item_id = i.id 
+                                                        INNER JOIN wh_category_list c ON i.category_id = c.id 
                                                         WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}'
                                                         UNION ALL
                                                         SELECT s.*, i.name as item, c.name as category, i.unit, s.date, s.expire_date 
-                                                        FROM stockin_list_deleted s 
-                                                        INNER JOIN item_list i ON s.item_id = i.id 
-                                                        INNER JOIN category_list c ON i.category_id = c.id 
+                                                        FROM wh_stockin_list_deleted s 
+                                                        INNER JOIN wh_item_list i ON s.item_id = i.id 
+                                                        INNER JOIN wh_category_list c ON i.category_id = c.id 
                                                         WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}'
                                                         ORDER BY date_created DESC");
 

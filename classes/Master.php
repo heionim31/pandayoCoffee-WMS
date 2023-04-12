@@ -54,7 +54,7 @@
 					$data .= " {$k}='{$v}' ";
 				}
 			}
-			$check = pg_query($this->conn, "SELECT * FROM category_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
+			$check = pg_query($this->conn, "SELECT * FROM wh_category_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
 			if(!$check)
 				return pg_last_error($this->conn);
 			$num_rows = pg_num_rows($check);
@@ -65,9 +65,9 @@
 				exit;
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO category_list (name, description, status) VALUES ('{$name}', '{$description}', '{$status}')";
+				$sql = "INSERT INTO wh_category_list (name, description, status) VALUES ('{$name}', '{$description}', '{$status}')";
 			}else{
-				$sql = "UPDATE category_list SET {$data} WHERE id = '{$id}' ";
+				$sql = "UPDATE wh_category_list SET {$data} WHERE id = '{$id}' ";
 			}
 			$save = pg_query($this->conn, $sql);
 			if($save){
@@ -88,7 +88,7 @@
 		// CATEGORY - DELETE
 		function delete_category(){
 			extract($_POST);
-			$del = pg_query($this->conn, "UPDATE category_list SET delete_flag = 1 WHERE id = '{$id}'");
+			$del = pg_query($this->conn, "UPDATE wh_category_list SET delete_flag = 1 WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success', 'Category successfully deleted.');
@@ -111,7 +111,7 @@
 					$data .= " {$k}='{$v}' ";
 				}
 			}
-			$check = pg_query($this->conn, "SELECT * FROM unit_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
+			$check = pg_query($this->conn, "SELECT * FROM wh_unit_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
 			if(!$check)
 				return pg_last_error($this->conn);
 			$num_rows = pg_num_rows($check);
@@ -122,9 +122,9 @@
 				exit;
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO unit_list (name, abbreviation, description, status) VALUES ('{$name}', '{$abbreviation}', '{$description}', '{$status}')";
+				$sql = "INSERT INTO wh_unit_list (name, abbreviation, description, status) VALUES ('{$name}', '{$abbreviation}', '{$description}', '{$status}')";
 			}else{
-				$sql = "UPDATE unit_list SET {$data} WHERE id = '{$id}' ";
+				$sql = "UPDATE wh_unit_list SET {$data} WHERE id = '{$id}' ";
 			}
 			$save = pg_query($this->conn, $sql);
 			if($save){
@@ -145,7 +145,7 @@
 		// UNIT - DELETE
 		function delete_unit(){
 			extract($_POST);
-			$del = pg_query($this->conn, "UPDATE unit_list SET delete_flag = 1 WHERE id = '{$id}'");
+			$del = pg_query($this->conn, "UPDATE wh_unit_list SET delete_flag = 1 WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success', 'Unit successfully deleted.');
@@ -168,7 +168,7 @@
 					$data .= " {$k}='{$v}' ";
 				}
 			}
-			$check = pg_query($this->conn, "SELECT * FROM item_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
+			$check = pg_query($this->conn, "SELECT * FROM wh_item_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
 			if(!$check)
 				return pg_last_error($this->conn);
 			$num_rows = pg_num_rows($check);
@@ -179,9 +179,9 @@
 				exit;
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO item_list (name, category_id, item_type, unit, description, status) VALUES ('{$name}', '{$category_id}', '{$item_type}', '{$unit}', '{$description}', '{$status}')";
+				$sql = "INSERT INTO wh_item_list (name, category_id, item_type, unit, description, status) VALUES ('{$name}', '{$category_id}', '{$item_type}', '{$unit}', '{$description}', '{$status}')";
 			}else{
-				$sql = "UPDATE item_list set {$data} where id = '{$id}' ";
+				$sql = "UPDATE wh_item_list set {$data} where id = '{$id}' ";
 			}
 			$save = pg_query($this->conn, $sql);
 			if($save){
@@ -236,7 +236,7 @@
 								elseif($_FILES['img']['type'] == 'image/png')
 								$upload = imagepng($temp,base_app.$spath,6);
 								if($upload){
-									pg_query($this->conn, "UPDATE item_list set image_path = CONCAT('{$spath}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$iid}' ");
+									pg_query($this->conn, "UPDATE wh_item_list set image_path = CONCAT('{$spath}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$iid}' ");
 								}
 		
 								imagedestroy($temp);
@@ -255,7 +255,7 @@
 		// ITEM - DELETE
 		function delete_item(){
 			extract($_POST);
-			$del = pg_query($this->conn, "UPDATE item_list SET delete_flag = 1 WHERE id = '{$id}'");
+			$del = pg_query($this->conn, "UPDATE wh_item_list SET delete_flag = 1 WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success',"Item successfully deleted.");
@@ -282,7 +282,7 @@
 				}
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO stockin_list ({$data}) VALUES ({$values})";
+				$sql = "INSERT INTO wh_stockin_list ({$data}) VALUES ({$values})";
 			}else{
 				$set_clause = "";
 				foreach($_POST as $k => $v){
@@ -292,7 +292,7 @@
 						$set_clause .= "{$k} = '{$v}'";
 					}
 				}
-				$sql = "UPDATE stockin_list SET {$set_clause} WHERE id = '{$id}' ";
+				$sql = "UPDATE wh_stockin_list SET {$set_clause} WHERE id = '{$id}' ";
 			}
 			
 			$save = pg_query($this->conn, $sql);
@@ -314,7 +314,7 @@
 		// STOCK-IN - DELETE
 		function delete_stockin(){
 			extract($_POST);
-			$del = pg_query($this->conn, "DELETE FROM stockin_list where id = '{$id}'");
+			$del = pg_query($this->conn, "DELETE FROM wh_stockin_list where id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success'," Item has been deleted successfully.");
@@ -401,9 +401,9 @@
 				}
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO `waste_list` set {$data} ";
+				$sql = "INSERT INTO `wh_waste_list` set {$data} ";
 			}else{
-				$sql = "UPDATE `waste_list` set {$data} where id = '{$id}' ";
+				$sql = "UPDATE `wh_waste_list` set {$data} where id = '{$id}' ";
 			}
 				$save = $this->conn->query($sql);
 			if($save){
@@ -424,7 +424,7 @@
 		// WASTE - DELETE
 		function delete_waste(){
 			extract($_POST);
-			$del = $this->conn->query("DELETE FROM `waste_list` where id = '{$id}'");
+			$del = $this->conn->query("DELETE FROM `wh_waste_list` where id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success'," Waste Data has been deleted successfully.");

@@ -50,7 +50,7 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = pg_query($conn, "SELECT * from unit_list where delete_flag = 0 ORDER BY date_created DESC");
+						$qry = pg_query($conn, "SELECT * from wh_unit_list where delete_flag = 0 ORDER BY date_created DESC");
 						while($row = pg_fetch_assoc($qry)):
 					?>
 						<tr>

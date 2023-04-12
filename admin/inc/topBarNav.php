@@ -334,23 +334,23 @@
           <?php
           // Count the number of expired items in the database
           // Count the number of expired items in the database
-          $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM stockin_list 
+          $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
           WHERE expire_date <= NOW() + INTERVAL '1 DAY'
           AND expire_date IS NOT NULL 
           AND expire_date <> '0001-01-01'");
           $expired_items_count = pg_fetch_assoc($expired_items_count)['count'];
 
 
-          $query = "SELECT COUNT(*) AS count FROM item_list i 
-                    INNER JOIN category_list c ON i.category_id = c.id 
+          $query = "SELECT COUNT(*) AS count FROM wh_item_list i 
+                    INNER JOIN wh_category_list c ON i.category_id = c.id 
                     INNER JOIN wh_stock_notif s ON s.id = 1 
                     WHERE i.delete_flag = 0 
-                    AND ((COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM stockout_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM waste_list WHERE item_id = i.id),0)) < s.min_stock OR 
-                            (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM stockout_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM waste_list WHERE item_id = i.id),0)) > s.max_stock)";
+                    AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
+                            COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
+                            COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) < s.min_stock OR 
+                            (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
+                            COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
+                            COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) > s.max_stock)";
 
           // Execute the query
           $result = pg_query($conn, $query);

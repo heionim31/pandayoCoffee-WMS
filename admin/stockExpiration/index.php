@@ -42,20 +42,20 @@
                             $id = $_POST['id'];
                             
                             // Insert data in waste_list table
-                            $sql = "INSERT INTO waste_list (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
-                            SELECT id, item_id, date, quantity, '$remarks', date_created, expire_date, date_updated FROM stockin_list 
+                            $sql = "INSERT INTO wh_waste_list (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
+                            SELECT id, item_id, date, quantity, '$remarks', date_created, expire_date, date_updated FROM wh_stockin_list 
                             WHERE id = $id";
                             $result = pg_query($conn, $sql);
 
-                            // Copy the deleted row to stockin_list_deleted table
-                            $sql = "INSERT INTO stockin_list_deleted (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
-                            SELECT id, item_id, date, quantity, remarks, date_created, expire_date, date_updated FROM stockin_list 
+                            // Copy the deleted row to stockin list deleted table
+                            $sql = "INSERT INTO wh_stockin_list_deleted (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
+                            SELECT id, item_id, date, quantity, remarks, date_created, expire_date, date_updated FROM wh_stockin_list 
                             WHERE id = $id";
                             $result = pg_query($conn, $sql);
 
                             if ($result) {
-                                // Delete data from stockin_list table
-                                $sql = "DELETE FROM stockin_list WHERE id = $id";
+                                // Delete data from stockin list table
+                                $sql = "DELETE FROM wh_stockin_list WHERE id = $id";
                                 $result = pg_query($conn, $sql);
                                 
                                 if ($result) {
@@ -99,9 +99,9 @@
                         $today = date('Y-m-d');
                         $tomorrow = date('Y-m-d', strtotime('+1 day'));
                         $stock_items = pg_query($conn, "SELECT s.*, i.name, i.unit, i.id AS item_id, c.name AS category_name 
-                                FROM stockin_list s 
-                                INNER JOIN item_list i ON s.item_id = i.id 
-                                INNER JOIN category_list c ON i.category_id = c.id
+                                FROM wh_stockin_list s 
+                                INNER JOIN wh_item_list i ON s.item_id = i.id 
+                                INNER JOIN wh_category_list c ON i.category_id = c.id
                                 WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') 
                                 AND (s.expire_date IS NOT NULL)"); 
                         $stock_items = pg_fetch_all($stock_items);

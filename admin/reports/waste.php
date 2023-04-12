@@ -61,9 +61,9 @@
                                         $g_total = 0;
                                         $i = 1;
                                         $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit 
-                                                                    FROM waste_list s 
-                                                                    INNER JOIN item_list i ON s.item_id = i.id 
-                                                                    INNER JOIN category_list c ON i.category_id = c.id 
+                                                                    FROM wh_waste_list s 
+                                                                    INNER JOIN wh_item_list i ON s.item_id = i.id 
+                                                                    INNER JOIN wh_category_list c ON i.category_id = c.id 
                                                                     WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}' 
                                                                     ORDER BY s.date_created DESC");
                                         while($row = pg_fetch_assoc($stock)):

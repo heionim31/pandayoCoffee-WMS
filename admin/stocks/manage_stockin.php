@@ -1,7 +1,7 @@
 <?php 
     require_once('../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
-        $qry = pg_query($conn, "SELECT * FROM stockin_list where id = '{$_GET['id']}' ");
+        $qry = pg_query($conn, "SELECT * FROM wh_stockin_list where id = '{$_GET['id']}' ");
         if(pg_num_rows($qry) > 0){
             foreach(pg_fetch_assoc($qry) as $k => $v){
                 $$k=$v;
@@ -12,7 +12,7 @@
     $item_type = "";
     $item_id = isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '');
     if(!empty($item_id)) {
-        $item_qry = pg_query($conn, "SELECT item_type FROM item_list WHERE id = '$item_id'");
+        $item_qry = pg_query($conn, "SELECT item_type FROM wh_item_list WHERE id = '$item_id'");
         if(pg_num_rows($item_qry) > 0) {
             $item_type = pg_fetch_assoc($item_qry)['item_type'];
         }

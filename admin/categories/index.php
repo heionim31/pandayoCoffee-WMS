@@ -48,7 +48,7 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = pg_query($conn, "SELECT * from category_list where delete_flag = 0 order by date_created desc");
+						$qry = pg_query($conn, "SELECT * from wh_category_list where delete_flag = 0 order by date_created desc");
 						while($row = pg_fetch_assoc($qry)):
 						?>
 						<tr>

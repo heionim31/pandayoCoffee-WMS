@@ -1,6 +1,6 @@
 <?php
     if(isset($_GET['id']) && $_GET['id'] > 0){
-        $qry = pg_query($conn, "SELECT i.*, c.name as category, (COALESCE((SELECT SUM(quantity) FROM stockin_list where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM stockout_list where item_id = i.id),0)) as available from item_list i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+        $qry = pg_query($conn, "SELECT i.*, c.name as category, (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM wh_stockout_list where item_id = i.id),0)) as available from wh_item_list i inner join wh_category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
         if(pg_num_rows($qry) > 0){
             $result = pg_fetch_assoc($qry);
             extract($result);
@@ -79,7 +79,7 @@
                     <tbody>
                         <?php 
                             if(isset($id)):
-                            $stockins = pg_query($conn, "SELECT * FROM stockin_list where item_id = '{$id}' order by date(date) asc");
+                            $stockins = pg_query($conn, "SELECT * FROM wh_stockin_list where item_id = '{$id}' order by date(date) asc");
                             while($row = pg_fetch_assoc($stockins)):
                             ?>
                             <tr>
@@ -125,7 +125,7 @@
                     <tbody>
                         <?php
                             if (isset($id)) {
-                                $stockouts = pg_query($conn, "SELECT * FROM stockout_list WHERE item_id = '{$id}' ORDER BY date(date) ASC");
+                                $stockouts = pg_query($conn, "SELECT * FROM wh_stockout_list WHERE item_id = '{$id}' ORDER BY date(date) ASC");
                                 while ($row = pg_fetch_assoc($stockouts)) {
                         ?>
                                     <tr>
@@ -169,7 +169,7 @@
                     <tbody>
                         <#php 
                         if(isset($id)):
-                        $wastes = $conn->query("SELECT * FROM `waste_list` where item_id = '{$id}' order by date(`date`) asc");
+                        $wastes = $conn->query("SELECT * FROM `wh_waste_list` where item_id = '{$id}' order by date(`date`) asc");
                         while($row = $wastes->fetch_assoc()):
                         ?>
                         <tr>

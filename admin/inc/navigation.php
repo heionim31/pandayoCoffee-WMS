@@ -111,16 +111,16 @@
                       $count = 0;
 
                       // Count items with stock status level
-                      $qry_count = pg_query($conn, "SELECT COUNT(*) as count FROM item_list i 
-                          INNER JOIN category_list c ON i.category_id = c.id 
+                      $qry_count = pg_query($conn, "SELECT COUNT(*) as count FROM wh_item_list i 
+                          INNER JOIN wh_category_list c ON i.category_id = c.id 
                           INNER JOIN wh_stock_notif s ON s.id = 1 
                           WHERE i.delete_flag = 0 
-                          AND ((COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
-                          OR (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) >= s.max_stock)");
+                          AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                          OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)");
                       $count = pg_fetch_assoc($qry_count)['count'];
 
                       // Count expired items
-                      $qry_count = pg_query($conn, "SELECT COUNT(*) AS count FROM stockin_list WHERE (expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date != '0001-01-01') OR (expire_date IS NULL)");
+                      $qry_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list WHERE (expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date != '0001-01-01') OR (expire_date IS NULL)");
                       $count += pg_fetch_assoc($qry_count)['count'];
 
                       // Display the total count if there are items with stock status level or expired items
@@ -159,12 +159,12 @@
                           <p style="color:white">Stock Status Level</p>
                           <?php
                               // Count the items marked as overstock, lowstock, and out of stock
-                              $count_query = "SELECT COUNT(*) as count FROM item_list i 
-                                              INNER JOIN category_list c ON i.category_id = c.id 
+                              $count_query = "SELECT COUNT(*) as count FROM wh_item_list i 
+                                              INNER JOIN wh_category_list c ON i.category_id = c.id 
                                               INNER JOIN wh_stock_notif s ON s.id = 1 
                                               WHERE i.delete_flag = 0 
-                                              AND ((COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
-                                              OR (COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id),0)) >= s.max_stock)";
+                                              AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                                              OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)";
                               $count_result = pg_query($conn, $count_query);
                               $count = pg_fetch_assoc($count_result)['count'];
 
@@ -182,7 +182,7 @@
                         // Count the number of expired items in the database
                         $expired_items_count_query = "
                             SELECT COUNT(*) AS count
-                            FROM stockin_list
+                            FROM wh_stockin_list
                             WHERE expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date IS NOT NULL
                         ";
                         $expired_items_count_result = pg_query($conn, $expired_items_count_query);

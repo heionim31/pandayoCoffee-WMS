@@ -44,14 +44,14 @@
 					<?php 
 						$i = 1;
 						$qry = pg_query($conn, "SELECT i.*, c.name AS category, 
-											(COALESCE((SELECT SUM(quantity) FROM stockin_list WHERE item_id = i.id), 0) 
-											- COALESCE((SELECT SUM(quantity) FROM stockout_list WHERE item_id = i.id), 0)
-											+ COALESCE((SELECT SUM(quantity) FROM stockin_list_deleted WHERE item_id = i.id), 0)
-											- COALESCE((SELECT SUM(quantity) FROM waste_list WHERE item_id = i.id), 0)) AS available, 
-											COALESCE((SELECT date_updated FROM stockin_list WHERE item_id = i.id ORDER BY date_updated DESC LIMIT 1), 
-													(SELECT date_updated FROM stockin_list_deleted WHERE item_id = i.id ORDER BY date_updated DESC LIMIT 1)) AS last_updated
-										FROM item_list i 
-										INNER JOIN category_list c ON i.category_id = c.id 
+											(COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id), 0) 
+											- COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id), 0)
+											+ COALESCE((SELECT SUM(quantity) FROM wh_stockin_list_deleted WHERE item_id = i.id), 0)
+											- COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id), 0)) AS available, 
+											COALESCE((SELECT date_updated FROM wh_stockin_list WHERE item_id = i.id ORDER BY date_updated DESC LIMIT 1), 
+													(SELECT date_updated FROM wh_stockin_list_deleted WHERE item_id = i.id ORDER BY date_updated DESC LIMIT 1)) AS last_updated
+										FROM wh_item_list i 
+										INNER JOIN wh_category_list c ON i.category_id = c.id 
 										WHERE i.delete_flag = 0 
 										ORDER BY i.date_updated DESC");
 						

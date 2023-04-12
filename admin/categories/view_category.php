@@ -1,7 +1,7 @@
 <?php
 	require_once('./../../config.php');
 	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$result = pg_query_params($conn, 'SELECT * from category_list where id = $1 and delete_flag = 0', array($_GET['id']));
+		$result = pg_query_params($conn, 'SELECT * from wh_category_list where id = $1 and delete_flag = 0', array($_GET['id']));
 		$row = pg_fetch_assoc($result);
 		if($row){
 			foreach($row as $k => $v){

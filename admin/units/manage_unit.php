@@ -1,7 +1,7 @@
 <?php
     require_once('./../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
-        $qry = pg_query($conn, "SELECT * FROM unit_list WHERE id = '{$_GET['id']}'");
+        $qry = pg_query($conn, "SELECT * FROM wh_unit_list WHERE id = '{$_GET['id']}'");
         if(pg_num_rows($qry) > 0){
             foreach(pg_fetch_assoc($qry) as $k => $v){
                 $$k=$v;
