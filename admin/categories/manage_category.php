@@ -1,9 +1,9 @@
 <?php
 	require_once('./../../config.php');
 	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT * from `category_list` where id = '{$_GET['id']}' and `delete_flag` = 0 ");
-		if($qry->num_rows > 0){
-			foreach($qry->fetch_assoc() as $k => $v){
+		$qry = pg_query($conn, "SELECT * FROM wh_category_list where id = '{$_GET['id']}' and delete_flag = 0 ");
+		if(pg_num_rows($qry) > 0){
+			foreach(pg_fetch_assoc($qry) as $k => $v){
 				$$k=$v;
 			}
 		}

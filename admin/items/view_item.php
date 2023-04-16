@@ -1,18 +1,21 @@
 <?php
-	require_once('./../../config.php');
-	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT i.*, c.name as `category` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
-		if($qry->num_rows > 0){
-			foreach($qry->fetch_assoc() as $k => $v){
-				$$k=$v;
-			}
-		}else{
-			echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
-		}
-	}else{
-		echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
-	}
+    require_once('./../../config.php');
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $id = $_GET['id'];
+        $result = pg_query($conn, "SELECT i.*, c.name as category from wh_item_list i inner join wh_category_list c on i.category_id = c.id where i.id = '{$id}' and i.delete_flag = 0");
+        if(pg_num_rows($result) > 0){
+            $row = pg_fetch_assoc($result);
+            foreach($row as $k => $v){
+                $$k=$v;
+            }
+        }else{
+            echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
+        }
+    }else{
+        echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
+    }
 ?>
+
 
 
 <style>

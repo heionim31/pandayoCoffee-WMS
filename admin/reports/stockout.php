@@ -56,11 +56,16 @@
                             </thead>
                             <tbody>
                                 <?php 
-                                $g_total = 0;
-                                $i = 1;
-                                $stock = $conn->query("SELECT s.*, i.name as `item`, c.name as `category`, i.unit FROM `stockout_list` s inner join `item_list` i on s.item_id = i.id inner join category_list c on i.category_id = c.id where date_format(s.date_created, '%Y-%m') = '{$month}' order by s.`date_created` DESC");
+                                    $g_total = 0;
+                                    $i = 1;
+                                    $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit 
+                                                                FROM wh_stockout_list s 
+                                                                INNER JOIN wh_item_list i ON s.item_id = i.id 
+                                                                INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                                                WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}' 
+                                                                ORDER BY s.date_created DESC");
 
-                                while($row = $stock->fetch_assoc()):
+                                    while($row = pg_fetch_assoc($stock)):
                                 ?>
                                 <tr>
                                     <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
@@ -76,7 +81,7 @@
                                     
                                 </tr>
                                 <?php endwhile; ?>
-                                <?php if($stock->num_rows <= 0): ?>
+                                <?php if(pg_num_rows($stock) <= 0): ?>
                                     <tr>
                                         <td class="py-1 text-center" colspan="5">No records found</td>
                                     </tr>

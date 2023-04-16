@@ -1,10 +1,9 @@
-<?php 
+<?php
     if(isset($_GET['id']) && $_GET['id'] > 0){
-        $qry = $conn->query("SELECT i.*, c.name as `category`, (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = i.id),0)) as `available` from `item_list` i inner join category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
-        if($qry->num_rows > 0){
-            foreach($qry->fetch_assoc() as $k => $v){
-                $$k=$v;
-            }
+        $qry = pg_query($conn, "SELECT i.*, c.name as category, (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list where item_id = i.id),0) - COALESCE((SELECT SUM(quantity) FROM wh_stockout_list where item_id = i.id),0)) as available from wh_item_list i inner join wh_category_list c on i.category_id = c.id where i.id = '{$_GET['id']}' and i.delete_flag = 0 ");
+        if(pg_num_rows($qry) > 0){
+            $result = pg_fetch_assoc($qry);
+            extract($result);
         }else{
             echo '<script>alert("item ID is not valid."); location.replace("./?page=items")</script>';
         }
@@ -12,6 +11,7 @@
         echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
     }
 ?>
+
 
      
 <div class="row mt-n4 justify-content-center">
@@ -79,8 +79,8 @@
                     <tbody>
                         <?php 
                             if(isset($id)):
-                            $stockins = $conn->query("SELECT * FROM `stockin_list` where item_id = '{$id}' order by date(`date`) asc");
-                            while($row = $stockins->fetch_assoc()):
+                            $stockins = pg_query($conn, "SELECT * FROM wh_stockin_list where item_id = '{$id}' order by date(date) asc");
+                            while($row = pg_fetch_assoc($stockins)):
                             ?>
                             <tr>
                                 <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
@@ -125,8 +125,8 @@
                     <tbody>
                         <?php
                             if (isset($id)) {
-                                $stockouts = $conn->query("SELECT * FROM `stockout_list` WHERE item_id = '{$id}' ORDER BY date(`date`) ASC");
-                                while ($row = $stockouts->fetch_assoc()) {
+                                $stockouts = pg_query($conn, "SELECT * FROM wh_stockout_list WHERE item_id = '{$id}' ORDER BY date(date) ASC");
+                                while ($row = pg_fetch_assoc($stockouts)) {
                         ?>
                                     <tr>
                                         <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
@@ -167,28 +167,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
+                        <#php 
                         if(isset($id)):
-                        $wastes = $conn->query("SELECT * FROM `waste_list` where item_id = '{$id}' order by date(`date`) asc");
+                        $wastes = $conn->query("SELECT * FROM `wh_waste_list` where item_id = '{$id}' order by date(`date`) asc");
                         while($row = $wastes->fetch_assoc()):
                         ?>
                         <tr>
-                            <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                            <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                            <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
+                            <td class="p-1 align-middle text-center"><#= date("M d, Y", strtotime($row['date'])) ?></td>
+                            <td class="p-1 align-middle text-center"><#= format_num($row['quantity']) ?></td>
+                            <td class="p-1 align-middle text-center"><#= $row['remarks'] ?></td>
                             <td class="p-1 align-middle text-center">
                                 <div class="btn-group btn-group-xs">
-                                    <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_waste" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
-                                    <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger delete_waste" title="Delete Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-trash"></i></small></button>
+                                    <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_waste" title="Edit Data" type="button" data-id = "<#= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
+                                    <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger delete_waste" title="Delete Data" type="button" data-id = "<#= $row['id'] ?>"><small><i class="fa fa-trash"></i></small></button>
                                 </div>
                             </td>
                         </tr>
-                        <?php endwhile; ?>
-                        <?php endif; ?>
+                        <#php endwhile; ?>
+                        <#php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div> -->
+        
     </div>
 </div>
 

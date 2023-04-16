@@ -1,9 +1,8 @@
 <?php 
-	$user = $conn->query("SELECT * FROM users_list where id ='".$_settings->userdata('id')."'");
-		foreach($user->fetch_array() as $k =>$v){
-			$meta[$k] = $v;
-		}
-	?>
+	$user = pg_query($conn, "SELECT * FROM users where id ='".$_settings->userdata('id')."'");
+	$meta = pg_fetch_assoc($user);
+?>
+
 <?php if($_settings->chk_flashdata('success')): ?>
 	<script>
 		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
@@ -18,16 +17,8 @@
 			<form action="" id="manage-user">	
 				<input type="hidden" name="id" value="<?php echo $_settings->userdata('id') ?>">
 				<div class="form-group">
-					<label for="name">First Name</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
-				</div>
-				<div class="form-group">
-					<label for="name">Middle Name</label>
-					<input type="text" name="middlename" id="middlename" class="form-control" value="<?php echo isset($meta['middlename']) ? $meta['middlename']: '' ?>">
-				</div>
-				<div class="form-group">
-					<label for="name">Last Name</label>
-					<input type="text" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
+					<label for="name">Full Name</label>
+					<input type="text" name="fullname" id="fullname" class="form-control" value="<?php echo isset($meta['fullname']) ? $meta['fullname']: '' ?>" required>
 				</div>
 				<div class="form-group">
 					<label for="username">Username</label>
@@ -59,6 +50,7 @@
 		</div>
 	</div>
 </div>
+
 
 
 <style>
