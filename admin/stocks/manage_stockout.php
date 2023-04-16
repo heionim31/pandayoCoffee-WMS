@@ -1,54 +1,54 @@
 <?php 
-require_once('../../config.php');
-if(isset($_GET['id']) && $_GET['id'] > 0){
-    $qry = $conn->query("SELECT * from `stockout_list` where id = '{$_GET['id']}' ");
-    if($qry->num_rows > 0){
-        foreach($qry->fetch_assoc() as $k => $v){
-            $$k=$v;
+    require_once('../../config.php');
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = pg_query($conn, "SELECT * from wh_stockout_list where id = '{$_GET['id']}' ");
+        if(pg_num_rows($qry) > 0){
+            foreach(pg_fetch_assoc($qry) as $k => $v){
+                $$k=$v;
+            }
         }
     }
-}
 ?>
 
 
 <?php
     // get item type from item_list table
     $item_id = isset($_GET['iid']) ? $_GET['iid'] : '';
-    $item_type_query = "SELECT item_type FROM item_list WHERE id = '$item_id'";
-    $item_type_result = mysqli_query($conn, $item_type_query);
-    $item_type_row = mysqli_fetch_assoc($item_type_result);
+    $item_type_query = "SELECT item_type FROM wh_item_list WHERE id = '$item_id'";
+    $item_type_result = pg_query($conn, $item_type_query);
+    $item_type_row = pg_fetch_assoc($item_type_result);
     $item_type = $item_type_row['item_type'];
 
     // check if item is non-perishable
     if ($item_type != 'Non-Perishable') {
-        // get total quantity of same items from stockin_list table
-        $total_quantity_query = "SELECT SUM(quantity) as total_quantity FROM stockin_list WHERE item_id = '$item_id'";
-        $total_quantity_result = mysqli_query($conn, $total_quantity_query);
-        $total_quantity_row = mysqli_fetch_assoc($total_quantity_result);
+        // get total quantity of same items from stockin list table
+        $total_quantity_query = "SELECT SUM(quantity) as total_quantity FROM wh_stockin_list WHERE item_id = '$item_id'";
+        $total_quantity_result = pg_query($conn, $total_quantity_query);
+        $total_quantity_row = pg_fetch_assoc($total_quantity_result);
         $total_quantity = $total_quantity_row['total_quantity'];
 
-        // get total quantity of same items from stockout_list table
-        $existing_quantity_query = "SELECT SUM(quantity) as existing_quantity FROM stockout_list WHERE item_id = '$item_id'";
-        $existing_quantity_result = mysqli_query($conn, $existing_quantity_query);
-        $existing_quantity_row = mysqli_fetch_assoc($existing_quantity_result);
+        // get total quantity of same items from stockout list table
+        $existing_quantity_query = "SELECT SUM(quantity) as existing_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+        $existing_quantity_result = pg_query($conn, $existing_quantity_query);
+        $existing_quantity_row = pg_fetch_assoc($existing_quantity_result);
         $existing_quantity = $existing_quantity_row['existing_quantity'];
 
-        // subtract existing quantity from total quantity if item already exists in stockout_list
+        // subtract existing quantity from total quantity if item already exists in stockout list
         if ($existing_quantity) {
             $total_quantity -= $existing_quantity;
         }
 
         // check if item is non-perishable
         if ($item_type != 'Non-Perishable') {
-            // get total quantity of expired items from stockin_list table
+            // get total quantity of expired items from stockin list table
             $expired_quantity = 0;
-            $expired_quantity_query = "SELECT SUM(quantity) as expired_quantity FROM stockin_list WHERE item_id = '$item_id' AND expire_date <= CURDATE()";
-            $expired_quantity_result = mysqli_query($conn, $expired_quantity_query);
-            $expired_quantity_row = mysqli_fetch_assoc($expired_quantity_result);
+            $expired_quantity_query = "SELECT SUM(quantity) as expired_quantity FROM wh_stockin_list WHERE item_id = '$item_id' AND expire_date <= CURRENT_DATE";
+            $expired_quantity_result = pg_query($conn, $expired_quantity_query);
+            $expired_quantity_row = pg_fetch_assoc($expired_quantity_result);
             if ($expired_quantity_row['expired_quantity']) {
-                $expired_quantity = $expired_quantity_row['expired_quantity'];
+            $expired_quantity = $expired_quantity_row['expired_quantity'];
             }
-
+            
             // check if there are any expired items
             $total_quantity = intval($total_quantity);
             $expired_quantity = intval($expired_quantity);
@@ -59,9 +59,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 $max_quantity = 0;
             } else if ($expired_quantity > 0) {
                 // some items have expired, show the message about remaining quantity
-                $remaining_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM stockout_list WHERE item_id = '$item_id'";
-                $remaining_quantity_result = mysqli_query($conn, $remaining_quantity_query);
-                $remaining_quantity_row = mysqli_fetch_assoc($remaining_quantity_result);
+                $remaining_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+                $remaining_quantity_result = pg_query($conn, $remaining_quantity_query);
+                $remaining_quantity_row = pg_fetch_assoc($remaining_quantity_result);
                 $remaining_quantity = $total_quantity - $expired_quantity;
                 echo "<div class='alert alert-warning'>NOTE: You can only add <b>({$remaining_quantity})</b> stock-out items because <b>({$expired_quantity} out of {$total_quantity})</b> have already expired.</div>";
                 // calculate the maximum quantity allowed
@@ -69,13 +69,12 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
             }
             else {
                 // no items have expired, set maximum quantity allowed to the total quantity
-                $max_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM stockout_list WHERE item_id = '$item_id'";
-                $max_quantity_result = mysqli_query($conn, $max_quantity_query);
-                $max_quantity_row = mysqli_fetch_assoc($max_quantity_result);
+                $max_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+                $max_quantity_result = pg_query($conn, $max_quantity_query);
+                $max_quantity_row = pg_fetch_assoc($max_quantity_result);
                 $max_quantity = $total_quantity - intval($max_quantity_row['stockout_quantity']);
             }
-        }
-
+        } 
     }
 ?>
 
@@ -148,6 +147,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 return false
              }
 			start_loader();
+            
 			$.ajax({
 				url:_base_url_+"classes/Master.php?f=save_stockout",
 				data: new FormData($(this)[0]),

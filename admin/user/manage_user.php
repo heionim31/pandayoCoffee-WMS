@@ -1,11 +1,17 @@
 <?php 
 	if(isset($_GET['id'])){
-		$user = $conn->query("SELECT * FROM users_list where id ='{$_GET['id']}' ");
-		foreach($user->fetch_array() as $k =>$v){
-			$meta[$k] = $v;
+		$id = pg_escape_string($_GET['id']);
+		$query = "SELECT * FROM users WHERE id = $1";
+		$stmt = pg_prepare($conn, "user_query", $query);
+		$result = pg_execute($conn, "user_query", array($id));
+		
+		if($result){
+			$meta = pg_fetch_assoc($result);
 		}
 	}
 ?>
+
+
 <?php if($_settings->chk_flashdata('success')): ?>
 	<script>
 		alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
@@ -20,20 +26,28 @@
 			<form action="" id="manage-user">	
 				<input type="hidden" name="id" value="<?= isset($meta['id']) ? $meta['id'] : '' ?>">
 				<div class="form-group">
-					<label for="name">First Name</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
-				</div>
-				<div class="form-group">
-					<label for="name">Middle Name</label>
-					<input type="text" name="middlename" id="middlename" class="form-control" value="<?php echo isset($meta['middlename']) ? $meta['middlename']: '' ?>">
-				</div>
-				<div class="form-group">
-					<label for="name">Last Name</label>
-					<input type="text" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
+					<label for="name">Full Name</label>
+					<input type="text" name="fullname" id="fullname" class="form-control" value="<?php echo isset($meta['fullname']) ? $meta['fullname']: '' ?>" required>
 				</div>
 				<div class="form-group">
 					<label for="username">Username</label>
 					<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
+				</div>
+				<div class="form-group">
+					<label for="birthdate">Birthdate</label>
+					<input type="date" name="birthdate" id="birthdate" class="form-control" value="<?php echo isset($meta['birthdate']) ? $meta['birthdate']: '' ?>" required  autocomplete="off">
+				</div>
+				<div class="form-group">
+					<label for="address">Address</label>
+					<input type="text" name="address" id="address" class="form-control" value="<?php echo isset($meta['address']) ? $meta['address']: '' ?>" required  autocomplete="off">
+				</div>
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="text" name="email" id="email" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email']: '' ?>" required  autocomplete="off">
+				</div>
+				<div class="form-group">
+					<label for="contact">Contact</label>
+					<input type="text" name="contact" id="contact" class="form-control" value="<?php echo isset($meta['contact']) ? $meta['contact']: '' ?>" required  autocomplete="off">
 				</div>
 				<div class="form-group">
 					<label for="password"><?= isset($meta['id']) ? "New" : "" ?> Password</label>
@@ -43,11 +57,11 @@
                     <?php endif; ?>
 				</div>
                 <div class="form-group">
-                    <label for="type" class="control-label">Type</label>
-                    <select name="type" id="type" class="form-control form-control-sm rounded-0" required>
-                    <option value="1" <?php echo isset($meta['type']) && $meta['type'] == 1 ? 'selected' : '' ?>>Manager</option>
-                    <option value="2" <?php echo isset($meta['type']) && $meta['type'] == 2 ? 'selected' : '' ?>>Staff</option>
-                    </select>
+                    <label for="role" class="control-label">Role</label>
+                    <select name="role" id="role" class="form-control form-control-sm rounded-0" required>
+						<option value="warehouse_manager" <?php echo isset($meta['role']) && $meta['role'] == 'warehouse_manager' ? 'selected' : '' ?>>Manager</option>
+						<option value="warehouse_staff" <?php echo isset($meta['role']) && $meta['role'] == 'warehouse_staff' ? 'selected' : '' ?>>Staff</option>
+					</select>
                 </div>
 				<div class="form-group">
 					<label for="" class="control-label">Avatar</label>

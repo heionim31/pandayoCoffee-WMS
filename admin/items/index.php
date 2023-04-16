@@ -49,8 +49,8 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = $conn->query("SELECT i.*, c.name as `category`, i.item_type from `item_list` i inner join category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.`date_created` desc");
-						while($row = $qry->fetch_assoc()):
+						$qry = pg_query($conn, "SELECT i.*, c.name as category, i.item_type from wh_item_list i inner join wh_category_list c on i.category_id = c.id where i.delete_flag = 0 order by i.date_created desc");
+						while($row = pg_fetch_assoc($qry)):
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
@@ -116,6 +116,7 @@
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
+	
 	function delete_item($id){
 		start_loader();
 		$.ajax({

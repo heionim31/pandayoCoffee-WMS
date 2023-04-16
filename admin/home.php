@@ -1,6 +1,3 @@
-<!-- Bootstrap CSS -->
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
-
 <!-- Import Chart.js library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -141,7 +138,7 @@
 <!-- WELCOME MESSAGE -->
 <div class="alert alert-success alert-dismissible fade show d-flex align-items-center py-2 px-3" role="alert">
   <div class="flex-grow-1">
-    <h4 class="alert-heading mb-0">Welcome, <?php echo $_settings->userdata('firstname')." ".$_settings->userdata('lastname') ?>!</h4>
+      <h4 class="alert-heading mb-0">Welcome, <?php echo $_settings->userdata('fullname'); ?>!</h4>
   </div>
   <button type="button" class="close text-black" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
@@ -159,8 +156,9 @@
         <a href="<?php echo base_url ?>admin/?page=items" style="color:black;"> 
           <span class="info-box-number text-left h5">
             <?php 
-              $items = $conn->query("SELECT id FROM item_list where delete_flag = 0 and `status` = 1")->num_rows;
-              echo format_num($items);
+              $items = pg_query($conn, "SELECT id FROM wh_item_list WHERE delete_flag = 0 AND status = 1");
+              $num_items = pg_num_rows($items);
+              echo number_format($num_items);
             ?>
             <?php ?>
           </span>
@@ -177,11 +175,11 @@
       <div class="info-box-content">
         <a href="<?php echo base_url ?>admin/?page=categories" style="color:black;">
           <span class="info-box-number text-left h5">
-            <?php 
-              $category = $conn->query("SELECT * FROM category_list where delete_flag = 0 and `status` = 1")->num_rows;
-              echo format_num($category);
-            ?>
-            <?php ?>
+          <?php 
+            $category = pg_query($conn, "SELECT * FROM wh_category_list WHERE delete_flag = 0 AND status = 1");
+            $num_category = pg_num_rows($category);
+            echo number_format($num_category);
+          ?>
           </span>
           <span class="info-box-text text-left">Total Categories</span>
         </a> 
@@ -197,10 +195,10 @@
         <a href="<?php echo base_url ?>admin/?page=units" style="color:black;">
           <span class="info-box-number text-left h5">
             <?php 
-              $unit = $conn->query("SELECT * FROM unit_list where delete_flag = 0 and `status` = 1")->num_rows;
-              echo format_num($unit);
+              $unit = pg_query($conn, "SELECT * FROM wh_unit_list WHERE delete_flag = 0 AND status = 1");
+              $num_unit = pg_num_rows($unit);
+              echo number_format($num_unit);
             ?>
-            <?php ?>
           </span>
           <span class="info-box-text text-left">Total Units</span>
         </a> 
@@ -216,10 +214,10 @@
         <a href="<?php echo base_url ?>admin/?page=user/list" style="color:black;"> 
           <span class="info-box-number text-left h5">
             <?php 
-                $user = $conn->query("SELECT * FROM users_list")->num_rows;
-                echo format_num($user);
+              $user = pg_query($conn, "SELECT * FROM users WHERE role IN ('warehouse_manager', 'warehouse_staff')");
+              $num_user = pg_num_rows($user);
+              echo number_format($num_user);              
             ?>
-            <?php ?>
           </span>
           <span class="info-box-text text-left">Total Users</span>
         </a>
@@ -235,38 +233,31 @@
         <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;" >
           <span class="info-box-number text-left h5">
             <?php 
-              // Define the query to retrieve the latest stockin_list records for each item_id
-              $query = "SELECT item_list.id, item_list.name, 
-                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
-                  (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
+              $query = "SELECT wh_item_list.id, wh_item_list.name, 
+                  (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
+                  (SELECT quantity FROM wh_stockin_list WHERE item_id = wh_item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                  (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0)) as `available`
-              FROM item_list 
+                  (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = wh_item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = wh_item_list.id),0)) as available
+              FROM wh_item_list 
               ORDER BY date_updated DESC";
 
-              // Execute the query
-              $result = mysqli_query($conn, $query);
-
-              // Initialize counter for overstock items
+              $result = pg_query($conn, $query);
               $overstock_count = 0;
 
-              // Loop through each item
-              while ($row = mysqli_fetch_assoc($result)) {
+              while ($row = pg_fetch_assoc($result)) {
                 $name = $row['name'];
                 $min_stock = $row['min_stock'];
                 $max_stock = $row['max_stock'];
                 $available_quantity = (int)$row['available'];
 
-                // Check if item is overstocked
                 if ($available_quantity >= $max_stock) {
                   $overstock_count++;
                 }
               }
 
-              // Output the count of overstock items
-              echo format_num($overstock_count);
+              echo number_format($overstock_count);
             ?>
           </span>
           <span class= "info-box-text text-left">Total Over stocks</span>
@@ -282,38 +273,30 @@
       <div class="info-box-content">
         <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;">
           <span class="info-box-number text-left h5">
-            <?php 
-              // Define the query to retrieve the latest stockin_list records for each item_id
-              $query = "SELECT item_list.id, item_list.name, 
-                  (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                  (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
-                  (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
+            <?php
+              $query = "SELECT wh_item_list.id, wh_item_list.name, 
+                  (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                  (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
+                  (SELECT quantity FROM wh_stockin_list WHERE item_id = wh_item_list.id 
                   ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                  (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0)) as `available`
-              FROM item_list 
+                  (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list where item_id = wh_item_list.id),0) - 
+                  COALESCE((SELECT SUM(quantity) FROM wh_stockout_list where item_id = wh_item_list.id),0)) as available
+              FROM wh_item_list 
               ORDER BY date_updated DESC";
 
-              // Execute the query
-              $result = mysqli_query($conn, $query);
-
-              // Initialize counter for low stock items
+              $result = pg_query($conn, $query);
               $lowstock_count = 0;
 
-              // Loop through each item
-              while ($row = mysqli_fetch_assoc($result)) {
+              while ($row = pg_fetch_assoc($result)) {
                 $name = $row['name'];
                 $min_stock = $row['min_stock'];
                 $max_stock = $row['max_stock'];
                 $available_quantity = (int)$row['available'];
 
-                // Check if item is low stocked
                 if ($available_quantity <= $min_stock && $available_quantity != 0) {
                   $lowstock_count++;
                 }
               }
-
-              // Output the count of low stock items
               echo format_num($lowstock_count);
             ?>
           </span>
@@ -331,41 +314,32 @@
         <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;">
           <span class="info-box-number text-left h5">
             <?php 
-              // Define the query to retrieve the latest stockin_list records for each item_id
-              $query = "SELECT item_list.id, item_list.name, 
-              (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-              (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
-              (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
-              ORDER BY date DESC LIMIT 1) AS latest_quantity,
-              (COALESCE((SELECT SUM(quantity) FROM `stockin_list` where item_id = item_list.id),0) - 
-              COALESCE((SELECT SUM(quantity) FROM `stockout_list` where item_id = item_list.id),0)) as `available`
-          FROM item_list 
-          WHERE item_list.delete_flag != 1
-          ORDER BY date_updated DESC";
+              $query = "SELECT wh_item_list.id, wh_item_list.name, 
+                        (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                        (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
+                        (SELECT quantity FROM wh_stockin_list WHERE item_id = wh_item_list.id 
+                        ORDER BY date DESC LIMIT 1) AS latest_quantity,
+                        (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = wh_item_list.id),0) - 
+                        COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = wh_item_list.id),0)) as available
+                        FROM wh_item_list 
+                        WHERE wh_item_list.delete_flag != 1
+                        ORDER BY date_updated DESC";
 
-
-              // Execute the query
-              $result = mysqli_query($conn, $query);
-
-              // Initialize counter for Out of Stock items
+              $result = pg_query($conn, $query);
               $outofstock_count = 0;
 
-              // Loop through each item
-              while ($row = mysqli_fetch_assoc($result)) {
-                $name = $row['name'];
-                $min_stock = $row['min_stock'];
-                $max_stock = $row['max_stock'];
-                $available_quantity = (int)$row['available'];
+              while ($row = pg_fetch_assoc($result)) {
+                  $name = $row['name'];
+                  $min_stock = $row['min_stock'];
+                  $max_stock = $row['max_stock'];
+                  $available_quantity = (int)$row['available'];
 
-                // Check if item is Out of Stocked
-                if ($available_quantity == 0 ) {
-                  $outofstock_count++;
-                }
+                  if ($available_quantity == 0 ) {
+                      $outofstock_count++;
+                  }
               }
-
-              // Output the count of Out of Stock items
               echo format_num($outofstock_count);
-            ?>
+          ?>
           </span>
           <span class= "info-box-text text-left">Total Out of stocks</span>
         </a>
@@ -381,15 +355,11 @@
           <a href="<?php echo base_url ?>admin/?page=stockExpiration" style="color:black;">
             <span class="info-box-number text-left h5">
               <?php
-                // Count the number of expired items in the database
-                $expired_items_count = $conn->query("
-                SELECT COUNT(*) AS count
-                FROM stockin_list
-                WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'
-                ");
-                $expired_items_count = $expired_items_count->fetch_assoc()['count'];
+                $expired_items_count_result = pg_query($conn, "SELECT COUNT(*) AS count
+                                FROM wh_stockin_list
+                                WHERE expire_date <= CURRENT_DATE + INTERVAL '1 day' AND expire_date IS NOT NULL AND expire_date <> '0001-01-01'");
+                $expired_items_count = pg_fetch_assoc($expired_items_count_result)['count'];
 
-                // Display the badge with the count, or zero if there are no expired items
                 echo '<span class="text">'.($expired_items_count > 0 ? $expired_items_count : 0).'</span>';
               ?>
             </span>
@@ -458,46 +428,47 @@
       <div class="card-body">
         <?php
           // Execute the SQL query
-          $sql = "SELECT item_list.name AS item_name, item_list.unit,
-                  IFNULL(stockin_list_deleted.total_quantity, 0) + IFNULL(stockin_list.total_quantity, 0) AS total_quantity,
-                  MAX(IFNULL(stockin_list.date_updated, stockin_list_deleted.date_updated)) AS date_updated
-                  FROM item_list
-                  LEFT JOIN (
-                      SELECT item_id, SUM(quantity) AS total_quantity, MAX(date_updated) AS date_updated
-                      FROM stockin_list_deleted GROUP BY item_id
-                  ) AS stockin_list_deleted ON item_list.id = stockin_list_deleted.item_id
-                  LEFT JOIN (
-                      SELECT item_id, SUM(quantity) AS total_quantity, MAX(date_updated) AS date_updated
-                      FROM stockin_list GROUP BY item_id
-                  ) AS stockin_list ON item_list.id = stockin_list.item_id
-                  GROUP BY item_list.id
-                  HAVING total_quantity > 0
-                  ORDER BY total_quantity DESC
-                  LIMIT 5;";
-          $result = $conn->query($sql);
+          $sql = "SELECT wh_item_list.name AS item_name, wh_item_list.unit,
+                    COALESCE(wh_stockin_list_deleted.total_quantity, 0) + COALESCE(wh_stockin_list.total_quantity, 0) AS total_quantity,
+                    MAX(COALESCE(wh_stockin_list.date_updated, wh_stockin_list_deleted.date_updated)) AS date_updated
+                    FROM wh_item_list
+                    LEFT JOIN (
+                        SELECT item_id, SUM(quantity) AS total_quantity, MAX(date_updated) AS date_updated
+                        FROM wh_stockin_list_deleted GROUP BY item_id
+                    ) AS wh_stockin_list_deleted ON wh_item_list.id = wh_stockin_list_deleted.item_id
+                    LEFT JOIN (
+                        SELECT item_id, SUM(quantity) AS total_quantity, MAX(date_updated) AS date_updated
+                        FROM wh_stockin_list GROUP BY item_id
+                    ) AS wh_stockin_list ON wh_item_list.id = wh_stockin_list.item_id
+                    GROUP BY wh_item_list.id, wh_stockin_list_deleted.total_quantity, wh_stockin_list.total_quantity
+                    HAVING COALESCE(wh_stockin_list_deleted.total_quantity, 0) + COALESCE(wh_stockin_list.total_quantity, 0) > 0
+                    ORDER BY total_quantity DESC
+                    LIMIT 5;";
+                    
+          $result = pg_query($conn, $sql);
 
-          if ($result->num_rows > 0) {
+          if ($result) {
             $items_stockin = array();
-            while ($row = $result->fetch_assoc()) {
-              $item_name = $row['item_name'] ?? 'Unknown';
-              $unit = $row['unit'] ?? 'Unknown';
-              $total_quantity = floor($row['total_quantity']);
-              $date_updated = $row['date_updated'];
+            while ($row = pg_fetch_assoc($result)) {
+                $item_name = $row['item_name'] ?? 'Unknown';
+                $unit = $row['unit'] ?? 'Unknown';
+                $total_quantity = floor($row['total_quantity']);
+                $date_updated = $row['date_updated'];
 
-              $item = array(
-                  'name' => $item_name,
-                  'quantity' => (int)$total_quantity
-              );
-              array_push($items_stockin, $item);
+                $item = array(
+                    'name' => $item_name,
+                    'quantity' => (int)$total_quantity
+                );
+                array_push($items_stockin, $item);
             }
           } else {
-            echo "<div class='no-data-message-big'>No data to display.</div>";
+              echo "<div class='no-data-message-big'>No data to display.</div>";
           }
         ?>
         <canvas id="stock-in-chart" style="height: 158px"></canvas>
       </div>
 
-
+      
       <!-- SCRIPT FOR TOP STOCK-IN ITEMS -->
       <script>
         // Get the table data
@@ -557,33 +528,32 @@
       </div>
       <div class="card-body">
         <?php
-          // Execute the SQL query
-          $sql = "SELECT item_list.name AS item_name, item_list.unit, SUM(IFNULL(stockout_list.quantity, 0)) AS total_quantity, MAX(IFNULL(stockout_list.date_updated, 'N/A')) AS date_updated
-                  FROM item_list
-                  LEFT JOIN stockout_list ON item_list.id = stockout_list.item_id
-                  GROUP BY item_list.id
-                  HAVING total_quantity > 0
-                  ORDER BY total_quantity DESC
-                  LIMIT 5;";
+          $sql = "SELECT wh_item_list.name AS item_name, wh_item_list.unit, SUM(COALESCE(wh_stockout_list.quantity, 0)) AS total_quantity, MAX(wh_stockout_list.date_updated) AS date_updated
+          FROM wh_item_list
+          LEFT JOIN wh_stockout_list ON wh_item_list.id = wh_stockout_list.item_id
+          GROUP BY wh_item_list.id
+          HAVING SUM(COALESCE(wh_stockout_list.quantity, 0)) > 0
+          ORDER BY SUM(COALESCE(wh_stockout_list.quantity, 0)) DESC
+          LIMIT 5;";
 
-          $result = $conn->query($sql);
+          $result = pg_query($conn, $sql);
 
-          if ($result->num_rows > 0) {
+          if ($result) {
             $items_stockout = array();
-            while ($row = $result->fetch_assoc()) {
-              $item_name = $row['item_name'] ?? 'Unknown';
-              $unit = $row['unit'] ?? 'Unknown';
-              $total_quantity = floor($row['total_quantity']);
-              $date_updated = $row['date_updated'];
+            while ($row = pg_fetch_assoc($result)) {
+                $item_name = $row['item_name'] ?? 'Unknown';
+                $unit = $row['unit'] ?? 'Unknown';
+                $total_quantity = floor($row['total_quantity']);
+                $date_updated = $row['date_updated'];
 
-              $item = array(
-                'name' => $item_name,
-                'quantity' => (int)$total_quantity
-              );
-              array_push($items_stockout, $item);
+                $item = array(
+                    'name' => $item_name,
+                    'quantity' => (int)$total_quantity
+                );
+                array_push($items_stockout, $item);
             }
           } else {
-            echo "<div class='no-data-message-big'>No data to display.</div>";
+              echo "<div class='no-data-message-big'>No data to display.</div>";
           }
         ?>
         <canvas id="stock-out-chart" style="height: 158px"></canvas>
@@ -650,37 +620,38 @@
       <div class="card-body">
         <?php
           // Execute the SQL query
-          $sql = "SELECT item_list.name AS item_name, item_list.unit, SUM(IFNULL(waste_list.quantity, 0)) AS total_quantity_wasted, MAX(IFNULL(waste_list.date_updated, 'N/A')) AS date_updated
-                  FROM item_list
-                  LEFT JOIN waste_list ON item_list.id = waste_list.item_id
-                  GROUP BY item_list.id
-                  HAVING total_quantity_wasted > 0
-                  ORDER BY total_quantity_wasted DESC
+          $sql = "SELECT wh_item_list.name AS item_name, wh_item_list.unit, SUM(COALESCE(wh_waste_list.quantity, 0)) AS total_quantity_wasted, MAX(COALESCE(wh_waste_list.date_updated, NULL)) AS date_updated
+                  FROM wh_item_list
+                  LEFT JOIN wh_waste_list ON wh_item_list.id = wh_waste_list.item_id
+                  GROUP BY wh_item_list.id
+                  HAVING SUM(COALESCE(wh_waste_list.quantity, 0)) > 0
+                  ORDER BY SUM(COALESCE(wh_waste_list.quantity, 0)) DESC
                   LIMIT 5;";
 
-          $result = $conn->query($sql);
+          $result = pg_query($conn, $sql);
 
-          if ($result->num_rows > 0) {
+          if ($result) {
             $items_waste = array();
+            while ($row = pg_fetch_assoc($result)) {
+                $item_name = $row['item_name'] ?? 'Unknown';
+                $unit = $row['unit'] ?? 'Unknown';
+                $total_quantity = floor($row['total_quantity_wasted']);
+                $date_updated = $row['date_updated'] ?: 'N/A';
 
-            while($row = $result->fetch_assoc()) {
-              $item_name = $row['item_name'] ?? 'Unknown';
-              $unit = $row['unit'] ?? 'Unknown';
-              $total_quantity = floor($row['total_quantity_wasted']);
-              $date_updated = $row['date_updated'];
-
-              $item = array(
-                'name' => $item_name,
-                'quantity' => (int)$total_quantity
-              );
-              array_push($items_waste, $item);
+                $item = array(
+                    'name' => $item_name,
+                    'quantity' => (int)$total_quantity,
+                    'date_updated' => $date_updated
+                );
+                array_push($items_waste, $item);
             }
           } else {
-            echo "<div class='no-data-message-big'>No data to display.</div>";
+              echo "<div class='no-data-message-big'>No data to display.</div>";
           }
         ?>
-        <canvas id="waste-chart" style="height: 158px"></canvas>
-      </div>
+      <canvas id="waste-chart" style="height: 158px"></canvas>
+  </div>
+
 
       <!-- SCRIPT FOR TOP WASTE ITEMS -->
       <script>
@@ -781,13 +752,13 @@
                   <tbody>
                     <?php
                       // Retrieve the 5 most recent items
-                      $sql = "SELECT * FROM item_list ORDER BY date_created DESC LIMIT 5";
-                      $result = $conn->query($sql);
+                      $sql = "SELECT * FROM wh_item_list ORDER BY date_created DESC LIMIT 5";
+                      $result = pg_query($conn, $sql);
                       
                       // Create an array to store the recent items
                       $recent_items = array();
-                      if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
+                      if (pg_num_rows($result) > 0) {
+                        while($row = pg_fetch_assoc($result)) {
                           $recent_items[] = $row;
                         }
                       }
@@ -800,8 +771,8 @@
                         <?php 
                           // Retrieve the category name based on the category ID
                           $category_id = $item['category_id'];
-                          $category_query = $conn->query("SELECT name FROM category_list WHERE id = $category_id");
-                          $category = $category_query->fetch_assoc();
+                          $category_query = pg_query($conn, "SELECT name FROM wh_category_list WHERE id = $category_id");
+                          $category = pg_fetch_assoc($category_query);
                           echo $category['name']; 
                         ?>
                       </td>
@@ -835,13 +806,13 @@
                   <tbody>
                     <?php
                       // Retrieve the 5 most recent items
-                      $sql = "SELECT * FROM category_list ORDER BY date_created DESC LIMIT 5";
-                      $result = $conn->query($sql);
+                      $sql = "SELECT * FROM wh_category_list ORDER BY date_created DESC LIMIT 5";
+                      $result = pg_query($conn, $sql);
                       
                       // Create an array to store the recent items
                       $recent_categories = array();
-                      if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
+                      if (pg_num_rows($result) > 0) {
+                        while($row = pg_fetch_assoc($result)) {
                           $recent_categories[] = $row;
                         }
                       }
@@ -881,13 +852,13 @@
                   <tbody>
                     <?php
                       // Retrieve the 5 most recent items
-                      $sql = "SELECT * FROM unit_list ORDER BY date_created DESC LIMIT 5";
-                      $result = $conn->query($sql);
+                      $sql = "SELECT * FROM wh_unit_list ORDER BY date_created DESC LIMIT 5";
+                      $result = pg_query($conn, $sql);
                       
                       // Create an array to store the recent items
                       $recent_units = array();
-                      if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
+                      if (pg_num_rows($result) > 0) {
+                        while($row = pg_fetch_assoc($result)) {
                           $recent_units[] = $row;
                         }
                       }
@@ -897,7 +868,6 @@
                       <td class="align-middle"><?php echo $id++; ?></td>
                       <td class="align-middle"><?php echo $units['name']; ?></td>
                       <td class="align-middle"><?php echo $units['abbreviation']; ?></td>
-
                       <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($units['date_created'])); ?></td>
                     </tr>
                     <?php endforeach; ?>
@@ -923,40 +893,25 @@
                       <th>#</th>
                       <th>Full Name</th>
                       <th>Type</th>
-                      <th>Date Created</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
-                        // Retrieve the 5 most recent items
-                        $sql = "SELECT * FROM users_list ORDER BY date_added DESC LIMIT 5";
-                        $result = $conn->query($sql);
-
-                        // Create an array to store the recent items
-                        $recent_users = array();
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                $recent_users[] = $row;
-                            }
-                        }
+                      // Retrieve the 5 most recent items
+                      $sql = "SELECT * FROM users WHERE role IN ('warehouse_manager', 'warehouse_staff') LIMIT 5";
+                      $result = pg_query($conn, $sql);
+                      // Create an array to store the recent users
+                      $recent_users = pg_fetch_all($result);
+                      // Initialize the ID counter
+                      $id = 1;
                     ?>
-                    <?php $id = 1; foreach($recent_users as $users): ?>
+                    <?php foreach($recent_users as $users): ?>
                       <tr>
-                          <td class="align-middle"><?php echo $id++; ?></td>
-                          <td class="align-middle">
-                              <?php 
-                                  $name = $users['firstname'];
-                                  if (!empty($users['middlename'])) {
-                                      $name .= ' ' . $users['middlename'] . '.';
-                                  }
-                                  $name .= ' ' . $users['lastname'];
-                                  echo $name;
-                              ?>
-                          </td>
-                          <td class="align-middle"><?php echo ($users['type'] == 1) ? "Manager" : "Staff"; ?></td>
-                          <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($users['date_added'])); ?></td>
+                        <td class="align-middle"><?php echo $id++; ?></td>
+                        <td class="align-middle"><?php echo $users['fullname']; ?></td>
+                        <td class="align-middle"><?php echo ($users['role'] == 'warehouse_manager') ? "Manager" : "Staff"; ?></td>
                       </tr>
-                      <?php endforeach; ?>
+                    <?php endforeach; ?>
                   </tbody>
                 </table>
               </div>
@@ -1003,62 +958,3 @@
 <div class="container-fluid text-center">
   <img src="<= validate_image($_settings->info('cover')) ?>" alt="system-cover" id="system-cover" class="img-fluid">
 </div> -->
-
-
-<!-- TABLE FOR STOCK ALERTS -->
-    <!-- <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title">Stock Alerts</h5>
-          <div class="card-tools">
-            <a href="./?page=stockStatus" class="btn btn-flat btn-success rounded"></span>View All</a>
-          </div>
-        </div>
-        <div class="card-body">
-          <#php
-            // Define the query to retrieve the latest stockin_list records for each item_id
-            $query = "SELECT item_list.id, item_list.name, 
-                (SELECT min_stock FROM stock_notif LIMIT 1) AS min_stock, 
-                (SELECT max_stock FROM stock_notif LIMIT 1) AS max_stock,
-                (SELECT quantity FROM stockin_list WHERE item_id = item_list.id 
-                ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = item_list.id),0) - 
-                COALESCE((SELECT SUM(quantity) FROM `stockout_list` WHERE item_id = item_list.id),0)) AS `available`
-            FROM item_list 
-            ORDER BY date_updated DESC LIMIT 5";
-
-            // Execute the query
-            $result = mysqli_query($conn, $query);
-          #>
-
-          <#php while ($row = mysqli_fetch_assoc($result)) {
-            $name = $row['name'];
-            $min_stock = $row['min_stock'];
-            $max_stock = $row['max_stock'];
-            $available_quantity = (int)$row['available'];
-
-            // Initialize variables
-            $message = '';
-            $class = '';
-
-            if ($available_quantity == 0) {
-              $message = "Out of Stock: " . $name . " is currently out of stock. Please consider ordering more.";
-              $class = "alert alert-danger";
-            } elseif ($available_quantity <= $min_stock ) {
-              $message = "Low Stock: Only " . $available_quantity . " of " . $name . " is available. Please consider ordering more.";
-              $class = "alert alert-warning";
-            } elseif ($available_quantity >= $max_stock) {
-              $message = "Over Stock: You have " . $available_quantity . " too many " . $name . ". Consider reducing your order to save costs.";
-              $class = "alert alert-info";
-            }
-
-            // Output row with status message
-            echo '<div class="' . $class . '">' .
-                '<strong>' . $message . '</strong>' .
-                '</div>';
-          } #>
-              
-        </div>
-      </div>
-    </div> -->
-    

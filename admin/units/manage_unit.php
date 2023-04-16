@@ -1,14 +1,15 @@
 <?php
-	require_once('./../../config.php');
-	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = $conn->query("SELECT * from `unit_list` where id = '{$_GET['id']}'");
-		if($qry->num_rows > 0){
-			foreach($qry->fetch_assoc() as $k => $v){
-				$$k=$v;
-			}
-		}
-	}
+    require_once('./../../config.php');
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $qry = pg_query($conn, "SELECT * FROM wh_unit_list WHERE id = '{$_GET['id']}'");
+        if(pg_num_rows($qry) > 0){
+            foreach(pg_fetch_assoc($qry) as $k => $v){
+                $$k=$v;
+            }
+        }
+    }
 ?>
+
 
 
 <div class="container-fluid">

@@ -111,67 +111,68 @@
                       $count = 0;
 
                       // Count items with stock status level
-                      $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i 
-                            INNER JOIN category_list c ON i.category_id = c.id 
-                            INNER JOIN stock_notif s ON s.id = 1 
-                            WHERE i.delete_flag = 0 
-                            AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0)) <= s.min_stock 
-                            OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0)) >= s.max_stock)");
-                      $count = $qry_count->fetch_assoc()['count'];
+                      $qry_count = pg_query($conn, "SELECT COUNT(*) as count FROM wh_item_list i 
+                          INNER JOIN wh_category_list c ON i.category_id = c.id 
+                          INNER JOIN wh_stock_notif s ON s.id = 1 
+                          WHERE i.delete_flag = 0 
+                          AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                          OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)");
+                      $count = pg_fetch_assoc($qry_count)['count'];
 
                       // Count expired items
-                      $qry_count = $conn->query("SELECT COUNT(*) AS count FROM stockin_list WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'");
-                      $count += $qry_count->fetch_assoc()['count'];
+                      $qry_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list WHERE (expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date != '0001-01-01') OR (expire_date IS NULL)");
+                      $count += pg_fetch_assoc($qry_count)['count'];
 
                       // Display the total count if there are items with stock status level or expired items
                       if ($count > 0) {
-                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                          echo '<span class="badge badge-danger">'.$count.'</span>';
                       }
-                    ?>
+                      ?>
                   </p>
                 </a>
 
                 <ul class="nav nav-treeview" style="display: none;">
                   <li class="nav-item">
-                    <a href="./?page=items" class="nav-link tree-item nav-items">
-                      <i class="fas fa-chart-line nav-icon"></i>
-                      <p style="color:white">Stock Information</p>
-                    </a>
+                      <a href="./?page=items" class="nav-link tree-item nav-items">
+                        <i class="fas fa-chart-line nav-icon"></i>
+                        <p style="color:white">Stock Information</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="./?page=stocks" class="nav-link tree-item nav-stocks">
+                        <i class="fas fa-exchange-alt nav-icon"></i>
+                        <p style="color:white">Stock Adjustment</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="./?page=setNotif" class="nav-link tree-item nav-setNotif">
+                        <i class="fas fa-envelope nav-icon"></i>
+                        <p style="color:white">Stock Alert Notification</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
+                          <i class="fas fa-battery-half nav-icon"></i>
+                          <p style="color:white">Stock Status Level</p>
+                          <?php
+                              // Count the items marked as overstock, lowstock, and out of stock
+                              $count_query = "SELECT COUNT(*) as count FROM wh_item_list i 
+                                              INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                              INNER JOIN wh_stock_notif s ON s.id = 1 
+                                              WHERE i.delete_flag = 0 
+                                              AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                                              OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)";
+                              $count_result = pg_query($conn, $count_query);
+                              $count = pg_fetch_assoc($count_result)['count'];
+
+                              // Display the badge element with the total count
+                              echo '<span class="badge badge-danger">'.$count.'</span>';
+                          ?>
+                      </a>
                   </li>
-
-                  <li class="nav-item">
-                    <a href="./?page=stocks" class="nav-link tree-item nav-stocks">
-                      <i class="fas fa-exchange-alt nav-icon"></i>
-                      <p style="color:white">Stock Adjustment</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="./?page=setNotif" class="nav-link tree-item nav-setNotif">
-                      <i class="fas fa-envelope nav-icon"></i>
-                      <p style="color:white">Stock Alert Notification</p>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
-                        <i class="fas fa-battery-half nav-icon"></i>
-                        <p style="color:white">Stock Status Level</p>
-                        <?php
-                            // Count the items marked as overstock, lowstock, and out of stock
-                            $qry_count = $conn->query("SELECT COUNT(*) as count FROM `item_list` i 
-                            INNER JOIN category_list c ON i.category_id = c.id 
-                            INNER JOIN stock_notif s ON s.id = 1 
-                            WHERE i.delete_flag = 0 
-                            AND ((COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0)) <= s.min_stock 
-                            OR (COALESCE((SELECT SUM(quantity) FROM `stockin_list` WHERE item_id = i.id),0)) >= s.max_stock) ");
-                            $count = $qry_count->fetch_assoc()['count'];
-
-                            // Display the badge element with the total count
-                            echo '<span class="badge badge-danger">'.$count.'</span>';
-                        ?>
-                    </a>
-                </li>
 
                   <li class="nav-item">
                     <a href="./?page=stockExpiration" class="nav-link tree-item nav-stockExpiration">
@@ -179,29 +180,27 @@
                         <p style="color:white">Stock Expiration</p>
                         <?php
                         // Count the number of expired items in the database
-                        $expired_items_count = $conn->query("
-                        SELECT COUNT(*) AS count
-                        FROM stockin_list
-                        WHERE expire_date <= DATE_ADD(NOW(), INTERVAL 1 DAY) AND expire_date != '0000-00-00'
-                        
-                        ");
-                        $expired_items_count = $expired_items_count->fetch_assoc()['count'];
+                        $expired_items_count_query = "
+                            SELECT COUNT(*) AS count
+                            FROM wh_stockin_list
+                            WHERE expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date IS NOT NULL
+                        ";
+                        $expired_items_count_result = pg_query($conn, $expired_items_count_query);
+                        $expired_items_count = pg_fetch_assoc($expired_items_count_result)['count'];
 
                         // Display the badge if there are expired items
                         if ($expired_items_count > 0) {
                             echo '<span class="badge badge-danger">'.$expired_items_count.'</span>';
                         }
                         ?>
-                      </a>
+                    </a>
                   </li>
 
                 </ul>
               </li>
 
-
-
               <!-- REPORTS DROPDOWN -->
-              <?php if($_settings->userdata('type') == 1): ?>
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-chart-bar"></i>
