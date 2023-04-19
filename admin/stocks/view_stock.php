@@ -23,10 +23,10 @@
                 <div class="card-title"><b>Item Details</b></div>
                 <div class="card-tools">
                     <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
-                    <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
+                    <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=items"><i class="fa fa-angle-left"></i> Back to List</a>
 		        </div>
             </div>
-            <div class="card-body">
+            <!-- <div class="card-body">
                 <div class="container-fluid">
                     <fieldset>
                     <div class="d-flex w-100">
@@ -51,17 +51,17 @@
                         </div>
                     </fieldset>
                 </div>
-            </div>
+            </div> -->
         </div>
 
 
         <!-- STOCK-IN TABLE -->
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
-                <div class="card-title">Stock-In History</div>
-                <div class="card-tools">
+                <div class="card-title">Purchasing History</div>
+                <!-- <div class="card-tools">
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_stockin"><i class="far fa-plus-square"></i> Add Stock In</button>
-                </div>
+                </div> -->
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="stockin-tbl">
@@ -107,10 +107,10 @@
         <!-- STOCK-OUT TABLE-->
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
-                <div class="card-title">Stock-Out History</div>
-                <div class="card-tools">
+                <div class="card-title">Point of Sale History</div>
+                <!-- <div class="card-tools">
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_stockout"><i class="far fa-plus-square"></i> Add Stock Out</button>
-                </div>
+                </div> -->
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="stockout-tbl">

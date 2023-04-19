@@ -246,7 +246,7 @@
               $pageTitle = 'Units';
               break;
             case 'items':
-              $pageTitle = 'Stock Information';
+              $pageTitle = 'Stock Adjustment';
               break;
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
@@ -254,8 +254,11 @@
             case 'setNotif':
               $pageTitle = 'Stock Alert Notifications';
               break;
+            case 'pos-request':
+              $pageTitle = 'Stock Sales Request';
+              break;
             case 'stockStatus':
-              $pageTitle = 'Stock Status Level';
+              $pageTitle = 'Stock Purchasing Request';
               break;
             case 'stockExpiration':
               $pageTitle = 'Stock Expiration';

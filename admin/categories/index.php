@@ -39,8 +39,8 @@
 						<th>#</th>
 						<th>Name</th>
 						<th>Description</th>
-						<th>Date Created</th>
 						<th>Last Updated</th>
+						<th>Items Registered</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -48,15 +48,15 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = pg_query($conn, "SELECT * from wh_category_list where delete_flag = 0 order by date_created desc");
+						$qry = pg_query($conn, "SELECT * from wh_category_list order by date_created desc");
 						while($row = pg_fetch_assoc($qry)):
 						?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
 							<td class=""><?= $row['name'] ?></td>
-							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
+							<td class=""><p class="mb-0 "><?= $row['description'] ?></p></td>
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
+							<td></td>
 							<td class="text-center">
 								<?php if($row['status'] == 1): ?>
 									<span class="badge badge-success px-3 rounded-pill">Active</span>

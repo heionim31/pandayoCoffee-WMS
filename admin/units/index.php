@@ -41,8 +41,8 @@
 						<th>Name</th>
 						<th>Abbreviation</th>
 						<th>Description</th>
-						<th>Date Created</th>
 						<th>Last Updated</th>
+						<th>Items Registered</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -50,7 +50,7 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = pg_query($conn, "SELECT * from wh_unit_list where delete_flag = 0 ORDER BY date_created DESC");
+						$qry = pg_query($conn, "SELECT * from wh_unit_list ORDER BY date_created DESC");
 						while($row = pg_fetch_assoc($qry)):
 					?>
 						<tr>
@@ -58,9 +58,8 @@
 							<td class=""><?= $row['name'] ?></td>
 							<td class=""><?= $row['abbreviation'] ?></td>
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_created'])) ?></td>
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
-
+							<td></td>
 							<td class="text-center">
                                 <?php if($row['status'] == 1): ?>
                                     <span class="badge badge-success px-3 rounded-pill">Active</span>

@@ -1,7 +1,7 @@
 <?php
     require_once('./../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
-        $qry = pg_query($conn, "SELECT * from wh_unit_list where id = '{$_GET['id']}' and delete_flag = 0 ");
+        $qry = pg_query($conn, "SELECT * from wh_unit_list where id = '{$_GET['id']}'");
         if(pg_num_rows($qry) > 0){
             $result = pg_fetch_assoc($qry);
             extract($result);
