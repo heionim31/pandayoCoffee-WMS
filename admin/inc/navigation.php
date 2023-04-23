@@ -200,7 +200,7 @@
 
                 <ul class="nav nav-treeview" style="display: none;">
                   <li class="nav-item">
-                    <a href="./?page=pos-request" class="nav-link tree-item nav-pos-request">
+                    <a href="./?page=sales_request" class="nav-link tree-item nav-sales_request">
                       <i class="fas fa-cash-register nav-icon"></i>
                       <p style="color:white">Sales Request</p>
                       <?php
@@ -216,7 +216,7 @@
                   </li>
 
                   <li class="nav-item">
-                    <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
+                    <a href="./?page=purchasing_request" class="nav-link tree-item nav-purchasing_request">
                       <i class="fas fa-clipboard-list nav-icon"></i>
                       <p style="color:white">Purchasing Request</p>
                       <?php

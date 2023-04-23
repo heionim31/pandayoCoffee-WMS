@@ -17,11 +17,9 @@
 
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
-		<h3 class="card-title">Stock Adjustment</h3>
+		<h3 class="card-title">Stock List</h3>
 		<div class="card-tools">
 			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Item</a>
-			<a class="btn btn-flat btn-success" href="./?page=pos-request"><span class="fas fa-eye"></span> Sales Request</a>
-			<a class="btn btn-flat btn-success" href="./?page=stockStatus"><span class="fas fa-eye"></span> Purchasing Request</a>
 		</div>
 	</div>
 	<div class="card-body">

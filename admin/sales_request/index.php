@@ -88,8 +88,8 @@
                     <input type="text" class="form-control" id="productName" name="productName" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea class="form-control" id="notes" name="notes" readonly></textarea>
+                    <label for="notes"> Request Notes</label>
+                    <input type="text" class="form-control" id="notes" name="notes" readonly>
                 </div>
 				<div class="form-group">
                     <label for="request_quantity">Request Quantity</label>

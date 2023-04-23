@@ -2,9 +2,9 @@
   <div class="col-md-8">
     <div class="card card-outline rounded-5 card-dark">
       <div class="card-header">
-          <h3 class="card-title">Pending Leave Requests</h3>
+          <h3 class="card-title">All Request Leave</h3>
           <div class="card-tools">
-            <a href="./?page=leave_request_manager/history" class="btn btn-flat btn-success"><span class="fas fa-history"></span> Request History</a>
+            <a href="./?page=leave_request_manager" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> Go back</a>
           </div>
       </div>
       <div class="card-body">
@@ -27,7 +27,7 @@
             <tbody>
               <?php 
                 $i = 1;
-                $qry = pg_query($conn, "SELECT * FROM wh_leave_request WHERE status NOT IN ('Approved', 'Declined') ORDER BY date_requested DESC");
+                $qry = pg_query($conn, "SELECT * FROM wh_leave_request WHERE status NOT IN ('Pending') ORDER BY id DESC");
                 while($row = pg_fetch_assoc($qry)):
               ?>
               <tr>
@@ -49,22 +49,6 @@
       </div>
     </div>
   </div>
-
-
-  <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if (isset($_POST["approve"])) {
-        $id = $_POST["id"];
-        $query = "UPDATE wh_leave_request SET status = 'Approved' WHERE id = $id";
-        pg_query($conn, $query);
-      } else if (isset($_POST["decline"])) {
-        $id = $_POST["id"];
-        $reason = $_POST["decline"];
-        $query = "UPDATE wh_leave_request SET status = 'Declined', reason_decline = '$reason' WHERE id = $id";
-        pg_query($conn, $query);
-      }
-    }
-  ?>
 
   <div class="col-md-4">
     <div class="card card-outline rounded-5 card-dark">
@@ -117,10 +101,6 @@
             <div class="form-group">
               <label for="reason">Reason</label>
               <textarea rows="4" class="form-control form-control-sm" id="reason" name="reason" readonly></textarea>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-              <button type="submit" class="btn btn-primary" name="approve">Approve</button>
-              <button class="btn btn-dark bg-gradient-danger border" name="decline"> Decline</button>
             </div>
           </div>
         </form>

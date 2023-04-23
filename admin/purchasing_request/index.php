@@ -8,7 +8,7 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<colgroup>
+				<!-- <colgroup>
 					<col width="5%">
 					<col width="15%">
 					<col width="5%">
@@ -17,7 +17,7 @@
 					<col width="25%">
 					<col width="10%">
 					<col width="25%">
-				</colgroup>
+				</colgroup> -->
 				<thead>
 					<tr>
 						<th>#</th>
@@ -25,7 +25,6 @@
 						<th>Current Stock</th>
 						<th>Reorder Level</th>
 						<th>Status Level</th>
-						<th>Message</th>
 						<th>Order Status</th>
 						<th>Action</th>
 					</tr>
@@ -70,9 +69,8 @@
 									</div>
 								</td>
 								<td><?= (int)$row['available'] ?></td>
-								<td></td>
+								<td><?= $row['min_stock'] ?></td>
 								<td class="<?= $class ?>"><strong><?= $title ?></strong></td>
-								<td><?= $message ?></td>
 								<td></td>
 								<td>
 									<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" onclick="showRequestModal('<?php echo $row['name']; ?>')"><span class="fa fa-cart-plus text-dark"></span> Request</a>

@@ -47,10 +47,9 @@
                         <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width:55%; height:100%">
                         <p class="text-center text-white px-1 py-2" id="page-title"><?php echo $_settings->info('name') ?></p>
                     </div>
-                    <!-- <p class="login-box-msg">Please enter your credentials</p> -->
                     <form id="login-frm" action="" method="post">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="username" autofocus placeholder="Username" />
+                            <input type="text" class="form-control" name="username" autofocus placeholder="Username" required />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
@@ -58,7 +57,7 @@
                             </div>
                         </div>
                         <div class="input-group mb-3">
-                            <input type="password" class="form-control" name="password" placeholder="Password" />
+                            <input type="password" class="form-control" name="password" placeholder="Password" required />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>

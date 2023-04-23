@@ -246,7 +246,7 @@
               $pageTitle = 'Units';
               break;
             case 'items':
-              $pageTitle = 'Stock Adjustment';
+              $pageTitle = 'Stock List';
               break;
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
@@ -254,10 +254,10 @@
             case 'setNotif':
               $pageTitle = 'Stock Alert Notifications';
               break;
-            case 'pos-request':
+            case 'sales_request':
               $pageTitle = 'Stock Sales Request';
               break;
-            case 'stockStatus':
+            case 'purchasing_request':
               $pageTitle = 'Stock Purchasing Request';
               break;
             case 'stockExpiration':
@@ -367,7 +367,7 @@
             $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-exclamation-circle text-danger"></i> ' . $expired_items_count . ' Items Expired Alerts</a>';
           }
           if ($count > 0) {
-            $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockStatus"><i class="fas fa-exclamation-triangle text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
+            $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-exclamation-triangle text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
           }
           $dropdown_count = count($dropdown_items);
 
