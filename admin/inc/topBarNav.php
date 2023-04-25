@@ -251,7 +251,7 @@
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
               break;
-            case 'setNotif':
+            case 'set_notification':
               $pageTitle = 'Stock Alert Notifications';
               break;
             case 'sales_request':

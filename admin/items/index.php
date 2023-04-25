@@ -44,7 +44,7 @@
 						<th>Item Type</th>
 						<th>Description</th>
 						<th>Current Stock</th>
-						<th>Reorder Level</th>
+						<th>Quantity Alert</th>
 						<th>Last Update</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -92,18 +92,10 @@
 								<span class="badge badge-danger px-3 rounded-pill">Unavailable</span>
 							<?php endif; ?>
 						</td>
-						<td align="center">
-								<button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-									Action
-								<span class="sr-only">Toggle Dropdown</span>
-								</button>
-								<div class="dropdown-menu" role="menu">
-								<a class="dropdown-item view-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item edit-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
-								</div>
+						<td align="center" class="d-flex justify-content-around">
+							<a class="view-data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="View" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark text-md"></span></a>
+							<a class="edit-data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="Edit" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary text-md"></span></a>
+							<a class="delete_data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="Delete" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger text-md"></span></a>
 						</td>
 					</tr>
 				<?php endwhile; ?>
@@ -113,6 +105,12 @@
 	</div>
 </div>
 
+<script>
+	$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+
+</script>
 
 <!-- <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">

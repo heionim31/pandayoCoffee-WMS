@@ -136,7 +136,7 @@
                   </li>
 
                   <li class="nav-item">
-                    <a href="./?page=setNotif" class="nav-link tree-item nav-setNotif">
+                    <a href="./?page=set_notification" class="nav-link tree-item nav-set_notification">
                       <i class="fas fa-envelope nav-icon"></i>
                       <p style="color:white">Stock Alert Notification</p>
                     </a>

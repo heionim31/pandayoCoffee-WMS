@@ -2,22 +2,12 @@
 	<div class="card-header">
 		<h3 class="card-title">Purchasing Request</h3>
 		<div class="card-tools">
-			<a class="btn btn-flat btn-primary" href=""><span class="fas fa-history"></span> Purchasing Request History </a>
+			<a class="btn btn-flat btn-success" href="#"><span class="fas fa-history"></span> History</a>
 		</div>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<!-- <colgroup>
-					<col width="5%">
-					<col width="15%">
-					<col width="5%">
-					<col width="5%">
-					<col width="10%">
-					<col width="25%">
-					<col width="10%">
-					<col width="25%">
-				</colgroup> -->
 				<thead>
 					<tr>
 						<th>#</th>
@@ -62,7 +52,7 @@
 						?>
 							<tr>
 								<td><?php echo $i++; ?></td>
-								<td class="">
+								<td>
 									<div style="line-height:1em">
 										<div><?= $row['name'] ?> [<?= $row['unit'] ?>]</div>
 										<div class="small"><i><?= $row['category'] ?></i></div>
@@ -71,11 +61,44 @@
 								<td><?= (int)$row['available'] ?></td>
 								<td><?= $row['min_stock'] ?></td>
 								<td class="<?= $class ?>"><strong><?= $title ?></strong></td>
-								<td></td>
 								<td>
-									<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" onclick="showRequestModal('<?php echo $row['name']; ?>')"><span class="fa fa-cart-plus text-dark"></span> Request</a>
-									<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks&id=<?php echo $row['id'] ?>"><span class="fa fa-adjust text-dark"></span> Adjustment</a>
-									<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-history text-dark"></span> History</a>
+									<?php
+										$item_name = $row['name'];
+										$request_status_query = pg_query($conn, "SELECT status FROM wh_ingredient_request WHERE name = '$item_name'");
+										if (pg_num_rows($request_status_query) > 0) {
+											$request_status = pg_fetch_result($request_status_query, 0);
+											echo $request_status;
+											if($request_status == "Approved") {
+												$disable_request = "disabled";
+												$disable_adjustment = "";
+											} else if($request_status == "Pending") {
+												$disable_request = "";
+												$disable_adjustment = "disabled";
+											} else {
+												$disable_request = "disabled";
+												$disable_adjustment = "disabled";
+											}
+										} else {
+											echo "----------";
+											$disable_request = "";
+											$disable_adjustment = "disabled";
+										}
+									?>
+								</td>
+								<td>
+									<?php
+										if($disable_request == "disabled") {
+											echo '<button class="btn btn-light border" disabled><span class="fa fa-cart-plus text-dark"></span> Request</button>';
+										} else {
+											echo '<a class="btn btn-light border" href="#" onclick="showRequestModal(\''. $row['name'] .'\',\''. $row['unit'] .'\',\''. $row['category'] .'\')"><span class="fa fa-cart-plus text-dark"></span> Request</a>';
+										}
+
+										if($disable_adjustment == "disabled") {
+											echo '<button class="btn btn-light border" disabled><span class="fa fa-adjust text-dark"></span> Adjustment</button>';
+										} else {
+											echo '<a class="btn btn-light border" href="./?page=purchasing_request/adjustment&id='. $row['id'] .'"><span class="fa fa-adjust text-dark"></span> Adjustment</a>';
+										}
+									?>
 								</td>
 							</tr>
 					<?php endwhile; ?>
@@ -84,6 +107,62 @@
 		</div>
 	</div>
 </div>
+
+
+<?php
+	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+		// Get the latest request ID
+		$query = "SELECT request_id FROM wh_ingredient_request ORDER BY request_id DESC LIMIT 1";
+		$result = pg_query($conn, $query);
+
+		if (pg_num_rows($result) > 0) {
+			$row = pg_fetch_assoc($result);
+			$latestId = $row['request_id'];
+		} else {
+			$latestId = '000000000000';
+		}
+
+		// Generate the next request ID
+		$lastCounter = substr($latestId, 7);
+		$lastDate = substr($latestId, 0, 6);
+		$today = date('ymd');
+		if ($lastDate == $today) {
+			if ($lastCounter == str_repeat('9', strlen($lastCounter))) {
+				$nextId = $today . '-001';
+			} else {
+				$nextCounter = str_pad($lastCounter + 1, strlen($lastCounter), '0', STR_PAD_LEFT);
+				$nextId = $today . '-' . $nextCounter;
+			}
+		} else {
+			$nextId = $today . '-001';
+		}
+
+		// Get the form data
+		$personnel = $_POST['personnel'];
+		$role = $_POST['role'];
+		$itemName = $_POST['itemName'];
+		$itemUnit = $_POST['itemUnit'];
+		$category = $_POST['category'];
+		$requestedQuantity = $_POST['requestedQuantity'];
+		$notes = $_POST['notes'];
+
+		// Save the data to the database
+		$query = "INSERT INTO wh_ingredient_request (request_id, request_by, personnel_role, name, unit, category, quantity, request_notes, status, date_request)
+				VALUES ('$nextId', '$personnel', '$role', '$itemName', '$itemUnit', '$category', $requestedQuantity, '$notes', 'Pending', CURRENT_DATE)";
+		
+		$result = pg_query($conn, $query);
+
+		if($result) {
+			// Data saved successfully
+			echo "<script>Swal.fire('Success', 'Request submitted successfully!', 'success')</script>";
+		} else {
+			// Error saving data
+			echo "<script>Swal.fire('Error', 'Error: " . pg_last_error($conn) . "', 'error')</script>";
+		}
+		
+	}
+?>
 
 <!-- REQUEST MODAL -->
 <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
@@ -96,18 +175,38 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="requestForm" method="post">
-                    <div class="form-group">
-                        <label for="itemName">Item Name</label>
-                        <input type="text" class="form-control" id="itemName" name="itemName" readonly>
+                <form id="requestForm" method="POST">
+					<div class="form-group">
+						<input type="text" class="form-control" id="personnel" name="personnel" value="<?php echo ucwords($_settings->userdata('fullname')) ?>" hidden>
+						<input type="text" class="form-control" id="role" name="role" value="<?php echo ucwords($_settings->userdata('role')) ?>" hidden>
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="itemName">Item Name</label>
+								<input type="text" class="form-control" id="itemName" name="itemName" readonly>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="itemUnit">Unit</label>
+								<input type="text" class="form-control" id="itemUnit" name="itemUnit" value="<?php echo $row['unit']; ?>" readonly>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="form-group">
+								<label for="category">Category</label>
+								<input type="text" class="form-control" id="category" name="category" readonly>
+							</div>
+						</div>
                     </div>
                     <div class="form-group">
                         <label for="requestedQuantity">Requested Quantity</label>
                         <input type="number" class="form-control" id="requestedQuantity" name="requestedQuantity" required>
                     </div>
                     <div class="form-group">
-                        <label for="reason">Reason for Request</label>
-                        <textarea class="form-control" id="reason" name="reason" required></textarea>
+                        <label for="notes">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" required></textarea>
                     </div>
                 </form>
             </div>
@@ -122,8 +221,10 @@
 
 <script>
 	// REQUEST ITEMS
-	function showRequestModal(itemName) {
-		$('#itemName').val(itemName);
+	function showRequestModal(name, unit, category) {
+		$('#itemName').val(name);
+		$('#itemUnit').val(unit);
+		$('#category').val(category);
 		$('#requestModal').modal('show');
 	}
 
