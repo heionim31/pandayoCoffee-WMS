@@ -176,7 +176,7 @@
         <a href="<?php echo base_url ?>admin/?page=categories" style="color:black;">
           <span class="info-box-number text-left h5">
           <?php 
-            $category = pg_query($conn, "SELECT * FROM wh_category_list WHERE delete_flag = 0 AND status = 1");
+            $category = pg_query($conn, "SELECT * FROM wh_category_list WHERE status = 1");
             $num_category = pg_num_rows($category);
             echo number_format($num_category);
           ?>
@@ -195,7 +195,7 @@
         <a href="<?php echo base_url ?>admin/?page=units" style="color:black;">
           <span class="info-box-number text-left h5">
             <?php 
-              $unit = pg_query($conn, "SELECT * FROM wh_unit_list WHERE delete_flag = 0 AND status = 1");
+              $unit = pg_query($conn, "SELECT * FROM wh_unit_list WHERE status = 1");
               $num_unit = pg_num_rows($unit);
               echo number_format($num_unit);
             ?>

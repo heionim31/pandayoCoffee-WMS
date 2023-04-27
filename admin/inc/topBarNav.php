@@ -246,16 +246,19 @@
               $pageTitle = 'Units';
               break;
             case 'items':
-              $pageTitle = 'Stock Information';
+              $pageTitle = 'Stock List';
               break;
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
               break;
-            case 'setNotif':
+            case 'set_notification':
               $pageTitle = 'Stock Alert Notifications';
               break;
-            case 'stockStatus':
-              $pageTitle = 'Stock Status Level';
+            case 'sales_request':
+              $pageTitle = 'Stock Sales Request';
+              break;
+            case 'purchasing_request':
+              $pageTitle = 'Stock Purchasing Request';
               break;
             case 'stockExpiration':
               $pageTitle = 'Stock Expiration';
@@ -364,7 +367,7 @@
             $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-exclamation-circle text-danger"></i> ' . $expired_items_count . ' Items Expired Alerts</a>';
           }
           if ($count > 0) {
-            $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockStatus"><i class="fas fa-exclamation-triangle text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
+            $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-exclamation-triangle text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
           }
           $dropdown_count = count($dropdown_items);
 
@@ -406,8 +409,8 @@
             </button>
             <div class="dropdown-menu" role="menu">
               <a class="dropdown-item" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> Profile</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a>
+              <!-- <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a> -->
             </div>
         </div>
     </li>

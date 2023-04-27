@@ -5,31 +5,28 @@
 <?php endif;?>
 
 
-<style>
-	.enroll-logo{
-		width:3em;
-		height:3em;
-		object-fit:cover;
-		object-position:center center;
-	}
-</style>
 
 
-<div class="card card-outline rounded-0 card-dark">
+
+
+<!-- <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
-		<h3 class="card-title">Stock Purchasing Requests</h3>
+		<h3 class="card-title">Warehouse Inventory</h3>
+		<div class="card-tools">
+			<a class="btn btn-flat btn-success" href="./?page=pos-request"><span class="fas fa-plus"></span> Sales Request</a>
+			<a class="btn btn-flat btn-success" href="./?page=stockStatus"><span class="fas fa-plus"></span> Purchasing Request</a>
+		</div>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
 				<colgroup>
-					<col width="5%">
+					<col width="10%">
 					<col width="20%">
 					<col width="15%">
 					<col width="15%">
 					<col width="10%">
-					<col width="10%">
-					<col width="10%">
+					<col width="15%">
 				</colgroup>
 				<thead>
 					<tr>
@@ -37,7 +34,6 @@
 						<th>Item</th>
 						<th>Unit</th>
 						<th>Current Stock</th>
-						<th>Reorder Level</th>
 						<th>Last Updated</th>
 						<th>Action</th>
 					</tr>
@@ -71,7 +67,6 @@
 							</td>
 							<td><?= $row['unit'] ?></td>
 							<td><?= (int)$row['available'] ?></td>
-							<td></td>
 							<td><?php echo !empty($row['last_updated']) ? date("Y-m-d H:i",strtotime($row['last_updated'])) : ''; ?></td>
 							<td>
 								<a class="btn btn-flat btn-sm btn-light bg-gradient-light border" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> Adjust</a>
@@ -82,40 +77,37 @@
 			</table>
 		</div>
 	</div>
-</div>
+</div> -->
 
 
-<!-- POS REQUEST -->
-<div class="card card-outline rounded-0 card-dark">
+<!-- <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
-		<h3 class="card-title">Stock POS Requests</h3>
+		<h3 class="card-title">POS Inventory</h3>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
 				<colgroup>
-					<col width="5%">
-					<col width="15%">
 					<col width="10%">
-					<col width="10%">
-					<col width="15%">
 					<col width="20%">
-					<col width="25%">
+					<col width="15%">
+					<col width="15%">
+					<col width="10%">
+					<col width="15%">
 				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
 						<th>Product</th>
-						<th>Date Request</th>
+						<th>Code</th>
 						<th>Status</th>
-						<th>Request ID</th>
-						<th>Request By</th>
-						<th>Action</th>
+						<th>Current Stock</th>
+						<th>Max Stock</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php 
-						$result = pg_query($conn, "SELECT * FROM Ingredient_request");
+						$result = pg_query($conn, "SELECT * FROM products_sales");
 						$counter = 1;
 						while ($row = pg_fetch_assoc($result)) {
 					?>
@@ -123,29 +115,25 @@
 							<td><?php echo $counter++; ?></td>
 							<td>
 								<div style="line-height: 1em">
-									<div><?php echo $row['product_name']; ?></div>
-									<div class="small"><i><?php echo $row['code']; ?></i></div>
+									<div><?php echo $row['prod_name']; ?></div>
+									<div class="small"><i><?php echo $row['category']; ?></i></div>
 								</div>
 							</td>
-							<td><?php echo $row['date_request']; ?></td>
+							<td><?php echo $row['code']; ?></td>
 							<td><?php echo $row['status']; ?></td>
-							<td><?php echo $row['request_id']; ?></td>
-							<td><?php echo $row['request_by']; ?></td>
-							<td>
-								<button class="btn btn-flat btn-sm bg-gradient-light border"><span class="fa fa-eye text-dark"></span> View</button>
-								<button class="btn btn-flat btn-sm btn-dark bg-gradient-success border"><span class="fa fa-check text-light"></span> Approve</button>
-								<button class="btn btn-flat btn-sm btn-light bg-danger border <?php echo ($row['request_by'] == 'AUTOMATIC SYSTEM') ? 'disabled' : 'bg-gradient-danger'; ?>"><span class="fa fa-times text-light"></span> Decline</button>
-							</td>
+							<td><?php echo $row['current_stock']; ?></td>
+							<td><?php echo $row['max_stock']; ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>
 			</table>
 		</div>
 	</div>
-</div>
+</div> -->
 
 
 <script>
+	// TABLE
 	$(document).ready(function(){
 		$('.table').dataTable({
 			columnDefs: [

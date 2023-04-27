@@ -14,13 +14,16 @@
 		}
 
 		public function save_users(){
-			if(empty($_POST['password']))
+			// BYCRYPT PASSWORD
+			if(empty($_POST['password'])) {
 				unset($_POST['password']);
-			else
-				$_POST['password'] = md5($_POST['password']);
-				extract($_POST);
-				$data = '';
-
+			} else {
+				$_POST['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
+			}
+			
+			extract($_POST);
+			$data = '';
+			
 			foreach($_POST as $k => $v){
 				if(!in_array($k,array('id'))){
 					if(!empty($data)) $data .=" , ";

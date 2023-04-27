@@ -54,7 +54,7 @@
 					$data .= " {$k}='{$v}' ";
 				}
 			}
-			$check = pg_query($this->conn, "SELECT * FROM wh_category_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
+			$check = pg_query($this->conn, "SELECT * FROM wh_category_list WHERE name = '{$name}' ".(!empty($id) ? " AND id != {$id} " : "")." ");
 			if(!$check)
 				return pg_last_error($this->conn);
 			$num_rows = pg_num_rows($check);
@@ -88,7 +88,7 @@
 		// CATEGORY - DELETE
 		function delete_category(){
 			extract($_POST);
-			$del = pg_query($this->conn, "UPDATE wh_category_list SET delete_flag = 1 WHERE id = '{$id}'");
+			$del = pg_query($this->conn, "DELETE FROM wh_category_list WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success', 'Category successfully deleted.');
@@ -98,6 +98,7 @@
 			}
 			return json_encode($resp);
 		}
+		
 
 
 		// UNIT - SAVE
@@ -111,7 +112,7 @@
 					$data .= " {$k}='{$v}' ";
 				}
 			}
-			$check = pg_query($this->conn, "SELECT * FROM wh_unit_list WHERE name = '{$name}' AND delete_flag = 0 ".(!empty($id) ? " AND id != {$id} " : "")." ");
+			$check = pg_query($this->conn, "SELECT * FROM wh_unit_list WHERE name = '{$name}'".(!empty($id) ? " AND id != {$id} " : "")." ");
 			if(!$check)
 				return pg_last_error($this->conn);
 			$num_rows = pg_num_rows($check);
@@ -145,7 +146,7 @@
 		// UNIT - DELETE
 		function delete_unit(){
 			extract($_POST);
-			$del = pg_query($this->conn, "UPDATE wh_unit_list SET delete_flag = 1 WHERE id = '{$id}'");
+			$del = pg_query($this->conn, "DELETE FROM wh_unit_list WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success', 'Unit successfully deleted.');
@@ -155,6 +156,7 @@
 			}
 			return json_encode($resp);
 		}
+		
 		
 
 		// ITEM - SAVE
@@ -300,9 +302,9 @@
 				$cid = !empty($id) ? $id : pg_last_oid($save);
 				$resp['status'] = 'success';
 				if(empty($id))
-					$this->settings->set_flashdata('success'," Item has been added successfully.");
+					$this->settings->set_flashdata('success'," Ingredient has been added successfully.");
 				else
-					$this->settings->set_flashdata('success'," Item successfully updated");
+					$this->settings->set_flashdata('success'," Ingredient successfully updated");
 				
 			}else{
 				$resp['status'] = 'failed';

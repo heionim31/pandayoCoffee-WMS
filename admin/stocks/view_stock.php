@@ -11,20 +11,19 @@
         echo '<script>alert("item ID is Required."); location.replace("./?page=items")</script>';
     }
 ?>
-
-
      
-<div class="row mt-n4 justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+<div class="row mt-3 justify-content-center">
+    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
         
+    
         <!-- ITEM DETAILS -->
-        <div class="card card-outline card-dark rounded-0 shadow printout">
+        <div class="card card-outline card-dark rounded-0 shadow printout" >
             <div class="card-header py-1">
                 <div class="card-title"><b>Item Details</b></div>
                 <div class="card-tools">
                     <button id="print" class="btn btn-success btn-flat bg-gradient-success btn-sm" type="button"><i class="fa fa-print"></i> Print</button>
-                    <a class="btn btn-light btn-flat bg-gradient-light border btn-sm text-dark" href="./?page=stocks"><i class="fa fa-angle-left"></i> Back to List</a>
-		        </div>
+                    <a href="./?page=items" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> return</a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
@@ -58,10 +57,10 @@
         <!-- STOCK-IN TABLE -->
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
-                <div class="card-title">Stock-In History</div>
-                <div class="card-tools">
+                <div class="card-title">Purchasing History</div>
+                <!-- <div class="card-tools">
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_stockin"><i class="far fa-plus-square"></i> Add Stock In</button>
-                </div>
+                </div> -->
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="stockin-tbl">
@@ -107,10 +106,10 @@
         <!-- STOCK-OUT TABLE-->
         <div class="card card-outline card-dark rounded-0 shadow printout">
             <div class="card-header py-1">
-                <div class="card-title">Stock-Out History</div>
-                <div class="card-tools">
+                <div class="card-title">Point of Sale History</div>
+                <!-- <div class="card-tools">
                     <button class="btn btn-sm btn-flat btn-light bg-gradient-light border" type="button" id="add_stockout"><i class="far fa-plus-square"></i> Add Stock Out</button>
-                </div>
+                </div> -->
             </div>
             <div class="card-body">
                 <table class="table table-bordered table-stripped" id="stockout-tbl">
@@ -281,8 +280,10 @@
 
         // Stockin
         $('#add_stockin').click(function(){
-            uni_modal("<i class='far fa-plus-square'></i> Add Stock-In Data", 'stocks/manage_stockin.php?iid=<?= isset($id) ? $id : '' ?>')
+            uni_modal("<i class='far fa-plus-square'></i> Add Stock-In Data", `stocks/manage_stockin.php?iid=<?= isset($id) ? $id : '' ?>&quantity=${$('#requested_quantity').val()}&expired_date=${$('#expired_date').val()}&manufactured_date=${$('#manufactured_date').val()}&request_id=${$('#request_id').val()}&supplier=${$('#supplier').val()}&physical_count=${$('#physical_count').val()}&date_approved=${$('#date_approved').val()}&date_received=${$('#date_received').val()}&physical_count_date=${$('#physical_count_date').val()}&personnel=${$('#personnel').val()}&personnel_role=${$('#personnel_role').val()}`)
         })
+
+
         $('.edit_stockin').click(function(){
             uni_modal("<i class='fa fa-edit'></i> Edit Stock-In Data", 'stocks/manage_stockin.php?iid=<?= isset($id) ? $id : '' ?>&id=' + $(this).attr('data-id'))
         })
@@ -402,4 +403,34 @@
 			}
 		})
 	}
+
+    // RESTRICTION FOR STOCK-IN BUTTON
+    const physicalCountField = document.getElementById("physical_count");
+    const requestedQuantityField = document.getElementById("requested_quantity");
+    const addStockInButton = document.getElementById("add_stockin");
+    const dateReceivedField = document.getElementById("date_received");
+    const physicalCountDateField = document.getElementById("physical_count_date");
+
+    // Create a function to check the conditions and enable/disable the button
+    function checkConditions() {
+    if (!physicalCountField.value ||
+        !requestedQuantityField.value ||
+        !dateReceivedField.value ||
+        !physicalCountDateField.value ||
+        physicalCountField.value !== requestedQuantityField.value) {
+        addStockInButton.disabled = true;
+    } else {
+        addStockInButton.disabled = false;
+    }
+    }
+
+    // Disable the button initially
+    addStockInButton.disabled = true;
+
+    // Add event listeners to the input fields
+    physicalCountField.addEventListener("input", checkConditions);
+    requestedQuantityField.addEventListener("input", checkConditions);
+    dateReceivedField.addEventListener("input", checkConditions);
+    physicalCountDateField.addEventListener("input", checkConditions);
+
 </script>
