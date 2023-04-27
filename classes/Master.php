@@ -302,9 +302,9 @@
 				$cid = !empty($id) ? $id : pg_last_oid($save);
 				$resp['status'] = 'success';
 				if(empty($id))
-					$this->settings->set_flashdata('success'," Item has been added successfully.");
+					$this->settings->set_flashdata('success'," Ingredient has been added successfully.");
 				else
-					$this->settings->set_flashdata('success'," Item successfully updated");
+					$this->settings->set_flashdata('success'," Ingredient successfully updated");
 				
 			}else{
 				$resp['status'] = 'failed';

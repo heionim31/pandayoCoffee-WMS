@@ -1,9 +1,6 @@
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
 		<h3 class="card-title">Purchasing Request</h3>
-		<div class="card-tools">
-			<a class="btn btn-flat btn-success" href="#"><span class="fas fa-history"></span> History</a>
-		</div>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
@@ -90,14 +87,15 @@
 										if($disable_request == "disabled") {
 											echo '<button class="btn btn-light border" disabled><span class="fa fa-cart-plus text-dark"></span> Request</button>';
 										} else {
-											echo '<a class="btn btn-light border" href="#" onclick="showRequestModal(\''. $row['name'] .'\',\''. $row['unit'] .'\',\''. $row['category'] .'\')"><span class="fa fa-cart-plus text-dark"></span> Request</a>';
+											echo '<a class="btn btn-light border" href="#" onclick="showRequestModal(\''. $row['id'] .'\', \''. $row['name'] .'\',\''. $row['unit'] .'\',\''. $row['category'] .'\')"><span class="fa fa-cart-plus text-dark"></span> Request</a>';
 										}
 
 										if($disable_adjustment == "disabled") {
 											echo '<button class="btn btn-light border" disabled><span class="fa fa-adjust text-dark"></span> Adjustment</button>';
 										} else {
-											echo '<a class="btn btn-light border" href="./?page=purchasing_request/adjustment&id='. $row['id'] .'"><span class="fa fa-adjust text-dark"></span> Adjustment</a>';
+											echo '<a class="btn btn-light border" href="./?page=stocks/stockin_adjustment&id='. $row['id'] .'"><span class="fa fa-adjust text-dark"></span> Adjustment</a>';
 										}
+										
 									?>
 								</td>
 							</tr>
@@ -139,6 +137,7 @@
 		}
 
 		// Get the form data
+		$itemID = $_POST['item-id'];
 		$personnel = $_POST['personnel'];
 		$role = $_POST['role'];
 		$itemName = $_POST['itemName'];
@@ -148,8 +147,8 @@
 		$notes = $_POST['notes'];
 
 		// Save the data to the database
-		$query = "INSERT INTO wh_ingredient_request (request_id, request_by, personnel_role, name, unit, category, quantity, request_notes, status, date_request)
-				VALUES ('$nextId', '$personnel', '$role', '$itemName', '$itemUnit', '$category', $requestedQuantity, '$notes', 'Pending', CURRENT_DATE)";
+		$query = "INSERT INTO wh_ingredient_request (request_id, request_by, personnel_role, name, unit, category, quantity, request_notes, status, date_request, item_id)
+				VALUES ('$nextId', '$personnel', '$role', '$itemName', '$itemUnit', '$category', $requestedQuantity, '$notes', 'Pending', CURRENT_DATE, $itemID)";
 		
 		$result = pg_query($conn, $query);
 
@@ -177,6 +176,7 @@
             <div class="modal-body">
                 <form id="requestForm" method="POST">
 					<div class="form-group">
+						<input type="text" class="form-control" id="item-id" name="item-id" hidden>
 						<input type="text" class="form-control" id="personnel" name="personnel" value="<?php echo ucwords($_settings->userdata('fullname')) ?>" hidden>
 						<input type="text" class="form-control" id="role" name="role" value="<?php echo ucwords($_settings->userdata('role')) ?>" hidden>
 					</div>
@@ -221,7 +221,8 @@
 
 <script>
 	// REQUEST ITEMS
-	function showRequestModal(name, unit, category) {
+	function showRequestModal(id, name, unit, category) {
+		$('#item-id').val(id);
 		$('#itemName').val(name);
 		$('#itemUnit').val(unit);
 		$('#category').val(category);

@@ -96,6 +96,7 @@
 							<a class="view-data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="View" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark text-md"></span></a>
 							<a class="edit-data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="Edit" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary text-md"></span></a>
 							<a class="delete_data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="Delete" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger text-md"></span></a>
+							<a href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="History"><span class="fa fa-history text-success text-md"></span></a>
 						</td>
 					</tr>
 				<?php endwhile; ?>
