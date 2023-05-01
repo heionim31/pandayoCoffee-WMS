@@ -4,7 +4,7 @@
       <div class="card-header">
           <h3 class="card-title">All Request Leave</h3>
           <div class="card-tools">
-            <a href="./?page=leave_request_manager" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> Go back</a>
+            <a href="./?page=leave_request_manager" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> Back</a>
           </div>
       </div>
       <div class="card-body">

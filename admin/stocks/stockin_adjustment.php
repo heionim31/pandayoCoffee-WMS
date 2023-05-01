@@ -19,7 +19,12 @@
             <div class="col-md-12">
                 <div class="card card-outline rounded-5 card-dark">
                     <div class="card-header">
-                        <a href="./?page=purchasing_request" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> return</a>
+                        <h3 class="card-title mt-2">REQUEST ADJUSTMENT</h3>
+                        <div class="card-tools">
+                            <a href="./?page=purchasing_request" class="btn btn-flat btn-success">
+                                Go Back <span class="fas fa-arrow-right"></span>
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <form method="">
@@ -308,9 +313,9 @@
 
     physicalCount.addEventListener('input', () => {
         if (Number(physicalCount.value) > Number(requestedQuantity)) {
-            document.getElementById('error-msg').textContent = 'Physical count cannot be greater than requested quantity';
+            document.getElementById('error-msg').textContent = 'Cannot be greater than requested quantity';
         } else if (Number(physicalCount.value) < Number(requestedQuantity)) {
-            document.getElementById('error-msg').textContent = 'Physical count cannot be less than requested quantity';
+            document.getElementById('error-msg').textContent = 'Cannot be less than requested quantity';
         } else {
             document.getElementById('error-msg').textContent = '';
         }

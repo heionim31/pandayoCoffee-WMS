@@ -25,7 +25,7 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<colgroup>
+				<!-- <colgroup>
 					<col width="5%">
 					<col width="15%">
 					<col width="10%">
@@ -35,7 +35,7 @@
 					<col width="10%">
 					<col width="10%">
 					<col width="10%">
-				</colgroup>
+				</colgroup> -->
 				<thead>
 					<tr>
 						<th>#</th>
@@ -44,7 +44,6 @@
 						<th>Item Type</th>
 						<th>Description</th>
 						<th>Current Stock</th>
-						<th>Quantity Alert</th>
 						<th>Last Update</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -83,7 +82,6 @@
 						<td><?= $row['item_type'] ?></td>
 						<td><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
 						<td><?= (int)$row['available'] ?></td>
-						<td></td>
 						<td><?php echo !empty($row['last_updated']) ? date("Y-m-d H:i",strtotime($row['last_updated'])) : ''; ?></td>
 						<td class="text-center">
 							<?php if($row['status'] == 1): ?>

@@ -65,8 +65,8 @@
 						alert_toast(resp.msg, 'success')
 						// Delay the page reload by 2 seconds and redirect to unit page
                         setTimeout(function(){
-                          window.location.href = './?page=units';
-                        }, 1000);
+							window.location.href = window.location.href;
+						}, 1000);
 					}else if(resp.status == 'failed' && !!resp.msg){
                         var el = $('<div>')
                             el.addClass("alert alert-danger err-msg").text(resp.msg)

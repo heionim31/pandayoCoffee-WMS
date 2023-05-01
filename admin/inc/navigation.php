@@ -131,7 +131,7 @@
                   <li class="nav-item">
                     <a href="./?page=items" class="nav-link tree-item nav-items">
                       <i class="fas fa-chart-line nav-icon"></i>
-                      <p style="color:white">Stock List</p>
+                      <p style="color:white">Ingredients List</p>
                     </a>
                   </li>
 
@@ -246,7 +246,7 @@
                     <p style="color:white">Leave Requests</p>
                     <?php
                       // Count the number of leave requests
-                      $count_query = "SELECT COUNT(*) as count FROM wh_leave_request";
+                      $count_query = "SELECT COUNT(*) as count FROM wh_leave_request WHERE status = 'Pending'";
                       $count_result = pg_query($conn, $count_query);
                       $count = pg_fetch_assoc($count_result)['count'];
 

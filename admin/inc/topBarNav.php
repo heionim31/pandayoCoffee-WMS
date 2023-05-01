@@ -255,10 +255,16 @@
               $pageTitle = 'Stock Alert Notifications';
               break;
             case 'sales_request':
-              $pageTitle = 'Stock Sales Request';
+              $pageTitle = 'Sales Request';
+              break;
+            case 'stocks/stockout_adjustment':
+              $pageTitle = 'Request Adjustment';
               break;
             case 'purchasing_request':
-              $pageTitle = 'Stock Purchasing Request';
+              $pageTitle = 'Purchasing Request';
+              break;
+            case 'stocks/stockin_adjustment':
+              $pageTitle = 'Request Adjustment';
               break;
             case 'stockExpiration':
               $pageTitle = 'Stock Expiration';
@@ -335,52 +341,64 @@
       <a class="dropdown-toggle" href="#" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="far fa-bell fa-lg" aria-hidden="true"></i>
           <?php
-          // Count the number of expired items in the database
-          // Count the number of expired items in the database
-          $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
-          WHERE expire_date <= NOW() + INTERVAL '1 DAY'
-          AND expire_date IS NOT NULL 
-          AND expire_date <> '0001-01-01'");
-          $expired_items_count = pg_fetch_assoc($expired_items_count)['count'];
+            // Count the number of expired items in the database
+            $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
+            WHERE expire_date <= NOW() + INTERVAL '1 DAY'
+            AND expire_date IS NOT NULL 
+            AND expire_date <> '0001-01-01'");
+            $expired_items_count = pg_fetch_assoc($expired_items_count)['count'];
 
+            // Count the number of items with quantity alerts
+            $query = "SELECT COUNT(*) AS count FROM wh_item_list i 
+                      INNER JOIN wh_category_list c ON i.category_id = c.id 
+                      INNER JOIN wh_stock_notif s ON s.id = 1 
+                      WHERE i.delete_flag = 0 
+                      AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
+                              COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
+                              COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) < s.min_stock OR 
+                              (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
+                              COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
+                              COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) > s.max_stock)";
 
-          $query = "SELECT COUNT(*) AS count FROM wh_item_list i 
-                    INNER JOIN wh_category_list c ON i.category_id = c.id 
-                    INNER JOIN wh_stock_notif s ON s.id = 1 
-                    WHERE i.delete_flag = 0 
-                    AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) < s.min_stock OR 
-                            (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) > s.max_stock)";
+            // Execute the query
+            $result = pg_query($conn, $query);
 
-          // Execute the query
-          $result = pg_query($conn, $query);
+            // Get the count of overstock items
+            $count = pg_fetch_assoc($result)['count'];
 
-          // Get the count of overstock items
-          $count = pg_fetch_assoc($result)['count'];
+            // Count the number of pending ingredient requests
+            $pending_requests_count = pg_query($conn, "SELECT COUNT(*) AS count FROM ingredient_request WHERE status IN ('Pending', 'Preparing')");
+            $pending_requests_count = pg_fetch_assoc($pending_requests_count)['count'];
 
-          // Count the total number of items in the dropdown menu
-          $dropdown_items = array();
-          if ($expired_items_count > 0) {
-            $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-exclamation-circle text-danger"></i> ' . $expired_items_count . ' Items Expired Alerts</a>';
-          }
-          if ($count > 0) {
-            $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-exclamation-triangle text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
-          }
-          $dropdown_count = count($dropdown_items);
+            // Count the number of pending leave requests
+            $pending_leave_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_leave_request WHERE status = 'Pending'");
+            $pending_leave_count = pg_fetch_assoc($pending_leave_count)['count'];
 
-          // Output the count in the notification badge
-          if ($dropdown_count > 0) {
-            if ($dropdown_count > 9) {
-              echo '<span class="notification-badge">9+</span>';
-            } else {
-              echo '<span class="notification-badge">' . $dropdown_count . '</span>';
+            // Count the total number of items in the dropdown menu
+            $dropdown_items = array();
+            if ($expired_items_count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-calendar-times text-danger"></i> ' . $expired_items_count . ' Items Expired Alerts</a>';
             }
-          }
-        ?>
+            if ($count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-clipboard-list text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
+            }
+            if ($pending_requests_count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=sales_request"><i class="fas fa-cash-register text-info"></i> ' . $pending_requests_count . ' Sales Requests</a>';
+            }
+            if ($pending_leave_count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=leave_request"><i class="fas fa-calendar-alt text-dark"></i> ' . $pending_leave_count . ' Leave Requests</a>';
+            }            
+            $dropdown_count = count($dropdown_items);
 
+            // Output the count in the notification badge
+            if ($dropdown_count > 0) {
+              if ($dropdown_count > 9) {
+                echo '<span class="notification-badge">9+</span>';
+              } else {
+                echo '<span class="notification-badge">' . $dropdown_count . '</span>';
+              }
+            }
+          ?>
       </a>
 
       <div class="dropdown-menu dropdown-menu-notif">
@@ -402,18 +420,23 @@
     <!-- PROFILE DROPDOWN -->
     <li class="nav-item">
       <div class="btn-group nav-link">
-            <button type="button" class="btn btn-rounded badge badge-light dropdown-toggle dropdown-icon" data-toggle="dropdown">
-              <span><img src="<?php echo validate_image($_settings->userdata('avatar')) ?>" class="img-circle elevation-2 user-img" alt="User Image"></span>
-              <span class="ml-3"><?php echo ucwords($_settings->userdata('fullname')) ?></span>
-              <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu" role="menu">
-              <a class="dropdown-item" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> Profile</a>
-              <!-- <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a> -->
-            </div>
+        <button type="button" class="btn btn-rounded badge badge-light dropdown-toggle dropdown-icon" data-toggle="dropdown">
+          <?php 
+              $userImgUrl = $_settings->userdata('imgurl');
+              $userAvatar = validate_image($userImgUrl) ? $userImgUrl : $_settings->userdata('avatar');
+          ?>
+          <span><img src="<?php echo $userAvatar ?>" class="img-circle elevation-2 user-img" alt="User Image"></span>
+          <span class="ml-3"><?php echo ucwords($_settings->userdata('fullname')) ?></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu" role="menu">
+          <a class="dropdown-item" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> Profile</a>
         </div>
+      </div>
     </li>
 
   </ul>
 </nav>
+
+<!-- <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a> -->

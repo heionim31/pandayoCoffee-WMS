@@ -403,34 +403,4 @@
 			}
 		})
 	}
-
-    // RESTRICTION FOR STOCK-IN BUTTON
-    const physicalCountField = document.getElementById("physical_count");
-    const requestedQuantityField = document.getElementById("requested_quantity");
-    const addStockInButton = document.getElementById("add_stockin");
-    const dateReceivedField = document.getElementById("date_received");
-    const physicalCountDateField = document.getElementById("physical_count_date");
-
-    // Create a function to check the conditions and enable/disable the button
-    function checkConditions() {
-    if (!physicalCountField.value ||
-        !requestedQuantityField.value ||
-        !dateReceivedField.value ||
-        !physicalCountDateField.value ||
-        physicalCountField.value !== requestedQuantityField.value) {
-        addStockInButton.disabled = true;
-    } else {
-        addStockInButton.disabled = false;
-    }
-    }
-
-    // Disable the button initially
-    addStockInButton.disabled = true;
-
-    // Add event listeners to the input fields
-    physicalCountField.addEventListener("input", checkConditions);
-    requestedQuantityField.addEventListener("input", checkConditions);
-    dateReceivedField.addEventListener("input", checkConditions);
-    physicalCountDateField.addEventListener("input", checkConditions);
-
 </script>

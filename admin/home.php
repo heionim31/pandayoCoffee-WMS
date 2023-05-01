@@ -140,9 +140,6 @@
   <div class="flex-grow-1">
       <h4 class="alert-heading mb-0">Welcome, <?php echo $_settings->userdata('fullname'); ?>!</h4>
   </div>
-  <button type="button" class="close text-black" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
 </div>
 
 
@@ -162,7 +159,7 @@
             ?>
             <?php ?>
           </span>
-          <span class="info-box-text text-left">Total Items</b></span>
+          <span class="info-box-text text-left">Total Ingredients</b></span>
         </a>
       </div>
       <span class="info-box-icon"><i class="fas fa-chart-line" style="font-size:60px"></i></span>
@@ -230,7 +227,7 @@
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;" >
+        <a href="<?php echo base_url ?>admin/?page=purchasing_request" style="color:black;" >
           <span class="info-box-number text-left h5">
             <?php 
               $query = "SELECT wh_item_list.id, wh_item_list.name, 
@@ -271,7 +268,7 @@
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;">
+        <a href="<?php echo base_url ?>admin/?page=purchasing_request" style="color:black;">
           <span class="info-box-number text-left h5">
             <?php
               $query = "SELECT wh_item_list.id, wh_item_list.name, 
@@ -311,7 +308,7 @@
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=stockStatus" style="color:black;">
+        <a href="<?php echo base_url ?>admin/?page=purchasing_request" style="color:black;">
           <span class="info-box-number text-left h5">
             <?php 
               $query = "SELECT wh_item_list.id, wh_item_list.name, 
@@ -721,9 +718,6 @@
           <li class="nav-item">
             <a class="nav-link recent-add-nav" href="#" data-toggle="tab" data-target="#units-table">Units</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link recent-add-nav" href="#" data-toggle="tab" data-target="#users-table">Users</a>
-          </li>
         </ul>
       </div>
 
@@ -870,47 +864,6 @@
                       <td class="align-middle"><?php echo $units['abbreviation']; ?></td>
                       <td class="align-middle"><?php echo date('Y-m-d h:i A', strtotime($units['date_created'])); ?></td>
                     </tr>
-                    <?php endforeach; ?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- RECNTLY ADDED USERS TABLE -->
-          <div id="users-table" class="tab-pane fade">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title">
-                  <i class="nav-icon fas fa-users"></i>
-                  Recent Users
-                </h5>
-              </div>
-              <div class="card-body">
-                <table class="table table-hover table-striped">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Full Name</th>
-                      <th>Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                      // Retrieve the 5 most recent items
-                      $sql = "SELECT * FROM users WHERE role IN ('warehouse_manager', 'warehouse_staff') LIMIT 5";
-                      $result = pg_query($conn, $sql);
-                      // Create an array to store the recent users
-                      $recent_users = pg_fetch_all($result);
-                      // Initialize the ID counter
-                      $id = 1;
-                    ?>
-                    <?php foreach($recent_users as $users): ?>
-                      <tr>
-                        <td class="align-middle"><?php echo $id++; ?></td>
-                        <td class="align-middle"><?php echo $users['fullname']; ?></td>
-                        <td class="align-middle"><?php echo ($users['role'] == 'warehouse_manager') ? "Manager" : "Staff"; ?></td>
-                      </tr>
                     <?php endforeach; ?>
                   </tbody>
                 </table>

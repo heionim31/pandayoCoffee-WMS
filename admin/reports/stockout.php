@@ -5,7 +5,7 @@
 
 <div class="container mt-4 ml-5">
     <div class="row justify-content-center">
-        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-11 col-sm-12 col-xs-12">
             <div class="card rounded-0 mb-2 shadow">
                 <div class="card-header bg-gradient-dark text-white py-3">
                     <h2 class="card-title mb-0">Monthly Stock-Out Reports</h2>
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-11 col-sm-12 col-xs-12">
             <div class="card rounded-0 mb-2 shadow">
                 <div class="card-header bg-white py-2">
                     <div class="card-tools">
@@ -38,19 +38,22 @@
                 <div class="card-body">
                     <div class="container-fluid" id="printout">
                         <table class="table table-bordered">
-                            <colgroup>
+                            <!-- <colgroup>
                                 <col width="5%">
                                 <col width="25%">
                                 <col width="10%">
                                 <col width="20%">
                                 <col width="40%">
-                            </colgroup>
+                            </colgroup> -->
                             <thead>
                                 <tr>
                                     <th class="px-1 py-1 text-center">#</th>
-                                    <th class="px-1 py-1 text-center">Item</th>
+                                    <th class="px-1 py-1 text-center">Request ID</th>
+                                    <th class="px-1 py-1 text-center">Ingredient</th>
                                     <th class="px-1 py-1 text-center">Quantity</th>
-                                    <th class="px-1 py-1 text-center">Date Issued</th>
+                                    <!-- <th class="px-1 py-1 text-center">Date Issued</th> -->
+                                    <th class="px-1 py-1 text-center">Date Approved</th>
+                                    <th class="px-1 py-1 text-center">Request By</th>
                                     <th class="px-1 py-1 text-center">Remarks</th>
                                 </tr>
                             </thead>
@@ -69,6 +72,8 @@
                                 ?>
                                 <tr>
                                     <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['request_id'] ?></td>
+
                                     <td class="px-1 py-1 align-middle text-center">
                                         <div line-height="1em">
                                             <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
@@ -76,9 +81,10 @@
                                         </div>
                                     </td>
                                     <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                                    <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['date'])) ?></td>
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['date'])) ?></td> -->
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['date_approved'] ?></td>
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['request_by'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                                    
                                 </tr>
                                 <?php endwhile; ?>
                                 <?php if(pg_num_rows($stock) <= 0): ?>

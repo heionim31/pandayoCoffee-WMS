@@ -4,7 +4,12 @@
       <div class="card-header">
           <h3 class="card-title">Pending Leave Requests</h3>
           <div class="card-tools">
-            <a href="./?page=leave_request_manager/history" class="btn btn-flat btn-success"><span class="fas fa-history"></span> Request History</a>
+            <a href="#" class="btn btn-flat btn-success" onclick="location.href = window.location.href; return false;">
+              <span class="fas fa-sync"></span> Refresh
+            </a>
+            <a href="./?page=leave_request_manager/history" class="btn btn-flat btn-info">
+              <span class="fas fa-history"></span> History
+            </a>
           </div>
       </div>
       <div class="card-body">
@@ -27,7 +32,7 @@
             <tbody>
               <?php 
                 $i = 1;
-                $qry = pg_query($conn, "SELECT * FROM wh_leave_request WHERE status NOT IN ('Approved', 'Declined') ORDER BY date_requested DESC");
+                $qry = pg_query($conn, "SELECT * FROM wh_leave_request WHERE status NOT IN ('Approved', 'Declined') ORDER BY id ASC");
                 while($row = pg_fetch_assoc($qry)):
               ?>
               <tr>
@@ -50,21 +55,37 @@
     </div>
   </div>
 
-
   <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if (isset($_POST["approve"])) {
         $id = $_POST["id"];
         $query = "UPDATE wh_leave_request SET status = 'Approved' WHERE id = $id";
         pg_query($conn, $query);
+        echo "<script>
+        Swal.fire({
+          icon: 'success',
+          title: 'Leave request approved',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        </script>";
       } else if (isset($_POST["decline"])) {
         $id = $_POST["id"];
         $reason = $_POST["decline"];
-        $query = "UPDATE wh_leave_request SET status = 'Declined', reason_decline = '$reason' WHERE id = $id";
+        $query = "UPDATE wh_leave_request SET status = 'Declined' WHERE id = $id";
         pg_query($conn, $query);
+        echo "<script>
+        Swal.fire({
+          icon: 'success',
+          title: 'Leave request declined',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        </script>";
       }
     }
-  ?>
+?>
+
 
   <div class="col-md-4">
     <div class="card card-outline rounded-5 card-dark">

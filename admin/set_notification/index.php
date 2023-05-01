@@ -34,25 +34,12 @@
 
         <div class="card-body">
             <?php if(isset($notification_updated) && $notification_updated) { ?>
-                <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="notificationModalLabel">Notification Updated</h5>
-                            </div>
-                            <div class="modal-body">
-                                <p>The stock notification has been updated successfully.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#notificationModal').modal('show');
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notification Updated',
+                        text: 'The stock notification has been updated successfully.',
+                        confirmButtonText: 'Okay'
                     });
                 </script>
             <?php } ?>

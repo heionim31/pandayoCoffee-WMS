@@ -1,6 +1,14 @@
 <div class="card card-outline rounded-0 card-dark">
 	<div class="card-header">
-		<h3 class="card-title">Purchasing Request</h3>
+		<h3 class="card-title mt-2">Purchasing Request</h3>
+		<div class="card-tools">
+			<a href="#" class="btn btn-flat btn-success" onclick="location.href = window.location.href; return false;">
+				<span class="fas fa-sync"></span> Refresh
+			</a>
+			<a href="./?page=reports/stockin" class="btn btn-flat btn-info">
+				<span class="fas fa-history"></span> Reports
+			</a>
+		</div>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
@@ -46,6 +54,15 @@
 								// Skip this row if item is in stock
 								continue;
 							}
+
+							// Check if status is Received to hide it
+							$request_status_query = pg_query($conn, "SELECT status FROM wh_ingredient_request WHERE name = '$name'");
+							if (pg_num_rows($request_status_query) > 0) {
+								$request_status = pg_fetch_result($request_status_query, 0);
+								if ($request_status == "Received") {
+									continue;
+								}
+							}
 						?>
 							<tr>
 								<td><?php echo $i++; ?></td>
@@ -69,7 +86,7 @@
 												$disable_request = "disabled";
 												$disable_adjustment = "";
 											} else if($request_status == "Pending") {
-												$disable_request = "";
+												$disable_request = "disabled"; // disable the request button
 												$disable_adjustment = "disabled";
 											} else {
 												$disable_request = "disabled";
@@ -80,6 +97,7 @@
 											$disable_request = "";
 											$disable_adjustment = "disabled";
 										}
+										
 									?>
 								</td>
 								<td>
@@ -87,7 +105,7 @@
 										if($disable_request == "disabled") {
 											echo '<button class="btn btn-light border" disabled><span class="fa fa-cart-plus text-dark"></span> Request</button>';
 										} else {
-											echo '<a class="btn btn-light border" href="#" onclick="showRequestModal(\''. $row['id'] .'\', \''. $row['name'] .'\',\''. $row['unit'] .'\',\''. $row['category'] .'\')"><span class="fa fa-cart-plus text-dark"></span> Request</a>';
+											echo '<a class="btn btn-light border" onclick="showRequestModal(\''. $row['id'] .'\', \''. $row['name'] .'\',\''. $row['unit'] .'\')"><span class="fa fa-cart-plus text-dark"></span> Request</a>';
 										}
 
 										if($disable_adjustment == "disabled") {
@@ -95,7 +113,6 @@
 										} else {
 											echo '<a class="btn btn-light border" href="./?page=stocks/stockin_adjustment&id='. $row['id'] .'"><span class="fa fa-adjust text-dark"></span> Adjustment</a>';
 										}
-										
 									?>
 								</td>
 							</tr>
@@ -142,23 +159,39 @@
 		$role = $_POST['role'];
 		$itemName = $_POST['itemName'];
 		$itemUnit = $_POST['itemUnit'];
-		$category = $_POST['category'];
 		$requestedQuantity = $_POST['requestedQuantity'];
 		$notes = $_POST['notes'];
 
 		// Save the data to the database
-		$query = "INSERT INTO wh_ingredient_request (request_id, request_by, personnel_role, name, unit, category, quantity, request_notes, status, date_request, item_id)
-				VALUES ('$nextId', '$personnel', '$role', '$itemName', '$itemUnit', '$category', $requestedQuantity, '$notes', 'Pending', CURRENT_DATE, $itemID)";
+		$query = "INSERT INTO wh_ingredient_request (request_id, request_by, personnel_role, name, unit, quantity, request_notes, status, date_request, item_id)
+				VALUES ('$nextId', '$personnel', '$role', '$itemName', '$itemUnit', $requestedQuantity, '$notes', 'Pending', CURRENT_DATE, $itemID)";
 		
 		$result = pg_query($conn, $query);
 
 		if($result) {
 			// Data saved successfully
-			echo "<script>Swal.fire('Success', 'Request submitted successfully!', 'success')</script>";
+			echo "<script>
+					Swal.fire({
+						icon: 'success',
+						title: 'Success',
+						text: 'Request submitted successfully!',
+						showConfirmButton: false,
+						timer: 1500
+					});
+				 </script>";
 		} else {
 			// Error saving data
-			echo "<script>Swal.fire('Error', 'Error: " . pg_last_error($conn) . "', 'error')</script>";
+			echo "<script>
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'Error: " . pg_last_error($conn) . "',
+						showConfirmButton: false,
+						timer: 1500
+					});
+				 </script>";
 		}
+		
 		
 	}
 ?>
@@ -181,22 +214,16 @@
 						<input type="text" class="form-control" id="role" name="role" value="<?php echo ucwords($_settings->userdata('role')) ?>" hidden>
 					</div>
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-md-8">
 							<div class="form-group">
 								<label for="itemName">Item Name</label>
 								<input type="text" class="form-control" id="itemName" name="itemName" readonly>
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-4">
 							<div class="form-group">
 								<label for="itemUnit">Unit</label>
 								<input type="text" class="form-control" id="itemUnit" name="itemUnit" value="<?php echo $row['unit']; ?>" readonly>
-							</div>
-						</div>
-						<div class="col-md-5">
-							<div class="form-group">
-								<label for="category">Category</label>
-								<input type="text" class="form-control" id="category" name="category" readonly>
 							</div>
 						</div>
                     </div>
@@ -225,7 +252,6 @@
 		$('#item-id').val(id);
 		$('#itemName').val(name);
 		$('#itemUnit').val(unit);
-		$('#category').val(category);
 		$('#requestModal').modal('show');
 	}
 

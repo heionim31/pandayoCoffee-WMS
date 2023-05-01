@@ -23,7 +23,7 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<colgroup>
+				<!-- <colgroup>
 					<col width="5%">
 					<col width="10%">
 					<col width="25%">
@@ -31,7 +31,7 @@
 					<col width="15%">
 					<col width="20%">
 					<col width="10%">
-				</colgroup>
+				</colgroup> -->
 				<thead>
 					<tr>
 						<th>#</th>
@@ -39,8 +39,7 @@
 						<th>Name</th>
 						<th>Username</th>
 						<th>Role</th>
-						<th>Email</th>
-						<th>Edit</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -50,24 +49,27 @@
 						while($row = pg_fetch_assoc($qry)):
 					?>
 						<tr>
-							<td class="text-center"><?php echo $i++; ?></td>
-							<td class="text-center">
-                                <img src="<?= validate_image($row['imgurl']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
-                            </td>
-							<td><?php echo $row['fullname'] ?></td>
-							<td><?php echo $row['username'] ?></td>
-							<td class="text-center">
-                                <?php if($row['role'] == 'warehouse_manager'): ?>
-                                    Manager
-                                <?php elseif($row['role'] == 'warehouse_staff'): ?>
-                                    Staff
-                                <?php else: ?>
+							<td class="text-center align-middle"><?php echo $i++; ?></td>
+							<td class="text-center align-middle">
+								<?php 
+									$imgUrl = $row['imgurl'];
+									$userAvatar = validate_image($imgUrl) ? $imgUrl : DEFAULT_AVATAR;
+								?>
+								<img src="<?= $userAvatar ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
+							</td>
+							<td class="align-middle"><?php echo $row['fullname'] ?></td>
+							<td class="align-middle"><?php echo $row['username'] ?></td>
+							<td class="text-center align-middle">
+								<?php if($row['role'] == 'warehouse_manager'): ?>
+									Manager
+								<?php elseif($row['role'] == 'warehouse_staff'): ?>
+									Staff
+								<?php else: ?>
 									N/A
-                                <?php endif; ?>
-                            </td>
-							<td><?php echo $row['email'] ?></td>
-							<td>
-								<a class="btn btn-flat p-1 btn-default btn-sm" href="./?page=user/manage_user&id=<?= $row['id'] ?>"><span class="fa fa-edit text-dark"></span></a>
+								<?php endif; ?>
+							</td>
+							<td class="align-middle">
+								<a class="btn btn-flat p-1 btn-default btn-sm" href="./?page=user/manage_user&id=<?= $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View Info</a>
 							</td>
 						</tr>
 					<?php endwhile; ?>
