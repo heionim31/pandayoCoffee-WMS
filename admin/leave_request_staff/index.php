@@ -3,6 +3,11 @@
         <div class="card card-outline rounded-5 card-dark">
             <div class="card-header">
                 <h3 class="card-title">Request Leave History</h3>
+                <div class="card-tools">
+                    <a href="#" class="btn btn-flat btn-success" onclick="location.href = window.location.href; return false;">
+                        <span class="fas fa-sync"></span> Refresh
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
@@ -10,7 +15,7 @@
                         <thead>
                             <tr>
                             <th>#</th>
-                            <th>Date</th>
+                            <th>Leave Date</th>
                             <th>Reason</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -20,9 +25,20 @@
                             <?php 
                                 $i = 1;
                                 if(isset($_POST['id'])){
-                                    $id = $_POST['id'];
-                                    $query = "DELETE FROM wh_leave_request WHERE id = $id";
-                                    $result = pg_query($conn, $query);
+                                $id = $_POST['id'];
+                                $query = "DELETE FROM wh_leave_request WHERE id = $id";
+                                $result = pg_query($conn, $query);
+                                if($result) {
+                                    echo "<script>
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Success!',
+                                                text: 'Leave request has been cancelled!',
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            });
+                                        </script>";
+                                }
                                 }
                                 $qry = pg_query($conn, "SELECT * from wh_leave_request WHERE employeeid = '".$_settings->userdata('id')."' ORDER by id DESC");
 
@@ -34,39 +50,16 @@
                                 <td><?= $row['reason'] ?></td>
                                 <td><?= $row['status'] ?></td>
                                 <td align="center">
-                                    <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger" onclick="deleteRow(<?= $row['id'] ?>)"><i class="fa fa-times"></i></button>
+                                <?php if($row['status'] != 'Approved' && $row['status'] != 'Declined'): ?>
+                                    <form method="post" onsubmit="return confirmDelete(event)">
+                                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                    <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger" type="submit"><i class="fa fa-times"></i></button>
+                                    </form>
+                                <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endwhile; ?>
                         </tbody>
-
-                        <script>
-                            function deleteRow(id) {
-                                Swal.fire({
-                                    title: 'Are you sure?',
-                                    text: "You won't be able to revert this!",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Yes, delete it!'
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        $.ajax({
-                                            url: '',
-                                            type: 'POST',
-                                            data: { id: id },
-                                            success: function(response) {
-                                                location.reload();
-                                            },
-                                            error: function(jqXHR, textStatus, errorThrown) {
-                                                console.log(textStatus, errorThrown);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        </script>
                     </table>
                 </div>
             </div>
@@ -93,9 +86,20 @@
                             $to = pg_escape_string($conn, $_POST['to']);
 
                             $result = pg_query_params($conn, "INSERT INTO wh_leave_request (employeeid, name, email, contact, reason, from_date, to_date, status, date_requested) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)", array($employee_id, $employee_name, $email, $contact_number, $reason, $from, $to, 'Pending', date('Y-m-d')));
+                            
+                            if ($result) {
+                                echo '<script>
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success!",
+                                    text: "Leave request has been sent.",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            </script>';
+                             }
                         }
                     ?>
-
                     <form class="mt-5 mt-md-0" method="POST">
                         <div class="row">
                             <div class="col-md-6">
@@ -137,18 +141,23 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="from">From</label>
-                                    <input type="date" class="form-control form-control-sm" id="from" name="from" required>
+                                    <input type="date" class="form-control form-control-sm" id="fromDate" name="from" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="to">To</label>
-                                    <input type="date" class="form-control form-control-sm" id="to" name="to" required>
+                                    <input type="date" class="form-control form-control-sm" id="toDate" name="to" required>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12  d-flex justify-content-center">
+                                <span id ="leaveDateMsg" class="alert-msg text-red text-center"></span>
+                            </div>
+                        </div>
                         <div class="modal-footer d-flex justify-content-center">
-                        <button class="btn btn-dark bg-gradient-success border" name="approve"> Send Request</button>
+                            <button id="approveBtn" class="btn btn-dark bg-gradient-success border" name="approve"> Send Request</button>
                         </div>
                     </form>
                 </div>
@@ -156,6 +165,84 @@
         </div>
     </div>
 </div>
+
+<script>
+  function confirmDelete(event) {
+    event.preventDefault();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Cancel Leave Request?',
+      text: 'You will not be able to recover this leave request!',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        event.target.submit();
+      }
+    });
+  }
+</script>
+
+<script>
+    const fromInput = document.getElementById('fromDate');
+    const toInput = document.getElementById('toDate');
+    const reasonInput = document.getElementById('reason');
+    const sendRequestBtn = document.getElementById('approveBtn');
+    const leaveDateMsg = document.getElementById('leaveDateMsg');
+
+    // disable the send request button by default
+    sendRequestBtn.disabled = true;
+
+    // add event listeners to the form inputs
+    fromInput.addEventListener('change', validateForm);
+    toInput.addEventListener('change', validateForm);
+    reasonInput.addEventListener('input', validateForm);
+
+    function validateForm() {
+        // check if the reason, from date, and to date inputs have values
+        const reasonValue = reasonInput.value.trim();
+        const fromValue = fromInput.value.trim();
+        const toValue = toInput.value.trim();
+
+        if (reasonValue !== '' && fromValue !== '' && toValue !== '') {
+            // enable the send request button
+            sendRequestBtn.disabled = false;
+
+            // check if the to date is less than the from date
+            const fromDate = new Date(fromValue);
+            const toDate = new Date(toValue);
+
+            if (toDate <= fromDate) {
+                leaveDateMsg.innerText = 'The "To" date must be greater than "From" date.';
+                sendRequestBtn.disabled = true;
+            } else {
+                // check if the to date and from date are greater than the current date
+                const currentDate = new Date();
+                if (fromDate < currentDate && toDate < currentDate) {
+                    leaveDateMsg.innerText = 'The "From" and "To" dates must be greater than the current date.';
+                    sendRequestBtn.disabled = true;
+                } else if (fromDate < currentDate) {
+                    leaveDateMsg.innerText = 'The "From" date must be greater than the current date.';
+                    sendRequestBtn.disabled = true;
+                } else if (toDate < currentDate) {
+                    leaveDateMsg.innerText = 'The "To" date must be greater than the current date.';
+                    sendRequestBtn.disabled = true;
+                } else {
+                    leaveDateMsg.innerText = '';
+                }
+            }
+        } else {
+            // disable the send request button
+            sendRequestBtn.disabled = true;
+            leaveDateMsg.innerText = '';
+        }
+    }
+
+</script>
+
+
 
 <script>
 	$(document).ready(function(){

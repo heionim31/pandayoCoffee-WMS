@@ -20,25 +20,41 @@
 	#uni_modal .modal-footer{
 		display:none;
 	}
+
+	th.text-muted {
+		width: 30%;
+	}
 </style>
 
-
-<div class="container-fluid">
-	<dl>
-		<dt class="text-muted">Name</dt>
-		<dd class="pl-4"><?= isset($name) ? $name : "" ?></dd>
-		<dt class="text-muted">Description</dt>
-		<dd class="pl-4"><?= isset($description) ? str_replace(["\n\r", "\n", "\r"],"<br>", htmlspecialchars_decode($description)) : '' ?></dd>
-		<dt class="text-muted">Status</dt>
-		<dd class="pl-4">
-			<?php if($status == 1): ?>
-				<span class="badge badge-success px-3 rounded-pill">Active</span>
-			<?php else: ?>
-				<span class="badge badge-danger px-3 rounded-pill">Inactive</span>
-			<?php endif; ?>
-		</dd>
-	</dl>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th class="text-muted">Name</th>
+            <td><?= isset($name) ? $name : "" ?></td>
+          </tr>
+          <tr>
+            <th class="text-muted">Description</th>
+            <td><?= isset($description) ? str_replace(["\n\r", "\n", "\r"],"<br>", htmlspecialchars_decode($description)) : '' ?></td>
+          </tr>
+          <tr>
+            <th class="text-muted">Status</th>
+            <td>
+              <?php if($status == 1): ?>
+                <span>Active</span>
+              <?php else: ?>
+                <span>Inactive</span>
+              <?php endif; ?>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
 
 <hr class="mx-n3">
 

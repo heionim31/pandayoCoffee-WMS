@@ -5,7 +5,7 @@
 
 <div class="container mt-4 ml-5">
     <div class="row justify-content-center">
-        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card rounded-0 mb-2 shadow">
                 <div class="card-header bg-gradient-dark text-white py-3">
                     <h2 class="card-title mb-0">Monthly Stock-In Reports</h2>
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card rounded-0 mb-2 shadow">
                 <div class="card-header bg-white py-2">
                     <div class="card-tools">
@@ -38,55 +38,69 @@
                 <div class="card-body">
                     <div class="container-fluid" id="printout">
                         <table class="table table-bordered">
-                            <colgroup>
+                            <!-- <colgroup>
                                 <col width="5%">
                                 <col width="20%">
                                 <col width="5%">
                                 <col width="15%">
                                 <col width="15%">
                                 <col width="40%">
-                            </colgroup>
+                            </colgroup> -->
                             <thead>
                                 <tr>
-                                    <th class="px-1 py-1 text-center">#</th>
-                                    <th class="px-1 py-1 text-center">Item</th>
-                                    <th class="px-1 py-1 text-center">Quantity</th>
-                                    <th class="px-1 py-1 text-center">Date of Receipt</th>
-                                    <th class="px-1 py-1 text-center">Expiration Date</th>
-                                    <th class="px-1 py-1 text-center">Remarks</th>
+                                    <th class="px-1 py-1 align-middle text-center">#</th>
+                                    <th class="px-1 py-1 align-middle text-center">Request ID</th>
+                                    <th class="px-1 py-1 align-middle text-center">Ingredient</th>
+                                    <th class="px-1 py-1 align-middle text-center">Quantity</th>
+                                    <th class="px-1 py-1 align-middle text-center">Manufactured</th>
+                                    <th class="px-1 py-1 align-middle text-center">Expiration</th>
+                                    <!-- <th class="px-1 py-1 align-middle text-center">Request ID</th> -->
+                                    <th class="px-1 py-1 align-middle text-center">Supplier</th>
+                                    <!-- <th class="px-1 py-1 align-middle text-center">Personnel</th> -->
+                                    <!-- <th class="px-1 py-1 align-middle text-center">Personnel Role</th> -->
+                                    <!-- <th class="px-1 py-1 align-middle text-center">Physical Count</th> -->
+                                    <!-- <th class="px-1 py-1 align-middle text-center">Physical Count Date</th> -->
+                                    <!-- <th class="px-1 py-1 align-middle text-center">Date Approved</th> -->
+                                    <th class="px-1 py-1 align-middle text-center">Received</th>
+                                    <th class="px-1 py-1 align-middle text-center">Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php 
                                 $g_total = 0;
                                 $i = 1;
-                                $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit, s.date, s.expire_date 
-                                                        FROM wh_stockin_list s 
-                                                        INNER JOIN wh_item_list i ON s.item_id = i.id 
-                                                        INNER JOIN wh_category_list c ON i.category_id = c.id 
-                                                        WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}'
-                                                        UNION ALL
-                                                        SELECT s.*, i.name as item, c.name as category, i.unit, s.date, s.expire_date 
-                                                        FROM wh_stockin_list_deleted s 
-                                                        INNER JOIN wh_item_list i ON s.item_id = i.id 
-                                                        INNER JOIN wh_category_list c ON i.category_id = c.id 
-                                                        WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}'
-                                                        ORDER BY date_created DESC");
-
+                                $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, u.abbreviation as unit_name, s.date, s.expire_date, s.request_id, s.supplier, s.personnel, s.personnel_role, s.physical_count, s.physical_count_date, s.date_approved, s.date_received
+                                FROM wh_stockin_list s 
+                                INNER JOIN wh_item_list i ON s.item_id = i.id 
+                                INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                INNER JOIN wh_unit_list u ON i.unit = u.id
+                                WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}'
+                                ORDER BY date_created DESC
+                                ");
+                                
                                 while($row = pg_fetch_assoc($stock)):
                             ?>
 
                                 <tr>
                                     <td class="px-1 py-1 align-middle text-center"><?= $i++ ?></td>
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['request_id'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center">
                                         <div line-height="1em">
-                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
+                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit_name'] ?>]</div>
                                             <div class="font-weight-light"><?= $row['category'] ?></div>
                                         </div>
                                     </td>
                                     <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['date'])) ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['expire_date'])) ?></td>
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= $row['request_id'] ?></td> -->
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['supplier'] ?></td>
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= $row['personnel'] ?></td> -->
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= $row['personnel_role'] ?></td> -->
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= $row['physical_count'] ?></td> -->
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= $row['physical_count_date'] ?></td> -->
+                                    <!-- <td class="px-1 py-1 align-middle text-center"><?= $row['date_approved'] ?></td> -->
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['date_received'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>
                                 </tr>
                                 <?php endwhile; ?>

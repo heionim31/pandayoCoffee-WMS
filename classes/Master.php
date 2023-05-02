@@ -191,9 +191,9 @@
 				$resp['iid'] = $iid;
 				$resp['status'] = 'success';
 				if(empty($id))
-					$resp['msg'] = "New item successfully saved.";
+					$resp['msg'] = "New ingredient successfully saved.";
 				else
-					$resp['msg'] = "Item successfully updated.";
+					$resp['msg'] = "Ingredient successfully updated.";
 
 					if(!empty($_FILES['img']['tmp_name'])){
 						$img_path = "uploads/items/";
@@ -260,7 +260,7 @@
 			$del = pg_query($this->conn, "UPDATE wh_item_list SET delete_flag = 1 WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
-				$this->settings->set_flashdata('success',"Item successfully deleted.");
+				$this->settings->set_flashdata('success',"Ingredient successfully deleted.");
 			}else{
 				$resp['status'] = 'failed';
 				$resp['error'] = pg_last_error($this->conn);
@@ -305,7 +305,13 @@
 					$this->settings->set_flashdata('success'," Ingredient has been added successfully.");
 				else
 					$this->settings->set_flashdata('success'," Ingredient successfully updated");
-				
+				// update the status column in the ingredient_request table
+				$update_sql = "UPDATE wh_ingredient_request SET status='Received' WHERE request_id = '{$request_id}' ";
+				$update = pg_query($this->conn, $update_sql);
+				if(!$update){
+					$resp['status'] = 'failed';
+					$resp['err'] = pg_last_error($this->conn)."[{$update_sql}]";
+				}
 			}else{
 				$resp['status'] = 'failed';
 				$resp['err'] = pg_last_error($this->conn)."[{$sql}]";
@@ -348,7 +354,7 @@
 				}
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO stockout_list (item_id, quantity, date, remarks) VALUES ('{$item_id}', '{$quantity}', '{$date}', '{$remarks}')";
+				$sql = "INSERT INTO wh_stockout_list (item_id, quantity, remarks, request_id, request_by, date_request, notes, personnel, personnel_role, date_prepared, date_approved) VALUES ('{$item_id}', '{$quantity}', '{$remarks}', '{$request_id}', '{$request_by}', '{$date_request}', '{$notes}', '{$personnel}', '{$personnel_role}', '{$date_prepared}', '{$date_approved}')";
 
 			}else{
 				$set_clause = "";
@@ -359,27 +365,36 @@
 						$set_clause .= "{$k} = '{$v}'";
 					}
 				}
-				$sql = "UPDATE stockout_list SET {$set_clause} WHERE id = '{$id}' ";
+				$sql = "UPDATE wh_stockout_list SET {$set_clause} WHERE id = '{$id}' ";
 			}
 			$save = pg_query($this->conn, $sql);
 			if($save){
 				$cid = !empty($id) ? $id : pg_last_oid($save);
 				$resp['status'] = 'success';
 				if(empty($id))
-					$this->settings->set_flashdata('success'," Stock-out Data has been added successfully.");
+					$this->settings->set_flashdata('success'," The requested ingredient has been approved");
 				else
-					$this->settings->set_flashdata('success'," Stock-out Data successfully updated");
+					$this->settings->set_flashdata('success'," The requested ingredient has been updated");
+					
+				// update the status column in the ingredient_request table
+				$update_sql = "UPDATE ingredient_request SET status='Approved', date_approved='{$date_approved}' WHERE request_id = '{$request_id}' ";
+				$update = pg_query($this->conn, $update_sql);
+				if(!$update){
+					$resp['status'] = 'failed';
+					$resp['err'] = pg_last_error($this->conn)."[{$update_sql}]";
+				}
 			}else{
 				$resp['status'] = 'failed';
 				$resp['err'] = pg_last_error($this->conn)."[{$sql}]";
 			}
 			return json_encode($resp);
 		}
+
 		
 		// STOCK-OUT - DELETE
 		function delete_stockout(){
 			extract($_POST);
-			$del = pg_query($this->conn, "DELETE FROM stockout_list where id = '{$id}'");
+			$del = pg_query($this->conn, "DELETE FROM wh_stockout_list where id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
 				$this->settings->set_flashdata('success'," Stock-out Data has been deleted successfully.");

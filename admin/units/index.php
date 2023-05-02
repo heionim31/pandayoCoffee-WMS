@@ -19,7 +19,7 @@
 	<div class="card-header">
 		<h3 class="card-title">List of Units</h3>
 		<div class="card-tools">
-			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
+			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Unit</a>
 		</div>
 	</div>
 	<div class="card-body">
@@ -42,7 +42,7 @@
 						<th>Abbreviation</th>
 						<th>Description</th>
 						<th>Last Updated</th>
-						<th>Items Registered</th>
+						<th>Total Registered</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -52,6 +52,10 @@
 						$i = 1;
 						$qry = pg_query($conn, "SELECT * from wh_unit_list ORDER BY date_created DESC");
 						while($row = pg_fetch_assoc($qry)):
+							$id = $row['id'];
+							$item_count_query = "SELECT COUNT(*) FROM wh_item_list WHERE unit = '$id'";
+							$item_count_result = pg_query($conn, $item_count_query);
+							$item_count = pg_fetch_result($item_count_result, 0);
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
@@ -59,7 +63,8 @@
 							<td class=""><?= $row['abbreviation'] ?></td>
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
 							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
-							<td></td>
+							<td><?php echo $item_count; ?></td>
+
 							<td class="text-center">
                                 <?php if($row['status'] == 1): ?>
                                     <span class="badge badge-success px-3 rounded-pill">Active</span>
@@ -69,7 +74,7 @@
                             </td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-				                  		Action
+									<i class="fas fa-caret-down"></i>
 				                    <span class="sr-only">Toggle Dropdown</span>
 				                  </button>
 				                  <div class="dropdown-menu" role="menu">
@@ -77,7 +82,11 @@
 				                    <div class="dropdown-divider"></div>
 				                    <a class="dropdown-item edit-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
 				                    <div class="dropdown-divider"></div>
-				                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+									<?php if($item_count == 0): ?>
+				                    	<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+										<?php else: ?>
+										<a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); Swal.fire({title: 'Cannot delete category', text: 'This category cannot be deleted because there are ingredient/s registered to it.', icon: 'warning', confirmButtonText: 'Ok'});"><span class="fa fa-trash text-muted"></span> Delete</a>
+									<?php endif; ?>
 				                  </div>
 							</td>
 						</tr>

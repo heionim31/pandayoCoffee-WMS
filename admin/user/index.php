@@ -11,6 +11,9 @@
 
 
 <div class="card card-outline rounded-0 card-dark">
+	<div class="card-header">
+		<h3 class="card-title">Account Settings</h3>
+	</div>
 	<div class="card-body">
 		<div class="container-fluid">
 			<div id="msg"></div>
@@ -19,20 +22,20 @@
 				<div class="row">
 					<div class="col-md-4">
 						<div class="form-group">
-							<label for="name">Full Name</label>
-							<input type="text" name="fullname" id="fullname" class="form-control" value="<?php echo isset($meta['fullname']) ? $meta['fullname']: '' ?>" required>
+							<label for="name">Name</label>
+							<input type="text" name="fullname" id="fullname" class="form-control" value="<?php echo isset($meta['fullname']) ? $meta['fullname']: '' ?>" readonly>
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label for="username">Username</label>
-							<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
+							<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" readonly  autocomplete="off">
 						</div>
 					</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label for="birthdate">Birthdate</label>
-							<input type="date" name="birthdate" id="birthdate" class="form-control" value="<?php echo isset($meta['birthdate']) ? $meta['birthdate']: '' ?>" required  autocomplete="off">
+							<input type="date" name="birthdate" id="birthdate" class="form-control" value="<?php echo isset($meta['birthdate']) ? $meta['birthdate']: '' ?>" readonly  autocomplete="off">
 						</div>
 					</div>
 				</div>
@@ -54,23 +57,27 @@
 						<div class="form-group">
 							<label for="password">Password</label>
 							<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
-							<small><i>Leave this blank if you dont want to change the password.</i></small>
+							<small><i class="text-red">Leave this blank if you dont want to change the password.</i></small>
 						</div>
 					</div>
 
 					<div class="col-md-6">
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label for="" class="control-label">Avatar</label>
 							<div class="custom-file">
 								<input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))" accept="image/png, image/jpeg">
 								<label class="custom-file-label" for="customFile">Choose file</label>
 							</div>
+						</div> -->
+						<div class="form-group">
+							<label for="role">Role</label>
+							<input type="text" name="role" id="role" class="form-control" value="<?php echo isset($meta['role']) ? $meta['role']: '' ?>" readonly  autocomplete="off">
 						</div>
-						<div class="form-group d-flex justify-content-center">
-							<img src="<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+						<div class="form-group d-flex justify-content-center mt-5">
+							<img src="<?php echo isset($meta['imgurl']) ? $meta['imgurl'] : validate_image('') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
 						</div>
 						<div class="form-group d-flex justify-content-center pt-5">
-							<button class="btn btn-sm btn-primary" form="manage-user">Update</button>
+							<button class="btn btn-sm btn-primary" form="manage-user">Update Profile</button>
 						</div>
 					</div>
 				</div>

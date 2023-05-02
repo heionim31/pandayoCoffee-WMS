@@ -19,15 +19,19 @@
             <div class="col-md-12">
                 <div class="card card-outline rounded-5 card-dark">
                     <div class="card-header">
-                        <a href="./?page=purchasing_request" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> return</a>
+                        <h3 class="card-title mt-2">REQUEST ADJUSTMENT</h3>
+                        <div class="card-tools">
+                            <a href="./?page=purchasing_request" class="btn btn-flat btn-success">
+                                Go Back <span class="fas fa-arrow-right"></span>
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <form method="">
                             <div class="container-fluid">
                                 <?php 
                                     $item_id = $_GET['id'];
-
-                                    $sql = "SELECT * FROM wh_ingredient_request WHERE item_id = '$item_id'";
+                                    $sql = "SELECT * FROM wh_ingredient_request WHERE item_id = '$item_id' ORDER BY request_id DESC LIMIT 1";
                                     $result = pg_query($sql);
                                     $row = pg_fetch_assoc($result);
                                 ?>
@@ -133,11 +137,11 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="date_received">Date Received:</label>
-                                        <input type="date" class="form-control" id="date_received" name="date_received">
-                                        <span class="error-message text-red"></span>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="date_received">Date Received:</label>
+                                            <input type="date" class="form-control" id="date_received" name="date_received">
+                                            <span class="error-message text-red"></span>
+                                        </div>
                                     </div>
                                     <div class="col-md-2">
                                         
@@ -153,7 +157,7 @@
                                 <div class="row">
                                     <div class="col-md-6 text-center">
                                         <div class="form-group">
-                                            <button class="btn btn-sm btn-primary bg-gradient-primary" type="button" id="add_stockin"><i class="far fa-plus-square"></i> Add Stock In</button>
+                                            <button class="btn btn-sm btn-primary bg-gradient-primary" type="button" id="add_stockin"><i class="far fa-plus-square"></i> Add to Inventory</button>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -170,46 +174,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
-
-        </div>
-
-
-        <!-- STOCK-IN TABLE -->
-        <div class="card card-outline card-dark rounded-0 shadow printout">
-            <div class="card-header py-1">
-                <div class="card-title">STOCK-IN History</div>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered table-stripped" id="stockin-tbl">
-                    <thead>
-                        <tr>
-                            <th class="p-1 text-center">Quantity</th>
-                            <th class="p-1 text-center">Date of Receipt</th> 
-                            <?php if($item_type !== 'Non-Perishable'): ?>
-                                <th class="p-1 text-center">Expiration Date</th>
-                            <?php endif; ?>
-                            <th class="p-1 text-center">Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            if(isset($id)):
-                            $stockins = pg_query($conn, "SELECT * FROM wh_stockin_list where item_id = '{$id}' order by date(date) asc");
-                            while($row = pg_fetch_assoc($stockins)):
-                            ?>
-                            <tr>
-                                <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                                <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                                <?php if($item_type !== 'Non-Perishable'): ?>
-                                    <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['expire_date'])) ?></td>
-                                <?php endif; ?>
-                                <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                            </tr>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
             </div>
         </div>
         
@@ -245,52 +209,58 @@
     const discrepancyNotes = document.getElementById("discrepancy_notes");
 
     // Create a function to check the conditions and enable/disable the button
-    function checkConditions() {
-        const currentDate = new Date();
-        const dateReceived = new Date(dateReceivedField.value);
-        const physicalCountDate = new Date(physicalCountDateField.value);
+   // Create a function to check the conditions and enable/disable the button
+function checkConditions() {
+    const currentDate = new Date();
+    const dateReceived = new Date(dateReceivedField.value);
+    const physicalCountDate = new Date(physicalCountDateField.value);
 
-        // Check if input dates are greater than current date
-        if (dateReceived > currentDate) {
-            dateReceivedField.nextElementSibling.textContent = "Date must not be greater than current date";
-            addStockInButton.disabled = true;
-            requestReturnButton.disabled = true;
-        } else {
-            dateReceivedField.nextElementSibling.textContent = "";
-        }
-
-        if (physicalCountDate > currentDate) {
-            physicalCountDateField.nextElementSibling.textContent = "Date must not be greater than current date";
-            addStockInButton.disabled = true;
-            requestReturnButton.disabled = true;
-        } else {
-            physicalCountDateField.nextElementSibling.textContent = "";
-        }
-
-        // Check other conditions
-        if (!physicalCountField.value ||
-            !requestedQuantityField.value ||
-            !dateReceivedField.value ||
-            !physicalCountDateField.value ||
-            dateReceived > currentDate ||
-            physicalCountDate > currentDate) {
-            addStockInButton.disabled = true;
-            requestReturnButton.disabled = true;
-        } else if (parseInt(physicalCountField.value) < parseInt(requestedQuantityField.value)) {
-            addStockInButton.disabled = true;
-            requestReturnButton.disabled = false;
-            discrepancyNotes.disabled = false;
-        } else if (parseInt(physicalCountField.value) > parseInt(requestedQuantityField.value)) {
-            addStockInButton.disabled = true;
-            requestReturnButton.disabled = true;
-            discrepancyNotes.disabled = true;
-        } else {
-            addStockInButton.disabled = false;
-            requestReturnButton.disabled = true;
-            discrepancyNotes.disabled = true;
-        }
-
+    // Check if input dates are greater than current date
+    if (dateReceived > currentDate) {
+        dateReceivedField.nextElementSibling.textContent = "Date must not be greater than current date";
+        addStockInButton.disabled = true;
+        requestReturnButton.disabled = true;
+    } else {
+        dateReceivedField.nextElementSibling.textContent = "";
     }
+
+    if (physicalCountDate > currentDate) {
+        physicalCountDateField.nextElementSibling.textContent = "Date must not be greater than current date";
+        addStockInButton.disabled = true;
+        requestReturnButton.disabled = true;
+    } else if (physicalCountDate < dateReceived) { // Check if physical count date is less than date received
+        physicalCountDateField.nextElementSibling.textContent = "Physical count date must not be less than date received";
+        addStockInButton.disabled = true;
+        requestReturnButton.disabled = true;
+    } else {
+        physicalCountDateField.nextElementSibling.textContent = "";
+    }
+
+    // Check other conditions
+    if (!physicalCountField.value ||
+        !requestedQuantityField.value ||
+        !dateReceivedField.value ||
+        !physicalCountDateField.value ||
+        dateReceived > currentDate ||
+        physicalCountDate > currentDate ||
+        physicalCountDate < dateReceived) {
+        addStockInButton.disabled = true;
+        requestReturnButton.disabled = true;
+    } else if (parseInt(physicalCountField.value) < parseInt(requestedQuantityField.value)) {
+        addStockInButton.disabled = true;
+        requestReturnButton.disabled = false;
+        discrepancyNotes.disabled = false;
+    } else if (parseInt(physicalCountField.value) > parseInt(requestedQuantityField.value)) {
+        addStockInButton.disabled = true;
+        requestReturnButton.disabled = true;
+        discrepancyNotes.disabled = true;
+    } else {
+        addStockInButton.disabled = false;
+        requestReturnButton.disabled = true;
+        discrepancyNotes.disabled = true;
+    }
+}
+
 
     // Disable initially
     addStockInButton.disabled = true;
@@ -308,9 +278,9 @@
 
     physicalCount.addEventListener('input', () => {
         if (Number(physicalCount.value) > Number(requestedQuantity)) {
-            document.getElementById('error-msg').textContent = 'Physical count cannot be greater than requested quantity';
+            document.getElementById('error-msg').textContent = 'Cannot be greater than requested quantity';
         } else if (Number(physicalCount.value) < Number(requestedQuantity)) {
-            document.getElementById('error-msg').textContent = 'Physical count cannot be less than requested quantity';
+            document.getElementById('error-msg').textContent = 'Cannot be less than requested quantity';
         } else {
             document.getElementById('error-msg').textContent = '';
         }
