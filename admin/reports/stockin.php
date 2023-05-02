@@ -69,12 +69,14 @@
                             <?php 
                                 $g_total = 0;
                                 $i = 1;
-                                $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit, s.date, s.expire_date, s.request_id, s.supplier, s.personnel, s.personnel_role, s.physical_count, s.physical_count_date, s.date_approved, s.date_received
+                                $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, u.abbreviation as unit_name, s.date, s.expire_date, s.request_id, s.supplier, s.personnel, s.personnel_role, s.physical_count, s.physical_count_date, s.date_approved, s.date_received
                                 FROM wh_stockin_list s 
                                 INNER JOIN wh_item_list i ON s.item_id = i.id 
                                 INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                INNER JOIN wh_unit_list u ON i.unit = u.id
                                 WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}'
-                                ORDER BY date_created DESC");
+                                ORDER BY date_created DESC
+                                ");
                                 
                                 while($row = pg_fetch_assoc($stock)):
                             ?>
@@ -84,7 +86,7 @@
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['request_id'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center">
                                         <div line-height="1em">
-                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
+                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit_name'] ?>]</div>
                                             <div class="font-weight-light"><?= $row['category'] ?></div>
                                         </div>
                                     </td>

@@ -354,7 +354,7 @@
 				}
 			}
 			if(empty($id)){
-				$sql = "INSERT INTO wh_stockout_list (item_id, quantity, date, remarks, request_id, request_by, date_request, notes, personnel, personnel_role, date_prepared, date_approved) VALUES ('{$item_id}', '{$quantity}', '{$date}', '{$remarks}', '{$request_id}', '{$request_by}', '{$date_request}', '{$notes}', '{$personnel}', '{$personnel_role}', '{$date_prepared}', '{$date_approved}')";
+				$sql = "INSERT INTO wh_stockout_list (item_id, quantity, remarks, request_id, request_by, date_request, notes, personnel, personnel_role, date_prepared, date_approved) VALUES ('{$item_id}', '{$quantity}', '{$remarks}', '{$request_id}', '{$request_by}', '{$date_request}', '{$notes}', '{$personnel}', '{$personnel_role}', '{$date_prepared}', '{$date_approved}')";
 
 			}else{
 				$set_clause = "";

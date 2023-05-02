@@ -21,6 +21,19 @@
 		</div>
 
 		<div class="form-group">
+			<label for="unit_id" class="control-label">Unit</label>
+			<select name="unit" id="unit_id" class="form-control form-control-sm rounded-0" required="required">
+				<option value="" <?= isset($unit_id) ? 'selected' : '' ?>></option>
+				<?php 
+					$items = pg_query($conn, "SELECT * FROM wh_unit_list where status = 1 ");
+					while($row= pg_fetch_assoc($items)):
+					?>
+					<option value="<?= $row['id'] ?>" <?= isset($unit_id) && $unit_id == $row['id'] ? 'selected' : '' ?>><?= $row['name'] ?></option>
+				<?php endwhile; ?>
+			</select>
+		</div>
+
+		<div class="form-group">
 			<label for="category_id" class="control-label">Category</label>
 			<select name="category_id" id="category_id" class="form-control form-control-sm rounded-0" required="required">
 				<option value="" <?= isset($category_id) ? 'selected' : '' ?>></option>
@@ -39,19 +52,6 @@
 				<option value="" <?= isset($item_type) ? 'selected' : '' ?>></option>
 				<option value="Perishable" <?php echo isset($item_type) && $item_type == 'Perishable' ? 'selected' : ''; ?>>Perishable</option>
 				<option value="Non-Perishable" <?php echo isset($item_type) && $item_type == 'Non-Perishable' ? 'selected' : ''; ?>>Non-Perishable</option>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="unit_id" class="control-label">Unit</label>
-			<select name="unit" id="unit_id" class="form-control form-control-sm rounded-0" required="required">
-				<option value="" <?= isset($unit_id) ? 'selected' : '' ?>></option>
-				<?php 
-				$items = pg_query($conn, "SELECT * FROM wh_unit_list where status = 1 ");
-				while($row= pg_fetch_assoc($items)):
-				?>
-				<option value="<?= $row['abbreviation'] ?>" <?= isset($unit_id) && $unit_id == $row['id'] ? 'selected' : '' ?>><?= $row['abbreviation'] ?></option>
-				<?php endwhile; ?>
 			</select>
 		</div>
 		
@@ -125,8 +125,8 @@
 						alert_toast(resp.msg, 'success')
 						// Delay the page reload by 2 seconds and redirect to item page
                         setTimeout(function(){
-                          window.location.href = './?page=items';
-                        }, 1000);
+							window.location.href = window.location.href;
+						}, 1000);
 					}else if(resp.status == 'failed' && !!resp.msg){
                         var el = $('<div>')
                             el.addClass("alert alert-danger err-msg").text(resp.msg)

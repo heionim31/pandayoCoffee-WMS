@@ -1,3 +1,5 @@
+<?php include '../loading-animation.php'; ?>
+
 <style>
   .user-img{
     position: absolute;
@@ -9,7 +11,7 @@
   }
 
   .btn-rounded{
-        border-radius: 50px;
+    border-radius: 50px;
   }
 
   /* LEFT NAVBAR*/
@@ -246,22 +248,40 @@
               $pageTitle = 'Units';
               break;
             case 'items':
-              $pageTitle = 'Stock List';
+              $pageTitle = 'Ingredients List';
               break;
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
               break;
             case 'set_notification':
-              $pageTitle = 'Stock Alert Notifications';
+              $pageTitle = 'Stock Alert Notification';
               break;
             case 'sales_request':
               $pageTitle = 'Sales Request';
+              break;
+            case 'sales_request/history':
+              $pageTitle = 'Sales Request History';
               break;
             case 'stocks/stockout_adjustment':
               $pageTitle = 'Request Adjustment';
               break;
             case 'purchasing_request':
               $pageTitle = 'Purchasing Request';
+              break;
+            case 'purchasing_request/history':
+              $pageTitle = 'Purchasing Request History';
+              break;
+            case 'stocks/stockin_adjustment':
+              $pageTitle = 'Request Adjustment';
+              break;
+            case 'leave_request_manager':
+              $pageTitle = 'Pending Leave Requests';
+              break;
+            case 'leave_request_manager/history':
+              $pageTitle = 'Leave Request History';
+              break;
+            case 'leave_request_staff':
+              $pageTitle = 'File Leave Request';
               break;
             case 'stocks/stockin_adjustment':
               $pageTitle = 'Request Adjustment';
@@ -279,7 +299,10 @@
               $pageTitle = 'Monthly Waste Reports';
               break;
             case 'user/list':
-              $pageTitle = 'User List';
+              $pageTitle = 'Users List';
+              break;
+            case 'user':
+              $pageTitle = 'Account Information';
               break;
             case 'system_info':
               $pageTitle = 'System Information';
@@ -438,5 +461,7 @@
   </ul>
 </nav>
 
-<!-- <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a> -->
+<!-- 
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a> 
+  </div> -->

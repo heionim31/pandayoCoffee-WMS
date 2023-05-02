@@ -82,7 +82,7 @@
     color: #888;
   }
   .no-data-message-big {
-    transform: rotate(-45deg);
+    /* transform: rotate(-45deg); */
     margin: 6rem 0 -5rem;
   }
 
@@ -223,41 +223,41 @@
     </div>
   </div>
 
-  <!-- TOTAL OF OVER STOCKS -->
+  <!-- TOTAL OF IN STOCK -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
       <div class="info-box-content">
-        <a href="<?php echo base_url ?>admin/?page=purchasing_request" style="color:black;" >
+        <a href="<?php echo base_url ?>admin/?page=items" style="color:black;">
           <span class="info-box-number text-left h5">
             <?php 
               $query = "SELECT wh_item_list.id, wh_item_list.name, 
-                  (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
-                  (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
-                  (SELECT quantity FROM wh_stockin_list WHERE item_id = wh_item_list.id 
-                  ORDER BY date DESC LIMIT 1) AS latest_quantity,
-                  (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = wh_item_list.id),0) - 
-                  COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = wh_item_list.id),0)) as available
-              FROM wh_item_list 
-              ORDER BY date_updated DESC";
+                        (SELECT min_stock FROM wh_stock_notif LIMIT 1) AS min_stock, 
+                        (SELECT max_stock FROM wh_stock_notif LIMIT 1) AS max_stock,
+                        (SELECT quantity FROM wh_stockin_list WHERE item_id = wh_item_list.id 
+                        ORDER BY date DESC LIMIT 1) AS latest_quantity,
+                        (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = wh_item_list.id),0) - 
+                        COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = wh_item_list.id),0)) as available
+                        FROM wh_item_list 
+                        WHERE wh_item_list.delete_flag != 1
+                        ORDER BY date_updated DESC";
 
               $result = pg_query($conn, $query);
-              $overstock_count = 0;
+              $instock_count = 0;
 
               while ($row = pg_fetch_assoc($result)) {
-                $name = $row['name'];
-                $min_stock = $row['min_stock'];
-                $max_stock = $row['max_stock'];
-                $available_quantity = (int)$row['available'];
+                  $name = $row['name'];
+                  $min_stock = $row['min_stock'];
+                  $max_stock = $row['max_stock'];
+                  $available_quantity = (int)$row['available'];
 
-                if ($available_quantity >= $max_stock) {
-                  $overstock_count++;
-                }
+                  if ($available_quantity > $min_stock && $available_quantity <= $max_stock ) {
+                      $instock_count++;
+                  }
               }
-
-              echo number_format($overstock_count);
+              echo format_num($instock_count);
             ?>
           </span>
-          <span class= "info-box-text text-left">Total Over stocks</span>
+          <span class= "info-box-text text-left">Total In Stock</span>
         </a>
       </div>
       <span class="info-box-icon"><i class="fas fa-battery-full" style="font-size:60px"></i></span>
@@ -367,7 +367,6 @@
     </div>
   </div>
 
-
   <!-- POP-UP ALERT BOX -->
   <div class="alert-container">
     <div class="out-of-stock-alert alert" style="<?php if ($outofstock_count == 0) { echo 'display:none;'; } ?>">
@@ -420,7 +419,7 @@
   <div class="col-md-4">
     <div class="card">
       <div class="card-header">
-        <h5 class="card-title">TOP STOCK-IN ITEMS</h5>
+        <h5 class="card-title">TOP STOCK-IN</h5>
       </div>
       <div class="card-body">
         <?php
@@ -444,7 +443,7 @@
                     
           $result = pg_query($conn, $sql);
 
-          if ($result) {
+          if (pg_num_rows($result) > 0) {
             $items_stockin = array();
             while ($row = pg_fetch_assoc($result)) {
                 $item_name = $row['item_name'] ?? 'Unknown';
@@ -521,7 +520,7 @@
   <div class="col-md-4">
     <div class="card">
       <div class="card-header">
-        <h5 class="card-title">TOP STOCK-OUT ITEMS</h5>
+        <h5 class="card-title">TOP STOCK-OUT</h5>
       </div>
       <div class="card-body">
         <?php
@@ -535,7 +534,7 @@
 
           $result = pg_query($conn, $sql);
 
-          if ($result) {
+          if (pg_num_rows($result) > 0) {
             $items_stockout = array();
             while ($row = pg_fetch_assoc($result)) {
                 $item_name = $row['item_name'] ?? 'Unknown';
@@ -612,7 +611,7 @@
   <div class="col-md-4">
     <div class="card">
       <div class="card-header">
-        <h5 class="card-title">TOP WASTE ITEMS</h5>
+        <h5 class="card-title">TOP WASTE</h5>
       </div>
       <div class="card-body">
         <?php
@@ -627,7 +626,7 @@
 
           $result = pg_query($conn, $sql);
 
-          if ($result) {
+          if (pg_num_rows($result) > 0) {
             $items_waste = array();
             while ($row = pg_fetch_assoc($result)) {
                 $item_name = $row['item_name'] ?? 'Unknown';
@@ -710,7 +709,7 @@
             <h5 class="card-title">Recently Added</h5>
           </li>
           <li class="nav-item">
-            <a class="nav-link recent-add-nav actives" href="#" data-toggle="tab" data-target="#items-table">Items</a>
+            <a class="nav-link recent-add-nav actives" href="#" data-toggle="tab" data-target="#items-table">Ingredients</a>
           </li>
           <li class="nav-item">
             <a class="nav-link recent-add-nav" href="#" data-toggle="tab" data-target="#categories-table">Categories</a>
@@ -730,7 +729,7 @@
               <div class="card-header">
                 <h5 class="card-title">
                   <i class="nav-icon fas fa-chart-line"></i>
-                  Recent Items
+                  Recent Ingredient
                 </h5>
               </div>
               <div class="card-body">

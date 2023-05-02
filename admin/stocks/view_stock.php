@@ -13,7 +13,7 @@
 ?>
      
 <div class="row mt-3 justify-content-center">
-    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         
     
         <!-- ITEM DETAILS -->
@@ -66,34 +66,53 @@
                 <table class="table table-bordered table-stripped" id="stockin-tbl">
                     <thead>
                         <tr>
+                            <th class="p-1 text-center">#</th>
+                            <th class="p-1 text-center">Request ID</th>
+                            <th class="p-1 text-center">Ingredient</th>
                             <th class="p-1 text-center">Quantity</th>
-                            <th class="p-1 text-center">Date of Receipt</th> 
-                            <?php if($item_type !== 'Non-Perishable'): ?>
+                            <th class="p-1 text-center">Manufactured</th>
+                            <th class="p-1 text-center">Expiration</th>
+                            <th class="p-1 text-center">Supplier</th> 
+                            <th class="p-1 text-center">Received</th>
+                            <!-- <?php if($item_type !== 'Non-Perishable'): ?>
                                 <th class="p-1 text-center">Expiration Date</th>
-                            <?php endif; ?>
+                            <?php endif; ?> -->
                             <th class="p-1 text-center">Remarks</th>
-                            <th class="p-1 text-center">Action</th>
+                            <!-- <th class="p-1 text-center">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
                         <?php 
+                            $i = 1;
                             if(isset($id)):
-                            $stockins = pg_query($conn, "SELECT * FROM wh_stockin_list where item_id = '{$id}' order by date(date) asc");
-                            while($row = pg_fetch_assoc($stockins)):
+                                $stockins = pg_query($conn, "SELECT s.*, i.name as ingredient_name
+                                FROM wh_stockin_list s
+                                JOIN wh_item_list i ON s.item_id = i.id
+                                WHERE item_id = '{$id}'
+                                ORDER by date(s.date) asc");
+                                while($row = pg_fetch_assoc($stockins)):
                             ?>
                             <tr>
+                                <td class="p-1 align-middle text-center"> <?= $i++ ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['request_id'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['ingredient_name'] ?></td>
                                 <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                                <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                                <?php if($item_type !== 'Non-Perishable'): ?>
+                                <td class="p-1 align-middle text-center"><?= $row['date'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['expire_date'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['supplier'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['date_received'] ?></td>
+
+                                <!-- <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td> -->
+                                <!-- <?php if($item_type !== 'Non-Perishable'): ?>
                                     <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['expire_date'])) ?></td>
-                                <?php endif; ?>
+                                <?php endif; ?> -->
                                 <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                                <td class="p-1 align-middle text-center">
+                                <!-- <td class="p-1 align-middle text-center">
                                     <div class="btn-group btn-group-xs">
                                         <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockin" title="Edit Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
                                         <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger delete_stockin" title="Delete Data" type="button" data-id = "<?= $row['id'] ?>"><small><i class="fa fa-trash"></i></small></button>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                             <?php endwhile; ?>
                         <?php endif; ?>
@@ -115,29 +134,44 @@
                 <table class="table table-bordered table-stripped" id="stockout-tbl">
                     <thead>
                         <tr>
+                            <th class="p-1 text-center">#</th>
+                            <th class="p-1 text-center">Request ID</th>
+                            <th class="p-1 text-center">Ingredient</th>
                             <th class="p-1 text-center">Quantity</th>
-                            <th class="p-1 text-center">Date Issued</th>
+                            <th class="p-1 text-center">Date Request</th>
+                            <th class="p-1 text-center">Date Approved</th>
+                            <th class="p-1 text-center">Request By</th>
                             <th class="p-1 text-center">Remarks</th>
-                            <th class="p-1 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
+                            $i = 1;
                             if (isset($id)) {
-                                $stockouts = pg_query($conn, "SELECT * FROM wh_stockout_list WHERE item_id = '{$id}' ORDER BY date(date) ASC");
+                                $stockouts = pg_query($conn, "SELECT s.*, i.name as ingredient_name
+                                FROM wh_stockout_list s
+                                JOIN wh_item_list i ON s.item_id = i.id
+                                WHERE s.item_id = '{$id}'
+                                ORDER BY date(s.date) ASC");
                                 while ($row = pg_fetch_assoc($stockouts)) {
                         ?>
-                                    <tr>
-                                        <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
-                                        <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td>
-                                        <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
-                                        <td class="p-1 align-middle text-center">
-                                            <div class="btn-group btn-group-xs">
-                                            <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockout" title="Edit Data" type="button" data-id="<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
-                                            <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger delete_stockout" title="Delete Data" type="button" data-id="<?= $row['id'] ?>"><small><i class="fa fa-trash"></i></small></button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                            <tr>
+                                <td class="p-1 align-middle text-center"><?= $i++ ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['request_id'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['ingredient_name'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
+                                <!-- <td class="p-1 align-middle text-center"><?= date("M d, Y", strtotime($row['date'])) ?></td> -->
+                                <td class="p-1 align-middle text-center"><?= $row['date_request'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['date_approved'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['request_by'] ?></td>
+                                <td class="p-1 align-middle text-center"><?= $row['remarks'] ?></td>
+                                <!-- <td class="p-1 align-middle text-center">
+                                    <div class="btn-group btn-group-xs">
+                                    <button class="btn btn-flat btn-primary btn-xs bg-gradient-primary edit_stockout" title="Edit Data" type="button" data-id="<?= $row['id'] ?>"><small><i class="fa fa-edit"></i></small></button>
+                                    <button class="btn btn-flat btn-danger btn-xs bg-gradient-danger delete_stockout" title="Delete Data" type="button" data-id="<?= $row['id'] ?>"><small><i class="fa fa-trash"></i></small></button>
+                                    </div>
+                                </td> -->
+                            </tr>
                         <?php
                                 }
                             }
@@ -235,8 +269,8 @@
             var card = $(this).clone()
             card.removeClass('shadow')
             card.find('.btn').remove()
-            card.find('td:nth-child(5)').remove()
-            card.find('th:nth-child(5)').remove()
+            card.find('td:nth-child(10)').remove()
+            card.find('th:nth-child(9)').remove()
             el += card[0].outerHTML
         })
         h.find('title').text("order Details - Print View")

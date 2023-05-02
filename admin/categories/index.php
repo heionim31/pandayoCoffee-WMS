@@ -19,7 +19,7 @@
 	<div class="card-header">
 		<h3 class="card-title">List of Categories</h3>
 		<div class="card-tools">
-			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
+			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Category</a>
 		</div>
 	</div>
 	<div class="card-body">
@@ -70,7 +70,7 @@
 						</td>
 						<td align="center">
 							<button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-								Action
+								<i class="fas fa-caret-down"></i>
 								<span class="sr-only">Toggle Dropdown</span>
 							</button>
 							<div class="dropdown-menu" role="menu">

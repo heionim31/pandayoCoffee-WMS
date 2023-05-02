@@ -52,6 +52,7 @@
                                     <th class="px-1 py-1 text-center">Ingredient</th>
                                     <th class="px-1 py-1 text-center">Quantity</th>
                                     <!-- <th class="px-1 py-1 text-center">Date Issued</th> -->
+                                    <th class="px-1 py-1 text-center">Date Request</th>
                                     <th class="px-1 py-1 text-center">Date Approved</th>
                                     <th class="px-1 py-1 text-center">Request By</th>
                                     <th class="px-1 py-1 text-center">Remarks</th>
@@ -61,10 +62,11 @@
                                 <?php 
                                     $g_total = 0;
                                     $i = 1;
-                                    $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, i.unit 
+                                    $stock = pg_query($conn, "SELECT s.*, i.name as item, c.name as category, u.abbreviation as unit_name, i.unit 
                                                                 FROM wh_stockout_list s 
                                                                 INNER JOIN wh_item_list i ON s.item_id = i.id 
                                                                 INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                                                INNER JOIN wh_unit_list u ON i.unit = u.id
                                                                 WHERE to_char(s.date_created, 'YYYY-MM') = '{$month}' 
                                                                 ORDER BY s.date_created DESC");
 
@@ -76,12 +78,13 @@
 
                                     <td class="px-1 py-1 align-middle text-center">
                                         <div line-height="1em">
-                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit'] ?>]</div>
+                                            <div class="font-weight-bold"><?= $row['item'] ?> [<?= $row['unit_name'] ?>]</div>
                                             <div class="font-weight-light"><?= $row['category'] ?></div>
                                         </div>
                                     </td>
                                     <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
                                     <!-- <td class="px-1 py-1 align-middle text-center"><?= date("Y-m-d",strtotime($row['date'])) ?></td> -->
+                                    <td class="px-1 py-1 align-middle text-center"><?= $row['date_request'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['date_approved'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['request_by'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['remarks'] ?></td>

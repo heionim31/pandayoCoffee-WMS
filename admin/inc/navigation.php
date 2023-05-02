@@ -30,7 +30,7 @@
     opacity: 0.8;
     color: #fff;
     border: 1px solid white;
-     margin-top: 6rem;
+     /* margin-top: 6rem; */
   }
 
   li p {
@@ -178,14 +178,14 @@
                     <?php
                       // Count the total number of sales and purchasing requests
                       $count_query = "SELECT SUM(count) as total FROM (
-                                      SELECT COUNT(*) as count FROM ingredient_request
+                                      SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received')
                                       UNION ALL
                                       SELECT COUNT(*) as count FROM wh_item_list i 
                                         INNER JOIN wh_category_list c ON i.category_id = c.id 
                                         INNER JOIN wh_stock_notif s ON s.id = 1 
                                         WHERE i.delete_flag = 0 
                                         AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
-                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)
+                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) > s.max_stock)
                                       ) as subquery";
                       $count_result = pg_query($conn, $count_query);
                       $total = pg_fetch_assoc($count_result)['total'];
@@ -205,7 +205,7 @@
                       <p style="color:white">Sales Request</p>
                       <?php
                         // Count the number of leave requests
-                        $count_query = "SELECT COUNT(*) as count FROM ingredient_request";
+                        $count_query = "SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received')";
                         $count_result = pg_query($conn, $count_query);
                         $count = pg_fetch_assoc($count_result)['count'];
 
@@ -226,7 +226,7 @@
                                         INNER JOIN wh_stock_notif s ON s.id = 1 
                                         WHERE i.delete_flag = 0 
                                         AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
-                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)";
+                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) > s.max_stock)";
                         $count_result = pg_query($conn, $count_query);
                         $count = pg_fetch_assoc($count_result)['count'];
 

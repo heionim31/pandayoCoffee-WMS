@@ -17,7 +17,7 @@
     $request_id = isset($_GET['request_id']) ? $_GET['request_id'] : '';
     $request_by = isset($_GET['request_by']) ? $_GET['request_by'] : '';
     $date_request = isset($_GET['date_request']) ? $_GET['date_request'] : '';
-    $requested_quantity = isset($_GET['requested_quantity']) ? $_GET['requested_quantity'] : '';
+    $quantity = isset($_GET['quantity']) ? $_GET['quantity'] : '';
     $notes = isset($_GET['notes']) ? $_GET['notes'] : '';
     $personnel = isset($_GET['personnel']) ? $_GET['personnel'] : '';
     $personnel_role = isset($_GET['personnel_role']) ? $_GET['personnel_role'] : '';
@@ -97,65 +97,60 @@
         <input type="hidden" name="id" value="<?= isset($id) ? $id : '' ?>">
         <input type="hidden" name="item_id" value="<?= isset($item_id) ? $item_id : (isset($_GET['iid']) ? $_GET['iid'] : '') ?>">
         
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="ingredient_name" class="control-label">Ingredient Name</label>
             <input type="text" step="any" name="ingredient_name" id="ingredient_name" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['ingredient_name']) ? $_GET['ingredient_name'] : '' ?>" readonly>
         </div>
         
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="request_id" class="control-label">Request ID</label>
             <input type="text" step="any" name="request_id" id="request_id" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['request_id']) ? $_GET['request_id'] : '' ?>" readonly>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="request_by" class="control-label">Request By</label>
             <input type="text" step="any" name="request_by" id="request_by" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['request_by']) ? $_GET['request_by'] : '' ?>" readonly>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="date_request" class="control-label">Date Requested</label>
             <input type="text" step="any" name="date_request" id="date_request" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['date_request']) ? $_GET['date_request'] : '' ?>" readonly>
         </div>
         
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="quantity" class="control-label">Quantity</label>
-            <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0" value="<?= isset($quantity) ? format_num($quantity) : '' ?>"  max="<?= $max_quantity ?>" required oninput="checkQuantity()">
+            <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['quantity']) ? $_GET['quantity'] : '' ?>" readonly>
             <span id="quantityError" style="color: red; display: none;">Sorry, the quantity entered exceeds the maximum allowed quantity.</span>
         </div> 
        
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="notes" class="control-label">Notes</label>
             <input type="text" step="any" name="notes" id="notes" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['notes']) ? $_GET['notes'] : '' ?>" readonly>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="personnel" class="control-label">Personnel</label>
             <input type="text" step="any" name="personnel" id="personnel" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['personnel']) ? $_GET['personnel'] : '' ?>" readonly>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="personnel_role" class="control-label">Personnel Role</label>
             <input type="text" step="any" name="personnel_role" id="personnel_role" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['personnel_role']) ? $_GET['personnel_role'] : '' ?>" readonly>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="date_prepared" class="control-label">Date Prepared</label>
             <input type="date" name="date_prepared" id="date_prepared" class="form-control form-control-sm rounded-0" value="<?= isset($date_prepared) ? $date_prepared : '' ?>" readonly>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="date_approved" class="control-label">Date Approved</label>
             <input type="date" name="date_approved" id="date_approved" class="form-control form-control-sm rounded-0" value="<?= isset($date_approved) ? $date_approved : '' ?>" readonly>
-        </div>
-        
-        <div class="form-group">
-            <label for="date" class="control-label">Date of Use</label>
-            <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($date) ? $date : '' ?>" max="<?= date("Y-m-d") ?>" required>
         </div>
 
         <div class="form-group">
             <label for="remarks" class="control-label">Remarks</label>
-            <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" required><?= isset($remarks) ? ($remarks) : '' ?></textarea>
+            <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" placeholder="Add your remarks or comments for the approved ingredient request of Sales Department here" required><?= isset($remarks) ? ($remarks) : '' ?></textarea>
         </div>
     </form>
 </div>

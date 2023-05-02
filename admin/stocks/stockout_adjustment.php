@@ -12,6 +12,7 @@
     }
 ?>
      
+     
 <div class="row mt-3 justify-content-center">
     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
 
@@ -45,6 +46,12 @@
                                     </div>
                                     <div class="col-md-4 text-center mb-3">
                                         <h3>Personnel</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                   
                                     </div>
                                 </div>
                                 <div class="row">
@@ -94,20 +101,26 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="requested_quantity">Quantity</label>
-                                            <input type="text" class="form-control" id="requested_quantity" name="requested_quantity" value="<?php echo $row['requested_quantity']; ?>" readonly>
+                                            <label for="quantity" class="control-label">Quantity</label>
+                                            <input type="number" step="any" name="quantity" id="quantity" class="form-control" value="<?= isset($quantity) ? format_num($quantity) : '' ?>"  max="<?= $max_quantity ?>" required oninput="checkQuantity()">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="wh_quantity">Warehouse Quantity</label>
+                                            <input type="text" class="form-control" id="wh_quantity" name="wh_quantity" value="<?php echo intval($available); ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="unit">Unit</label>
                                             <input type="text" class="form-control" id="unit" name="unit" value="<?php echo $row['unit']; ?>" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                    
+                                        
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -118,9 +131,95 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
+                                        <span id="quantityError" style="color: red; display: none;">Sorry, the quantity entered exceeds the maximum allowed quantity.</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="expiration_alert">Expiration Alert</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="notes">Request Notes</label>
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <?php
+                                            // get item type from item_list table
+                                            $item_id = isset($_GET['id']) ? $_GET['id'] : '';
+                                            $item_type_query = "SELECT item_type FROM wh_item_list WHERE id = '$item_id'";
+                                            $item_type_result = pg_query($conn, $item_type_query);
+                                            $item_type_row = pg_fetch_assoc($item_type_result);
+                                            $item_type = $item_type_row['item_type'];
+
+                                            // check if item is non-perishable
+                                            if ($item_type != 'Non-Perishable') {
+                                                // get total quantity of same items from stockin list table
+                                                $total_quantity_query = "SELECT SUM(quantity) as total_quantity FROM wh_stockin_list WHERE item_id = '$item_id'";
+                                                $total_quantity_result = pg_query($conn, $total_quantity_query);
+                                                $total_quantity_row = pg_fetch_assoc($total_quantity_result);
+                                                $total_quantity = $total_quantity_row['total_quantity'];
+
+                                                // get total quantity of same items from stockout list table
+                                                $existing_quantity_query = "SELECT SUM(quantity) as existing_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+                                                $existing_quantity_result = pg_query($conn, $existing_quantity_query);
+                                                $existing_quantity_row = pg_fetch_assoc($existing_quantity_result);
+                                                $existing_quantity = $existing_quantity_row['existing_quantity'];
+
+                                                // subtract existing quantity from total quantity if item already exists in stockout list
+                                                if ($existing_quantity) {
+                                                    $total_quantity -= $existing_quantity;
+                                                }
+
+                                                // check if item is non-perishable
+                                                if ($item_type != 'Non-Perishable') {
+                                                    // get total quantity of expired items from stockin list table
+                                                    $expired_quantity = 0;
+                                                    $expired_quantity_query = "SELECT SUM(quantity) as expired_quantity FROM wh_stockin_list WHERE item_id = '$item_id' AND expire_date <= CURRENT_DATE";
+                                                    $expired_quantity_result = pg_query($conn, $expired_quantity_query);
+                                                    $expired_quantity_row = pg_fetch_assoc($expired_quantity_result);
+                                                    if ($expired_quantity_row['expired_quantity']) {
+                                                    $expired_quantity = $expired_quantity_row['expired_quantity'];
+                                                    }
+                                                    
+                                                    // check if there are any expired items
+                                                    $total_quantity = intval($total_quantity);
+                                                    $expired_quantity = intval($expired_quantity);
+                                                    if ($total_quantity == $expired_quantity && $total_quantity != 0) {
+                                                        // all items have expired, show the message
+                                                        echo "<div class='alert alert-warning'>Sorry, you cannot add a stock-out because all <b>({$expired_quantity})</b> items in stock have already expired. Please restock before performing any stock-out transactions.</div>";
+                                                        // set maximum quantity allowed to 0
+                                                        $max_quantity = 0;
+                                                    } else if ($expired_quantity > 0) {
+                                                        // some items have expired, show the message about remaining quantity
+                                                        $remaining_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+                                                        $remaining_quantity_result = pg_query($conn, $remaining_quantity_query);
+                                                        $remaining_quantity_row = pg_fetch_assoc($remaining_quantity_result);
+                                                        $remaining_quantity = $total_quantity - $expired_quantity;
+                                                        echo "<div class='alert alert-warning'>NOTE: You can only add <b>({$remaining_quantity})</b> stock-out items because <b>({$expired_quantity} out of {$total_quantity})</b> have already expired.</div>";
+                                                        // calculate the maximum quantity allowed
+                                                        $max_quantity = $total_quantity - $expired_quantity;
+                                                    }
+                                                    else {
+                                                        // no items have expired, set maximum quantity allowed to the total quantity
+                                                        $max_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+                                                        $max_quantity_result = pg_query($conn, $max_quantity_query);
+                                                        $max_quantity_row = pg_fetch_assoc($max_quantity_result);
+                                                        $max_quantity = $total_quantity - intval($max_quantity_row['stockout_quantity']);
+                                                        echo "<div class='alert alert-info'>No Expired Ingredients in Inventory</div>";
+                                                    }
+                                                } 
+                                            }
+                                        ?>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="notes">Request Notes</label>
-                                            <textarea type="text" class="form-control" id="notes" name="notes" readonly cols="3" style="resize: none;"><?php echo $row['notes']; ?></textarea>
+                                            
+                                            <textarea type="text" class="form-control" id="notes" name="notes" rows="4" readonly  style="resize: none;"><?php echo $row['notes']; ?></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -150,6 +249,56 @@
         
     </div>
 </div>
+
+<script>
+    function checkQuantity() {
+    var quantityInput = document.getElementById("quantity");
+    var quantityError = document.getElementById("quantityError");
+    var expiredQuantity = <?= $expired_quantity ?>;
+    var totalQuantity = <?= $total_quantity ?>;
+    var addStockOutButton = document.getElementById("add_stockout");
+    var dateApprovedField = document.getElementById("date_approved");
+    var dateApprovedError = document.getElementById("date_approved_error");
+    
+    if (totalQuantity == expiredQuantity) {
+        // all items have expired, show error message and disable submit button
+        quantityError.style.display = "inline";
+        quantityError.innerText = "Stock-out transactions cannot be performed as all items in stock have already expired.";
+        addStockOutButton.disabled = true;
+    } else if (quantityInput.value <= 0) {
+        // quantity entered is less than or equal to zero, show error message and disable submit button
+        quantityError.style.display = "inline";
+        quantityError.innerText = "Sorry, the quantity entered must be greater than zero.";
+        addStockOutButton.disabled = true;
+    } else if (quantityInput.value > <?= $max_quantity ?> ) {
+        // quantity entered exceeds the maximum allowed quantity, show error message and disable submit button
+        quantityError.style.display = "inline";
+        quantityError.innerText = "Sorry, the quantity entered exceeds the maximum allowed quantity.";
+        addStockOutButton.disabled = true;
+    } else {
+        // quantity entered is valid, hide error message
+        quantityError.style.display = "none";
+    }
+
+    // check if there are any quantity errors or if the date is not set yet or if the date is invalid
+    if (quantityError.style.display === "inline" || !dateApprovedField.value || dateApprovedError.textContent) {
+        addStockOutButton.disabled = true;
+    } else {
+        addStockOutButton.disabled = false;
+    }
+    
+    // Check the validity of the "Date Approved" field
+    const selectedDate = new Date(dateApprovedField.value);
+    const currentDate = new Date();
+    if (isNaN(selectedDate) || selectedDate > currentDate) {
+        dateApprovedError.textContent = 'Please enter a valid date';
+    } else {
+        dateApprovedError.textContent = '';
+    }
+}
+
+
+</script>
 
 <script>
     // Get the "Date Approved" field and the error message element
@@ -195,7 +344,7 @@
     $(function(){
         // Stockout
         $('#add_stockout').click(function(){
-            uni_modal("<i class='far fa-plus-square'></i> Add Stock-out Data", `stocks/manage_stockout.php?iid=<?= isset($id) ? $id : '' ?>&request_id=${$('#request_id').val()}&ingredient_name=${$('#ingredient_name').val()}&request_by=${$('#request_by').val()}&date_request=${$('#date_request').val()}&requested_quantity=${$('#requested_quantity').val()}&notes=${$('#notes').val()}&personnel=${$('#personnel').val()}&personnel_role=${$('#personnel_role').val()}&date_prepared=${$('#date_prepared').val()}&date_approved=${$('#date_approved').val()}`);
+            uni_modal("<i class='far fa-plus-square'></i> Add Stock-out Data", `stocks/manage_stockout.php?iid=<?= isset($id) ? $id : '' ?>&request_id=${$('#request_id').val()}&ingredient_name=${$('#ingredient_name').val()}&request_by=${$('#request_by').val()}&date_request=${$('#date_request').val()}&quantity=${$('#quantity').val()}&notes=${$('#notes').val()}&personnel=${$('#personnel').val()}&personnel_role=${$('#personnel_role').val()}&date_prepared=${$('#date_prepared').val()}&date_approved=${$('#date_approved').val()}`);
         })
         $('.edit_stockout').click(function(){
             uni_modal("<i class='fa fa-edit'></i> Edit Stock-out Data", 'stocks/manage_stockout.php?iid=<?= isset($id) ? $id : '' ?>&id=' + $(this).attr('data-id'))

@@ -19,7 +19,7 @@
 	<div class="card-header">
 		<h3 class="card-title">List of Units</h3>
 		<div class="card-tools">
-			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span>  Create New</a>
+			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Unit</a>
 		</div>
 	</div>
 	<div class="card-body">
@@ -52,8 +52,8 @@
 						$i = 1;
 						$qry = pg_query($conn, "SELECT * from wh_unit_list ORDER BY date_created DESC");
 						while($row = pg_fetch_assoc($qry)):
-							$unit = $row['abbreviation'];
-							$item_count_query = "SELECT COUNT(*) FROM wh_item_list WHERE unit = '$unit'";
+							$id = $row['id'];
+							$item_count_query = "SELECT COUNT(*) FROM wh_item_list WHERE unit = '$id'";
 							$item_count_result = pg_query($conn, $item_count_query);
 							$item_count = pg_fetch_result($item_count_result, 0);
 					?>
@@ -74,7 +74,7 @@
                             </td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-				                  		Action
+									<i class="fas fa-caret-down"></i>
 				                    <span class="sr-only">Toggle Dropdown</span>
 				                  </button>
 				                  <div class="dropdown-menu" role="menu">
