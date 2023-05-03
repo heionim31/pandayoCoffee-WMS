@@ -92,7 +92,12 @@
     align-items: center;
     color: white;
     list-style: none;
+    background-color: black;
   }
+
+  .nav-link{
+      color:white;
+    }
 
   .card-primary:not(.card-outline)>.card-header a.actives {
       color: #1f2d3d;
@@ -104,10 +109,10 @@
     border-color: #dee2e6 #dee2e6 #fff;
   }
 
-  /* TOTALS METRICS */
-  .info-box {
+ /* TOTALS METRICS */
+ .info-box {
     /* background: linear-gradient(to right, #1e5799, #2989d8); */
-    background-image: linear-gradient(to right, #834d9b 0%, #d04ed6 51%, #834d9b 100%);
+    background-image: linear-gradient(to right, #cc891d 10%, #f5d68e 50%);
     background-size: 200% auto;
     box-shadow: 1 1 3px #000;
     border-radius: 10px;
@@ -703,7 +708,7 @@
   <!-- TABLE FOR RECENTLY ADDED -->
   <div class="col-md-12">
     <div class="card card-primary card-tabs">
-      <div class="card-header recently-header p-0 pt-1">
+      <div class=" recently-header p-0 pt-1">
         <ul class="nav nav-tabs">
           <li class="pt-2 px-4">
             <h5 class="card-title">Recently Added</h5>
