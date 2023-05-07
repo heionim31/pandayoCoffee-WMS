@@ -75,11 +75,13 @@
 				unlink(base_app.$fname);
 				$upload =imagepng($temp,base_app.$fname);
 				if($upload){
+					$timestamp = time();
+					$url = "uploads/logo.png?v=$timestamp";
 					if(isset($_SESSION['wh_system_info']['logo'])){
-						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'logo' ");
+						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = '{$url}' where meta_field = 'logo'");
 						if(is_file(base_app.$_SESSION['wh_system_info']['logo'])) unlink(base_app.$_SESSION['wh_system_info']['logo']);
-					}else{
-						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$fname}',meta_field = 'logo' ");
+					} else {
+						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$url}', meta_field = 'logo'");
 					}
 				}
 				imagedestroy($temp);
@@ -105,11 +107,13 @@
 				unlink(base_app.$fname);
 				$upload =imagepng($temp,base_app.$fname);
 				if($upload){
+					$timestamp = time();
+					$url = "uploads/cover.png?v=$timestamp";
 					if(isset($_SESSION['wh_system_info']['cover'])){
-						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'cover' ");
+						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = '{$url}' where meta_field = 'cover'");
 						if(is_file(base_app.$_SESSION['wh_system_info']['cover'])) unlink(base_app.$_SESSION['wh_system_info']['cover']);
-					}else{
-						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$fname}',meta_field = 'cover' ");
+					} else {
+						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$url}', meta_field = 'cover'");
 					}
 				}
 				imagedestroy($temp);
