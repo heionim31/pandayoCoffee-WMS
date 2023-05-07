@@ -19,11 +19,13 @@
 <?php endif;?>
 
 
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title">View Account Information</h3>
+		<h3 class="card-title mt-2 font-weight-bold">VIEW ACCOUNT INFORMATION</h3>
 		<div class="card-tools">
-			<a href="./?page=user/list" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> Back</a>
+			<a href="./?page=user/list" class="btn btn-flat btn-success">
+				Go Back <span class="fas fa-arrow-right"></span>
+			</a>
 		</div>
 	</div>
 	<div class="card-body">
@@ -72,7 +74,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label for="role">Role</label>
-							<input type="text" name="role" id="role" class="form-control" value="<?php echo isset($meta['role']) ? $meta['role']: '' ?>" readonly  autocomplete="off">
+							<input type="text" name="role" id="role" class="form-control" value="<?php echo isset($meta['role']) ? ($meta['role'] == 'warehouse_manager' ? 'Warehouse Manager' : 'Warehouse Staff') : '' ?>" readonly  autocomplete="off">
 						</div>
 						<div class="form-group d-flex justify-content-center mt-5">
 							<img src="<?php echo isset($meta['imgurl']) ? $meta['imgurl'] : validate_image('') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">

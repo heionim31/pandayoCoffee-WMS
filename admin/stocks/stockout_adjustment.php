@@ -18,9 +18,9 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-outline rounded-5 card-dark">
+                <div class="card card-outline rounded-5">
                     <div class="card-header">
-                        <h3 class="card-title mt-2">REQUEST ADJUSTMENT</h3>
+                        <h3 class="card-title font-weight-bold mt-2">REQUEST ADJUSTMENT (SALES)</h3>
                         <div class="card-tools">
                             <a href="./?page=sales_request" class="btn btn-flat btn-success">
                                 Go Back <span class="fas fa-arrow-right"></span>
@@ -32,7 +32,6 @@
                             <div class="container-fluid">
                                 <?php 
                                     $item_id = $_GET['id'];
-
                                     $sql = "SELECT * FROM ingredient_request WHERE item_id = '$item_id'";
                                     $result = pg_query($sql);
                                     $row = pg_fetch_assoc($result);
@@ -50,9 +49,7 @@
                                 </div>
                                 
                                 <div class="row">
-                                    <div class="col-md-6">
-                                   
-                                    </div>
+                                    <div class="col-md-6"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
@@ -67,9 +64,7 @@
                                             <input type="text" class="form-control" id="request_id" name="request_id" value="<?php echo $row['request_id']; ?>" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        
-                                    </div>
+                                    <div class="col-md-2"></div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="personnel">Personnel</label>
@@ -87,12 +82,10 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="date_request">Date Request</label>
-                                            <input type="date" class="form-control" id="date_request" name="date_request" value="<?php echo $row['date_request']; ?>" readonly>
+                                            <input type="text" class="form-control" id="date_request" name="date_request" value="<?php echo $row['date_request']; ?>" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                            
-                                    </div>
+                                    <div class="col-md-2"></div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="personnel_role">Personnel Role</label>
@@ -119,9 +112,7 @@
                                             <input type="text" class="form-control" id="unit" name="unit" value="<?php echo $row['unit']; ?>" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        
-                                    </div>
+                                    <div class="col-md-2"></div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="date_prepared">Date Prepared</label>
@@ -133,9 +124,7 @@
                                     <div class="col-md-6">
                                         <span id="quantityError" style="color: red; display: none;">Sorry, the quantity entered exceeds the maximum allowed quantity.</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        
-                                    </div>
+                                    <div class="col-md-6"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
@@ -218,13 +207,10 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            
                                             <textarea type="text" class="form-control" id="notes" name="notes" rows="4" readonly  style="resize: none;"><?php echo $row['notes']; ?></textarea>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-
-                                    </div>
+                                    <div class="col-md-2"></div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="date_approved">Date Approved</label>
@@ -251,94 +237,69 @@
 </div>
 
 <script>
-    function checkQuantity() {
-    var quantityInput = document.getElementById("quantity");
-    var quantityError = document.getElementById("quantityError");
-    var expiredQuantity = <?= $expired_quantity ?>;
-    var totalQuantity = <?= $total_quantity ?>;
-    var addStockOutButton = document.getElementById("add_stockout");
-    var dateApprovedField = document.getElementById("date_approved");
-    var dateApprovedError = document.getElementById("date_approved_error");
+    const dateApprovedField = document.getElementById("date_approved");
+    const quantityInput = document.getElementById("quantity");
+    const quantityError = document.getElementById("quantityError");
+    const expiredQuantity = <?= $expired_quantity ?>;
+    const totalQuantity = <?= $total_quantity ?>;
+    const addStockOutButton = document.getElementById("add_stockout");
+    const dateApprovedError = document.getElementById("date_approved_error");
+    const maxQuantity = <?= $max_quantity ?>;
     
-    if (totalQuantity == expiredQuantity) {
-        // all items have expired, show error message and disable submit button
-        quantityError.style.display = "inline";
-        quantityError.innerText = "Stock-out transactions cannot be performed as all items in stock have already expired.";
-        addStockOutButton.disabled = true;
-    } else if (quantityInput.value <= 0) {
-        // quantity entered is less than or equal to zero, show error message and disable submit button
-        quantityError.style.display = "inline";
-        quantityError.innerText = "Sorry, the quantity entered must be greater than zero.";
-        addStockOutButton.disabled = true;
-    } else if (quantityInput.value > <?= $max_quantity ?> ) {
-        // quantity entered exceeds the maximum allowed quantity, show error message and disable submit button
-        quantityError.style.display = "inline";
-        quantityError.innerText = "Sorry, the quantity entered exceeds the maximum allowed quantity.";
-        addStockOutButton.disabled = true;
-    } else {
-        // quantity entered is valid, hide error message
-        quantityError.style.display = "none";
-    }
-
-    // check if there are any quantity errors or if the date is not set yet or if the date is invalid
-    if (quantityError.style.display === "inline" || !dateApprovedField.value || dateApprovedError.textContent) {
-        addStockOutButton.disabled = true;
-    } else {
-        addStockOutButton.disabled = false;
-    }
-    
-    // Check the validity of the "Date Approved" field
-    const selectedDate = new Date(dateApprovedField.value);
-    const currentDate = new Date();
-    if (isNaN(selectedDate) || selectedDate > currentDate) {
-        dateApprovedError.textContent = 'Please enter a valid date';
-    } else {
-        dateApprovedError.textContent = '';
-    }
-}
-
-
-</script>
-
-<script>
-    // Get the "Date Approved" field and the error message element
-    const dateApprovedField = document.getElementById('date_approved');
-    const dateApprovedError = document.getElementById('date_approved_error');
-
-    // Get the "Add Stock Out" button and disable it by default
-    const addStockOutButton = document.getElementById('add_stockout');
     addStockOutButton.disabled = true;
 
-    // Add event listeners to the "Date Approved" field
-    dateApprovedField.addEventListener('change', function() {
-        // Get the selected date from the field
-        const selectedDate = new Date(dateApprovedField.value);
-
-        // Get the current date
-        const currentDate = new Date();
-
-        // Check if the selected date is greater than the current date
-        if (selectedDate > currentDate) {
-            // If it is, display an error message and disable the "Add Stock Out" button
-            dateApprovedError.textContent = 'Date must not be greater than current date';
+    function checkQuantity() {
+        if (totalQuantity == expiredQuantity) {
+            quantityError.style.display = "inline";
+            quantityError.innerText = "All items in stock have already expired.";
+            addStockOutButton.disabled = true;
+        } else if (quantityInput.value <= 0) {
+            quantityError.style.display = "inline";
+            quantityError.innerText = "Sorry, the quantity entered must be greater than zero.";
+            addStockOutButton.disabled = true;
+        } else if (quantityInput.value > maxQuantity) {
+            quantityError.style.display = "inline";
+            quantityError.innerText = "Sorry, the quantity entered exceeds the maximum allowed quantity.";
             addStockOutButton.disabled = true;
         } else {
-            // If it's not, clear the error message and enable the "Add Stock Out" button
+            quantityError.style.display = "none";
+        }
+
+        if (quantityError.style.display === "inline" || !dateApprovedField.value || dateApprovedError.textContent) {
+            addStockOutButton.disabled = true;
+        } else {
+            addStockOutButton.disabled = false;
+        }
+    }
+
+
+    dateApprovedField.addEventListener('change', function() {
+        const selectedDate = new Date(dateApprovedField.value);
+        const currentDate = new Date();
+
+        if (selectedDate > currentDate) {
+            dateApprovedError.textContent = 'Date must not be greater than current date';
+            addStockOutButton.disabled = true;
+        } else if (selectedDate < currentDate && !quantityInput.value || selectedDate < currentDate && totalQuantity === expiredQuantity) {
+            dateApprovedError.textContent = '';
+            addStockOutButton.disabled = true;
+        } else if (selectedDate.getFullYear().toString().length < 4) {
+            addStockOutButton.disabled = true;
+        } else {
             dateApprovedError.textContent = '';
             addStockOutButton.disabled = false;
         }
     });
 
     dateApprovedField.addEventListener('keyup', function(event) {
-        // Get the value of the field
         const fieldValue = dateApprovedField.value;
 
-        // If the value of the field is empty, disable the "Add Stock Out" button
         if (!fieldValue) {
             addStockOutButton.disabled = true;
         }
     });
 </script>
+
 
 <script>
     $(function(){

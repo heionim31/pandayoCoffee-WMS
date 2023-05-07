@@ -1,33 +1,57 @@
+<?php 
+    $month = isset($_GET['month']) ? $_GET['month'] : date("Y-m");
+?>
+
+
 <div class="row">
   <div class="col-md-8">
-    <div class="card card-outline rounded-5 card-dark">
+    <div class="card card-outline rounded-5">
       <div class="card-header">
-          <h3 class="card-title">All Request Leave</h3>
-          <div class="card-tools">
-            <a href="./?page=leave_request_manager" class="btn btn-flat btn-success"><span class="fas fa-arrow-left"></span> Back</a>
+        <div class="row">
+          <div class="col-3">
+            <h3 class="card-title mt-2 font-weight-bold">LEAVE REQUEST HISTORY</h3>
           </div>
+          <div class="col-md-1">
+
+          </div>
+          <div class="col-5">
+            <form action="" id="filter-form" class=" d-flex justify-content-center">
+              <input type="month" class="form-control" name="month" id="month" value="<?= $month ?>" required>
+              <button class="btn btn-primary bg-gradient-primary" type="submit"><i class="fa fa-filter"></i></button>
+          </form>
+          </div>
+          <div class="col-md-1">
+
+          </div>
+          <div class="col-2">
+            <a href="./?page=leave_request_manager" class="btn btn-success">
+              Go Back <span class="fas fa-arrow-right"></span>
+            </a>
+          </div>
+        </div>
       </div>
       <div class="card-body">
         <div class="container-fluid">
           <table id="leave-table" class="table table-hover table-striped table-bordered text-center">
             <thead>
               <tr>
-              <th>#</th>
-              <th hidden>id</th>
-              <th hidden>EID</th>
-              <th>Name</th>
-              <th>Date to Leave</th>
-              <th>Date Requested</th>
-              <th hidden>Reason</th>
-              <th hidden>Email</th>
-              <th hidden>Contact</th>
-              <th>Status</th>
+                <th>#</th>
+                <th hidden>id</th>
+                <th hidden>EID</th>
+                <th>Name</th>
+                <th hidden>Date to Leave</th>
+                <th>Date Requested</th>
+                <th hidden>Reason</th>
+                <th hidden>Email</th>
+                <th hidden>Contact</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               <?php 
                 $i = 1;
-                $qry = pg_query($conn, "SELECT * FROM wh_leave_request WHERE status NOT IN ('Pending') ORDER BY id DESC");
+                $qry = pg_query($conn, "SELECT * FROM wh_leave_request WHERE to_char(date_approved, 'YYYY-MM') = '{$month}' OR to_char(date_decline, 'YYYY-MM') = '{$month}' ORDER BY id DESC");
+
                 while($row = pg_fetch_assoc($qry)):
               ?>
               <tr>
@@ -35,7 +59,7 @@
                 <td hidden><?= $row['id'] ?></td>
                 <td hidden><?= $row['employeeid'] ?></td>
                 <td><?= $row['name'] ?></td>
-                <td><?= $row['from_date'] . ' - ' . $row['to_date'] ?></td>
+                <td hidden><?= $row['from_date'] . ' - ' . $row['to_date'] ?></td>
                 <td><?= $row['date_requested'] ?></td>
                 <td hidden><?= $row['reason'] ?></td>
                 <td hidden><?= $row['email'] ?></td>
@@ -51,9 +75,9 @@
   </div>
 
   <div class="col-md-4">
-    <div class="card card-outline rounded-5 card-dark">
+    <div class="card card-outline rounded-5">
       <div class="card-header">
-        <h3 class="card-title">Leave Information</h3>
+        <h3 class="card-title font-weight-bold">LEAVE DETAILED INFORMATION</h3>
       </div>
       <div class="card-body">
         <form method="POST">
@@ -65,8 +89,8 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="employee-id">Employee ID</label>
-                  <input type="text" class="form-control form-control-sm" id="employee-id" name="employee-id" readonly>
+                  <label for="employee-name">Employee Name</label>
+                  <input type="text" class="form-control form-control-sm" id="employee-name" name="employee-name" readonly>
                 </div>
               </div>
               <div class="col-md-6">
@@ -76,27 +100,21 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="employee-name">Employee Name</label>
-              <input type="text" class="form-control form-control-sm" id="employee-name" name="employee-name" readonly>
+            <div class="form-group" hidden>
+              <label for="employee-id">Employee ID</label>
+              <input type="text" class="form-control form-control-sm" id="employee-id" name="employee-id" readonly>
             </div>
             <div class="form-group">
               <label for="date-to-leave">Date to leave</label>
               <input type="text" class="form-control form-control-sm" id="date-to-leave" name="date-to-leave" readonly>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" class="form-control form-control-sm" id="email" name="email" readonly>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="contact-number">Contact Number</label>
-                  <input type="number" class="form-control form-control-sm" id="contact-number" name="contact-number" readonly>
-                </div>
-              </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control form-control-sm" id="email" name="email" readonly>
+            </div>
+            <div class="form-group">
+              <label for="contact-number">Contact Number</label>
+              <input type="number" class="form-control form-control-sm" id="contact-number" name="contact-number" readonly>
             </div>
             <div class="form-group">
               <label for="reason">Reason</label>
@@ -147,4 +165,11 @@
 			order:[0,'asc']
 		});
 	})
+
+  $(function(){
+        $('#filter-form').submit(function(e){
+            e.preventDefault()
+            location.href = './?page=leave_request_manager/history&'+$(this).serialize()
+        })
+    })
 </script>

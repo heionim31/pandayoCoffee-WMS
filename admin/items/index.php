@@ -15,9 +15,9 @@
 </style>
 
 
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title">Ingredients List</h3>
+		<h3 class="card-title mt-2 font-weight-bold">INGREDIENTS LIST</h3>
 		<div class="card-tools">
 			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Ingredient</a>
 		</div>
@@ -81,19 +81,25 @@
 								<i class="fas fa-caret-down"></i>
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item view-data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="View" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark text-md"></span> View</a>
-								<a class="dropdown-item edit-data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="Edit" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary text-md"></span> Edit</a>
-								<a class="dropdown-item delete_data" href="javascript:void(0)" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="Delete" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger text-md"></span> Delete</a>
-								<a class="dropdown-item" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>" data-toggle="tooltip" data-placement="top" data-offset="100%, 30%" title="History"><span class="fa fa-history text-success text-md"></span> History</a>
+								<a class="dropdown-item view-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark text-md"></span> View</a>
+								<a class="dropdown-item edit-data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary text-md"></span> Edit</a>
+								<?php if($available_quantity == 0): ?>
+								<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger text-md"></span> Delete</a>
+								<?php else: ?>
+									<a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); Swal.fire({title: 'Cannot delete ingredient', text: 'This ingredient cannot be deleted because there are still stock on it', icon: 'warning', confirmButtonText: 'Ok'});"><span class="fa fa-trash text-muted"></span> Delete</a>
+								<?php endif; ?>
+								<a class="dropdown-item" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-history text-success text-md"></span> History</a>
 							</div>
 						</td>
 					</tr>
 				<?php endwhile; ?>
 				</tbody>
+
 			</table>
 		</div>
 	</div>
 </div>
+
 
 
 <script>

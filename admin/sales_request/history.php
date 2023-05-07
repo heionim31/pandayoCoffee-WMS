@@ -54,9 +54,9 @@
 
 
 <!-- POS REQUEST -->
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title mt-2">SALES REQUEST HISTORY</h3>
+		<h3 class="card-title mt-2 font-weight-bold">SALES REQUEST HISTORY</h3>
         <div class="card-tools">
             <a href="./?page=sales_request" class="btn btn-flat btn-success">
                 Go Back <span class="fas fa-arrow-right"></span>

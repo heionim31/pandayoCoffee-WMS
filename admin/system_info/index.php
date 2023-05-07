@@ -21,9 +21,9 @@
 
 
 <div class="col-lg-12">
-	<div class="card card-outline rounded-0 card-dark">
+	<div class="card card-outline rounded-5">
 		<div class="card-header">
-			<h5 class="card-title">System Information</h5>
+			<h5 class="card-title font-weight-bold">SYSTEM INFORMATION</h5>
 		</div>
 		<div class="card-body">
 			<form action="" id="system-frm">
@@ -68,7 +68,7 @@
 		<div class="card-footer">
 			<div class="row">
 				<div class="col-md-12 d-flex justify-content-center">
-					<button class="btn btn-sm btn-primary" form="system-frm">Update Setting</button>
+					<button class="btn btn-primary" form="system-frm">Update Setting</button>
 				</div>
 			</div>
 		</div>

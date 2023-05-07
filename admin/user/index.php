@@ -10,9 +10,9 @@
 <?php endif;?>
 
 
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title">Account Settings</h3>
+		<h3 class="card-title font-weight-bold">ACCOUNT SETTINGS</h3>
 	</div>
 	<div class="card-body">
 		<div class="container-fluid">
@@ -71,7 +71,7 @@
 						</div> -->
 						<div class="form-group">
 							<label for="role">Role</label>
-							<input type="text" name="role" id="role" class="form-control" value="<?php echo isset($meta['role']) ? $meta['role']: '' ?>" readonly  autocomplete="off">
+							<input type="text" name="role" id="role" class="form-control" value="<?php echo isset($meta['role']) ? ($meta['role'] == 'warehouse_manager' ? 'Warehouse Manager' : 'Warehouse Staff') : '' ?>" readonly  autocomplete="off">
 						</div>
 						<div class="form-group d-flex justify-content-center mt-5">
 							<img src="<?php echo isset($meta['imgurl']) ? $meta['imgurl'] : validate_image('') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">

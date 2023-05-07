@@ -1,22 +1,19 @@
 <?php
-    // Establish a connection to the database
-
-
     // Check if the "Set Notification" button was clicked
     if (isset($_POST['set_notification'])) {
         // Get the minimum and maximum stock values from the form
         $min_stock = $_POST['minimum_stock'];
         $max_stock = $_POST['max_stock'];
-
-        // Update the values in the stock_notif table
-        $sql = "UPDATE wh_stock_notif SET min_stock='$min_stock', max_stock='$max_stock' WHERE id=1";
+    
+        // Update the values and date in the stock_notif table
+        $sql = "UPDATE wh_stock_notif SET min_stock='$min_stock', max_stock='$max_stock', date_updated=NOW() WHERE id=1";
         $result = pg_query($conn, $sql);
         if ($result) {
             $notification_updated = true;
         } else {
             echo "Error: " . $sql . "<br>" . pg_last_error($conn);
         }
-    }
+    }    
 
     // Select the data from the stock_notif table
     $sql = "SELECT * FROM wh_stock_notif WHERE id=1";
@@ -25,11 +22,10 @@
 ?>
 
 
-
 <div class="col-lg-12">
-    <div class="card card-outline rounded-0 card-dark">
+    <div class="card card-outline rounded-5">
         <div class="card-header">
-            <h5 class="card-title">Stock Alert Notification</h5>
+            <h5 class="card-title mt-2 font-weight-bold">SET ALERT NOTIFICATION</h5>
         </div>
 
         <div class="card-body">
@@ -38,8 +34,9 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Notification Updated',
-                        text: 'The stock notification has been updated successfully.',
-                        confirmButtonText: 'Okay'
+                        text: 'The ingredient notification has been updated successfully.',
+                        timer: 2000,
+                        showConfirmButton: false
                     });
                 </script>
             <?php } ?>
@@ -85,7 +82,7 @@
                             minStockError.style.display = "none";
                         }
                     }
-                </script>
+                </>
             </form>
 
 		</div>

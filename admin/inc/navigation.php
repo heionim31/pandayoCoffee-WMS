@@ -47,7 +47,7 @@
   <a href="<?php echo base_url ?>admin" class="brand-link bg-white text-sm">
     <div class="logos">
       <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 55% ; height: 100%; "> 
-      <span class="brand-text font-normal shortName"><?php echo $_settings->info('short_name') ?></span>
+      <span class="h6 brand-text font-bold shortName mt-3"><?php echo $_settings->info('short_name') ?></span>
     </div>
   </a>
 
@@ -86,6 +86,7 @@
                 </a>
               </li> 
 
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
               <li class="nav-item dropdown">
                 <a href="./?page=categories" class="nav-link nav-categories">
                   <i class="nav-icon fas fa-cubes"></i>
@@ -94,7 +95,9 @@
                   </p>
                 </a>
               </li>
+              <?php endif; ?>
 
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
               <li class="nav-item dropdown">
                 <a href="./?page=units" class="nav-link nav-units">
                   <i class="nav-icon fas fa-balance-scale"></i>
@@ -103,6 +106,7 @@
                   </p>
                 </a>
               </li> 
+              <?php endif; ?>
 
               <!-- STOCKS DROP-DOWN -->
               <li class="nav-item">
@@ -135,17 +139,19 @@
                     </a>
                   </li>
 
-                  <li class="nav-item">
-                    <a href="./?page=set_notification" class="nav-link tree-item nav-set_notification">
-                      <i class="fas fa-envelope nav-icon"></i>
-                      <p style="color:white">Stock Alert Notification</p>
-                    </a>
-                  </li>
+                  <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
+                    <li class="nav-item">
+                      <a href="./?page=set_notification" class="nav-link tree-item nav-set_notification">
+                        <i class="fas fa-envelope nav-icon"></i>
+                        <p style="color:white">Alert Notification</p>
+                      </a>
+                    </li>
+                  <?php endif; ?>
 
                   <li class="nav-item">
                     <a href="./?page=stockExpiration" class="nav-link tree-item nav-stockExpiration">
                         <i class="fas fa-calendar-times nav-icon"></i>
-                        <p style="color:white">Stock Expiration</p>
+                        <p style="color:white">Ingredient Expiration</p>
                         <?php
                         // Count the number of expired items in the database
                         $expired_items_count_query = "
@@ -178,7 +184,7 @@
                     <?php
                       // Count the total number of sales and purchasing requests
                       $count_query = "SELECT SUM(count) as total FROM (
-                                      SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received')
+                                      SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received', 'Declined')
                                       UNION ALL
                                       SELECT COUNT(*) as count FROM wh_item_list i 
                                         INNER JOIN wh_category_list c ON i.category_id = c.id 
@@ -205,7 +211,7 @@
                       <p style="color:white">Sales Request</p>
                       <?php
                         // Count the number of leave requests
-                        $count_query = "SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received')";
+                        $count_query = "SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received', 'Declined')";
                         $count_result = pg_query($conn, $count_query);
                         $count = pg_fetch_assoc($count_result)['count'];
 
@@ -238,6 +244,53 @@
                 </ul>
               </li>
 
+              
+              <!-- REPORTS DROPDOWN -->
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-chart-bar"></i>
+                    <p style="color:white">
+                      Monthly Reports
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+
+                  <ul class="nav nav-treeview" style="display: none;">
+                    <li class="nav-item">
+                      <a href="./?page=reports/stockin" class="nav-link tree-item nav-reports_stockin">
+                        <i class="far fa-calendar-alt nav-icon"></i>
+                        <p style="color:white">Monthly Stock-In</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="./?page=reports/stockout" class="nav-link tree-item nav-reports_stockout">
+                        <i class="fas fa-table nav-icon flex-direction: column" ></i>
+                        <p style="color:white">Monthly Stock-Out</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="./?page=reports/waste" class="nav-link tree-item nav-reports_waste">
+                        <i class="fas fa-trash-alt nav-icon"></i>
+                        <p style="color:white">Monthly Waste</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+
+              <?php if($_settings->userdata('role') !== 'warehouse_manager'): ?>
+                <li class="nav-item dropdown">
+                  <a href="<?php echo base_url ?>admin/?page=leave_request_staff" class="nav-link  nav-leave_request_staff" >
+                    <i class="nav-icon fas fa-calendar-alt flex-direction: column" ></i>
+                    <p style="color:white">
+                      File a Leave
+                    </p>
+                  </a>
+                </li>
+              <?php endif; ?>
+
 
               <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
                 <li class="nav-item dropdown">
@@ -256,63 +309,14 @@
                   </a>
                 </li>
               <?php endif; ?>
-              
-
-              <?php if($_settings->userdata('role') !== 'warehouse_manager'): ?>
-              <li class="nav-item dropdown">
-                <a href="<?php echo base_url ?>admin/?page=leave_request_staff" class="nav-link  nav-leave_request_staff" >
-                  <i class="nav-icon fas fa-calendar-alt flex-direction: column" ></i>
-                  <p style="color:white">
-                    File a Leave
-                  </p>
-                </a>
-              </li>
-              <?php endif; ?>
 
               
-              <!-- REPORTS DROPDOWN -->
-              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
-                <li class="nav-item">
-                  <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-chart-bar"></i>
-                    <p style="color:white">
-                      View Reports
-                      <i class="right fas fa-angle-left"></i>
-                    </p>
-                  </a>
-
-                  <ul class="nav nav-treeview" style="display: none;">
-                    <li class="nav-item">
-                      <a href="./?page=reports/stockin" class="nav-link tree-item nav-reports_stockin">
-                        <i class="far fa-calendar-alt nav-icon"></i>
-                        <p style="color:white">Monthly Stock-In Report</p>
-                      </a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a href="./?page=reports/stockout" class="nav-link tree-item nav-reports_stockout">
-                        <i class="fas fa-table nav-icon flex-direction: column" ></i>
-                        <p style="color:white">Monthly Stock-Out Report</p>
-                      </a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a href="./?page=reports/waste" class="nav-link tree-item nav-reports_waste">
-                        <i class="fas fa-trash-alt nav-icon"></i>
-                        <p style="color:white">Monthly Waste Report</p>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-              <?php endif; ?>
-
-
               <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
                 <li class="nav-item dropdown">
                   <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link  nav-user_list" >
                     <i class="nav-icon fas fa-users flex-direction: column" ></i>
                     <p style="color:white">
-                      User List
+                      Users List
                     </p>
                   </a>
                 </li>
@@ -326,16 +330,6 @@
                   </a>
                 </li>
               <?php endif; ?>
-
-
-              <li class="nav-item dropdown">
-                <a href="<?php echo base_url.'/classes/Login.php?f=logout' ?>" class="nav-link nav-logout">
-                  <i class="nav-icon fas fa-sign-out-alt"></i>
-                  <p style="color:white">
-                    Log out
-                  </p>
-                </a>
-              </li>
 
             </ul>
             
@@ -382,6 +376,10 @@
     }
     
     // ACTIVE HOVER
-    $('.nav-link.active').addClass('bg-gradient-orange')
+    // $('.nav-link.active').addClass('bg-gradient-orange')
+    // $('.nav-link.active').css('background-color', '#cc891d');
+    // $('.nav-link.active').css('background-image', 'linear-gradient(to right, #cc891d 70%, #f5d68e 100%)');
+    $('.nav-link.active').css('background-image', 'linear-gradient(to right,  #8B4513 20%, #f7b360  90%)');
+
   })
 </script>

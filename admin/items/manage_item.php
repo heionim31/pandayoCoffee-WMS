@@ -15,49 +15,59 @@
 	<form action="" id="item-form">
 		<input type="hidden" name ="id" value="<?php echo isset($id) ? $id : '' ?>">
 
-		<div class="form-group">
-			<label for="name" class="control-label">Name</label>
-			<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="name" class="control-label">Name</label>
+					<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ingredient Name" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="unit_id" class="control-label">Unit</label>
+					<select name="unit" id="unit_id" class="form-control form-control-sm rounded-0" required="required">
+						<option value="" <?= isset($unit_id) ? 'selected' : '' ?>></option>
+						<?php 
+							$items = pg_query($conn, "SELECT * FROM wh_unit_list where status = 1 ");
+								while($row= pg_fetch_assoc($items)):
+							?>
+							<option value="<?= $row['id'] ?>" <?= isset($unit_id) && $unit_id == $row['id'] ? 'selected' : '' ?>><?= $row['name'] ?> (<?= $row['abbreviation'] ?>)</option>
+						<?php endwhile; ?>
+					</select>
+				</div>
+			</div>
 		</div>
-
-		<div class="form-group">
-			<label for="unit_id" class="control-label">Unit</label>
-			<select name="unit" id="unit_id" class="form-control form-control-sm rounded-0" required="required">
-				<option value="" <?= isset($unit_id) ? 'selected' : '' ?>></option>
-				<?php 
-					$items = pg_query($conn, "SELECT * FROM wh_unit_list where status = 1 ");
-					while($row= pg_fetch_assoc($items)):
-					?>
-					<option value="<?= $row['id'] ?>" <?= isset($unit_id) && $unit_id == $row['id'] ? 'selected' : '' ?>><?= $row['name'] ?></option>
-				<?php endwhile; ?>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="category_id" class="control-label">Category</label>
-			<select name="category_id" id="category_id" class="form-control form-control-sm rounded-0" required="required">
-				<option value="" <?= isset($category_id) ? 'selected' : '' ?>></option>
-				<?php 
-				$items = pg_query($conn, "SELECT * FROM wh_category_list where status = 1 ");
-				while($row= pg_fetch_assoc($items)):
-				?>
-				<option value="<?= $row['id'] ?>" <?= isset($category_id) && $category_id == $row['id'] ? 'selected' : '' ?>><?= $row['name'] ?></option>
-				<?php endwhile; ?>
-			</select>
-		</div>
-
-		<div class="form-group">
-			<label for="type_id" class="control-label">Item Type</label>
-			<select name="item_type" id="type_id" class="form-control form-control-sm rounded-0" required="required">
-				<option value="" <?= isset($item_type) ? 'selected' : '' ?>></option>
-				<option value="Perishable" <?php echo isset($item_type) && $item_type == 'Perishable' ? 'selected' : ''; ?>>Perishable</option>
-				<option value="Non-Perishable" <?php echo isset($item_type) && $item_type == 'Non-Perishable' ? 'selected' : ''; ?>>Non-Perishable</option>
-			</select>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="category_id" class="control-label">Category</label>
+					<select name="category_id" id="category_id" class="form-control form-control-sm rounded-0" required="required">
+						<option value="" <?= isset($category_id) ? 'selected' : '' ?>></option>
+						<?php 
+						$items = pg_query($conn, "SELECT * FROM wh_category_list where status = 1 ");
+							while($row= pg_fetch_assoc($items)):
+						?>
+						<option value="<?= $row['id'] ?>" <?= isset($category_id) && $category_id == $row['id'] ? 'selected' : '' ?>><?= $row['name'] ?></option>
+						<?php endwhile; ?>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="type_id" class="control-label">Item Type</label>
+					<select name="item_type" id="type_id" class="form-control form-control-sm rounded-0" required="required">
+						<option value="" <?= isset($item_type) ? 'selected' : '' ?>></option>
+						<option value="Perishable" <?php echo isset($item_type) && $item_type == 'Perishable' ? 'selected' : ''; ?>>Perishable</option>
+						<option value="Non-Perishable" <?php echo isset($item_type) && $item_type == 'Non-Perishable' ? 'selected' : ''; ?>>Non-Perishable</option>
+					</select>
+				</div>
+			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="description" class="control-label">Description</label>
-			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" required><?php echo isset($description) ? $description : ''; ?></textarea>
+			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" placeholder="Add description of the ingredient" required><?php echo isset($description) ? $description : ''; ?></textarea>
 		</div>
 
 		<div class="form-group">

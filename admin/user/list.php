@@ -16,22 +16,13 @@
 </style>
 
 
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title">List of Users</h3>
+		<h3 class="card-title font-weight-bold">LIST OF USERS</h3>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<!-- <colgroup>
-					<col width="5%">
-					<col width="10%">
-					<col width="25%">
-					<col width="15%">
-					<col width="15%">
-					<col width="20%">
-					<col width="10%">
-				</colgroup> -->
 				<thead>
 					<tr>
 						<th>#</th>
@@ -61,9 +52,9 @@
 							<td class="align-middle"><?php echo $row['username'] ?></td>
 							<td class="text-center align-middle">
 								<?php if($row['role'] == 'warehouse_manager'): ?>
-									Manager
+									Warehouse Manager
 								<?php elseif($row['role'] == 'warehouse_staff'): ?>
-									Staff
+									Warehouse Staff
 								<?php else: ?>
 									N/A
 								<?php endif; ?>

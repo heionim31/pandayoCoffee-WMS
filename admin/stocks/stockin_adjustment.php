@@ -17,9 +17,9 @@
          
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-outline rounded-5 card-dark">
+                <div class="card card-outline rounded-5">
                     <div class="card-header">
-                        <h3 class="card-title mt-2">REQUEST ADJUSTMENT</h3>
+                        <h3 class="card-title font-weight-bold mt-2">REQUEST ADJUSTMENT (PURCHASING)</h3>
                         <div class="card-tools">
                             <a href="./?page=purchasing_request" class="btn btn-flat btn-success">
                                 Go Back <span class="fas fa-arrow-right"></span>
@@ -53,13 +53,13 @@
                                             <input type="text" class="form-control" id="item_name" name="item_name" value="<?php echo $row['name']; ?>" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="item_unit">Item Unit</label>
                                             <input type="text" class="form-control" id="item_unit" name="item_unit" value="<?php echo $row['unit']; ?>"  readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="request_id">Request ID</label>
                                             <input type="text" class="form-control" id="request_id" name="request_id" value="<?php echo $row['request_id']; ?>" readonly>
@@ -146,14 +146,45 @@
                                     <div class="col-md-2">
                                         
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" hidden>
                                         <div class="form-group">
                                             <label for="discrepancy_notes">Discrepancy Notes (If any):</label>
                                             <textarea class="form-control" id="discrepancy_notes" name="discrepancy_notes" placeholder="Enter notes if  there is discrepancy"></textarea>
                                         </div>
                                     </div>
+                                    <?php
+                                        // Query the users table for the purchasing_manager role
+                                        $result = pg_query("SELECT * FROM users WHERE role='purchasing_manager'");
+
+                                        // Check if there is a result
+                                        if (pg_num_rows($result) > 0) {
+                                            // Display the data in a card
+                                            $row = pg_fetch_assoc($result);
+                                            echo "
+                                            <div class='col-md-4'>
+                                                <div class='card'>
+                                                    <div class='card-body'>
+                                                        <p class='card-text'>
+                                                            If their is any discrepancies, please contact our Purchasing Manager, <strong>{$row['fullname']}</strong>, at <a href='mailto:{$row['email']}'><strong>{$row['email']}</strong></a> or by phone at <strong>{$row['contact']}</strong>.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>";
+                                        } else {
+                                            echo "
+                                            <div class='col-md-4'>
+                                                <div class='card'>
+                                                    <div class='card-body'>
+                                                        <p class='card-text'>
+                                                            We apologize for the inconvenience, but we do not currently have a Purchasing Manager assigned. If you notice any discrepancies, please contact our Customer Support team for assistance.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>";
+                                        }
+                                    ?>
                                 </div>
-                                
+                               
                                 <div class="row">
                                     <div class="col-md-6 text-center">
                                         <div class="form-group">
@@ -163,7 +194,7 @@
                                     <div class="col-md-2">
                                     
                                     </div>
-                                    <div class="col-md-4 text-center">
+                                    <div class="col-md-4 text-center" hidden>
                                         <div class="form-group">
                                             <button id="request_return" type="submit" class="btn btn-sm btn-danger bg-gradient-danger" name="request_return"> Request Return</button>
                                         </div>	

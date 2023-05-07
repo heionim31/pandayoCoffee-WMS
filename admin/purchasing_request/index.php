@@ -1,13 +1,13 @@
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title mt-2">Purchasing Request</h3>
+		<h3 class="card-title mt-2 font-weight-bold">PURCHASING REQUEST</h3>
 		<div class="card-tools">
 			<a href="#" class="btn btn-flat btn-success" onclick="location.href = window.location.href; return false;">
 				<span class="fas fa-sync"></span> Refresh
 			</a>
-			<a href="./?page=purchasing_request/history" class="btn btn-flat btn-dark">
+			<!-- <a href="./?page=purchasing_request/history" class="btn btn-flat btn-dark">
                 <span class="fas fa-file-alt"></span> History
-            </a>
+            </a> -->
 			<a href="./?page=reports/stockin" class="btn btn-flat btn-info">
 				<span class="fas fa-history"></span> Reports
 			</a>
@@ -16,6 +16,16 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
+				<colgroup>
+                    <col width="2%">
+                    <col width="20%">
+                    <col width="5%">
+                    <col width="5%">
+                    <col width="12%">
+                    <col width="12%">
+                    <col width="24%">
+                    <col width="20%">
+                </colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
@@ -35,7 +45,7 @@
 						FROM wh_item_list i 
 						INNER JOIN wh_category_list c ON i.category_id = c.id 
 						INNER JOIN wh_stock_notif s ON s.id = 1 
-						INNER JOIN wh_unit_list u ON i.unit = u.id -- Join with wh_unit_list
+						INNER JOIN wh_unit_list u ON i.unit = u.id
 						WHERE i.delete_flag = 0 
 						ORDER BY i.date_updated DESC");
 
@@ -72,14 +82,13 @@
 								if ($request_status == "Received" && $title == "In Stock") {
 									continue;
 								}
-								
 							}
 						?>
 							<tr>
 								<td><?php echo $i++; ?></td>
 								<td>
 									<div style="line-height:1em">
-									<div><?= $row['name'] ?> [<?= $row['unit_abbr'] ?>]</div>
+									<div><?= $row['name'] ?> (<?= $row['unit_abbr'] ?>)</div>
 										<div class="small"><i><?= $row['category'] ?></i></div>
 									</div>
 								</td>
@@ -111,17 +120,17 @@
 										$disable_adjustment = "disabled";
 										}
 									?>
-									</td>
-									<td>
+								</td>
+								<td class="font-italic">
 									<?php
 										if($request_status == "Approved") {
 										echo "You can now adjust your inventory.";
 										} else if ($request_status == "Pending") {
-										echo "Your request is waiting approval";
+										echo "Your request is waiting for approval.";
 										} else if ($request_status == "Awaiting") {
-										echo "Please replenish your stock now.";
+										echo "Please replenish your stock now!";
 										} else if ($request_status == "Declined") {
-										echo "Your request has been declined";
+										echo "Your request has been declined.";
 										} else {
 										echo "test";
 										}
@@ -197,14 +206,17 @@
 		if($result) {
 			// Data saved successfully
 			echo "<script>
+				window.onload = function() {
 					Swal.fire({
 						icon: 'success',
 						title: 'Success',
-						text: 'Request submitted successfully!',
-						showConfirmButton: false,
-						timer: 1500
+						text: 'Successfully declined the request ingredient.',
+						showConfirmButton: true
+					}).then(function() {
+						location.href = window.location.href;
 					});
-				 </script>";
+				};
+			</script>";
 		} else {
 			// Error saving data
 			echo "<script>

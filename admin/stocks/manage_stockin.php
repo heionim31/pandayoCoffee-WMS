@@ -42,65 +42,50 @@
             <label for="request_id" class="control-label">Request ID</label>
             <input type="text" step="any" name="request_id" id="request_id" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['request_id']) ? $_GET['request_id'] : '' ?>" readonly>
         </div>
-
         <div class="form-group" hidden>
             <label for="quantity" class="control-label">Requested Quantity</label>
             <input type="number" step="any" name="quantity" id="quantity" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['quantity']) ? $_GET['quantity'] : '' ?>" readonly>
         </div>
-
         <div class="form-group" hidden>
             <label for="physical_count" class="control-label">Physical Count</label>
             <input type="text" step="any" name="physical_count" id="physical_count" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['physical_count']) ? $_GET['physical_count'] : '' ?>" readonly>
         </div>
-
         <div class="form-group" hidden>
             <label for="physical_count_date" class="control-label">Date Physical Count</label>
             <input type="text" name="physical_count_date" id="physical_count_date" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['physical_count_date']) ? $_GET['physical_count_date'] : '' ?>" readonly>
         </div>
-
-        
         <div class="form-group" hidden>
             <label for="date_approved" class="control-label">Date Approved</label>
             <input type="date" name="date_approved" id="date_approved" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['date_approved']) ? $_GET['date_approved'] : '' ?>" readonly>
         </div>
-
         <div class="form-group" hidden>
             <label for="date_received" class="control-label">Date Received</label>
             <input type="date" name="date_received" id="date_received" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['date_received']) ? $_GET['date_received'] : '' ?>" readonly>
         </div>
-
-
-        <div class="form-group" hidden>
+        <div class="form-group">
             <label for="date" class="control-label">Manufactured Date</label>
-            <input type="date" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['manufactured_date']) ? $_GET['manufactured_date'] : '' ?>" readonly>
+            <input type="text" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['manufactured_date']) ? $_GET['manufactured_date'] : '' ?>" readonly>
         </div>
-
         <?php if ($item_type != "Non-Perishable"): ?>
-            <div class="form-group" hidden>
+            <div class="form-group">
                 <label for="expire_date" class="control-label">Expiration Date</label>
-                <input type="date" name="expire_date" id="expire_date" class="form-control form-control-sm rounded-0 " value="<?= isset($_GET['expired_date']) ? $_GET['expired_date'] : '' ?>" readonly>
+                <input type="text" name="expire_date" id="expire_date" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['expired_date']) && !empty($_GET['expired_date']) ? $_GET['expired_date'] : '0001-01-01' ?>" readonly>
             </div>
         <?php else: ?>
             <input type="hidden" name="expire_date" value="">
         <?php endif; ?>
-
-
         <div class="form-group" hidden>
             <label for="personnel" class="control-label">Personnel</label>
             <input type="text" name="personnel" id="personnel" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['personnel']) ? $_GET['personnel'] : '' ?>" readonly>
         </div>
-    
         <div class="form-group" hidden>
             <label for="personnel_role" class="control-label">Personnel Role</label>
             <input type="text" name="personnel_role" id="personnel_role" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['personnel_role']) ? $_GET['personnel_role'] : '' ?>" readonly>
         </div>
-            
-
-        <div class="form-group" hidden>
+        <div class="form-group">
             <label for="supplier" class="control-label">Supplier</label>
             <input type="text" step="any" name="supplier" id="supplier" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['supplier']) ? $_GET['supplier'] : '' ?>" readonly>
         </div>
-
         <div class="form-group">
             <label for="remarks" class="control-label">Add Remarks</label>
             <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" placeholder="Add Remarks (if any)"><?= isset($remarks) ? ($remarks) : '' ?></textarea>

@@ -15,9 +15,9 @@
 </style>
 
 
-<div class="card card-outline rounded-5 card-dark">
+<div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title">List of Categories</h3>
+		<h3 class="card-title mt-2 font-weight-bold">LIST OF CATEGORIES</h3>
 		<div class="card-tools">
 			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Category</a>
 		</div>
@@ -25,21 +25,11 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<colgroup>
-					<col width="5%">
-					<col width="15%">
-					<col width="30%">
-					<col width="15%">
-					<col width="15%">
-					<col width="10%">
-					<col width="10%">
-				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
 						<th>Name</th>
 						<th>Description</th>
-						<th>Last Updated</th>
 						<th>Total Registered</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -48,7 +38,7 @@
 				<tbody>
 					<?php
 						$i = 1;
-						$qry = pg_query($conn, "SELECT * from wh_category_list order by date_created desc");
+						$qry = pg_query($conn, "SELECT * FROM wh_category_list ORDER BY date_updated DESC");
 						while($row = pg_fetch_assoc($qry)):
 						$category_id = $row['id'];
 						$item_count_query = "SELECT COUNT(*) FROM wh_item_list WHERE category_id = $category_id";
@@ -59,7 +49,6 @@
 						<td class="text-center"><?php echo $i++; ?></td>
 						<td class=""><?= $row['name'] ?></td>
 						<td class=""><p class="mb-0 "><?= $row['description'] ?></p></td>
-						<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
 						<td><?php echo $item_count; ?></td>
 						<td class="text-center">
 						<?php if($row['status'] == 1): ?>
@@ -110,7 +99,7 @@
 		})
 		$('.table').dataTable({
 			columnDefs: [
-					{ orderable: false, targets: [5] }
+					{ orderable: false, targets: [3] }
 			],
 			order:[0,'asc']
 		});

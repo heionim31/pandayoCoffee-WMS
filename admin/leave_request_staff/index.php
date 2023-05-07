@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-md-8">
-        <div class="card card-outline rounded-5 card-dark">
+        <div class="card card-outline rounded-5">
             <div class="card-header">
-                <h3 class="card-title">Request Leave History</h3>
+                <h3 class="card-title mt-2 font-weight-bold">REQUEST LEAVE HISTORY</h3>
                 <div class="card-tools">
                     <a href="#" class="btn btn-flat btn-success" onclick="location.href = window.location.href; return false;">
                         <span class="fas fa-sync"></span> Refresh
@@ -17,8 +17,9 @@
                             <th>#</th>
                             <th>Leave Date</th>
                             <th>Reason</th>
+                            <th>Decline Reason</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Cancel</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,8 +35,9 @@
                                                 icon: 'success',
                                                 title: 'Success!',
                                                 text: 'Leave request has been cancelled!',
-                                                showConfirmButton: false,
-                                                timer: 1500
+                                                showConfirmButton: true
+                                            }).then(function() {
+                                                location.href = window.location.href;
                                             });
                                         </script>";
                                 }
@@ -48,6 +50,7 @@
                                 <td class="text-center"><?php echo $i++; ?></td>
                                 <td><?= $row['from_date'] . ' - ' . $row['to_date'] ?></td>
                                 <td><?= $row['reason'] ?></td>
+                                <td><?= $row['decline_reason'] ?></td>
                                 <td><?= $row['status'] ?></td>
                                 <td align="center">
                                 <?php if($row['status'] != 'Approved' && $row['status'] != 'Declined'): ?>
@@ -68,9 +71,9 @@
 
 
     <div class="col-md-4">
-        <div class="card card-outline rounded-5 card-dark">
+        <div class="card card-outline rounded-5">
             <div class="card-header">
-                <h3 class="card-title">File a Leave</h3>
+                <h3 class="card-title font-weight-bold">FILE A LEAVE</h3>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
@@ -93,8 +96,9 @@
                                     icon: "success",
                                     title: "Success!",
                                     text: "Leave request has been sent.",
-                                    showConfirmButton: false,
-                                    timer: 1500
+                                    showConfirmButton: true
+                                }).then(function() {
+                                    location.href = window.location.href;
                                 });
                             </script>';
                              }

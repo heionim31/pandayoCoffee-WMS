@@ -61,31 +61,31 @@
             $expired_quantity = $expired_quantity_row['expired_quantity'];
             }
             
-            // check if there are any expired items
-            $total_quantity = intval($total_quantity);
-            $expired_quantity = intval($expired_quantity);
-            if ($total_quantity == $expired_quantity && $total_quantity != 0) {
-                // all items have expired, show the message
-                echo "<div class='alert alert-warning'>Sorry, you cannot add a stock-out because all <b>({$expired_quantity})</b> items in stock have already expired. Please restock before performing any stock-out transactions.</div>";
-                // set maximum quantity allowed to 0
-                $max_quantity = 0;
-            } else if ($expired_quantity > 0) {
-                // some items have expired, show the message about remaining quantity
-                $remaining_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
-                $remaining_quantity_result = pg_query($conn, $remaining_quantity_query);
-                $remaining_quantity_row = pg_fetch_assoc($remaining_quantity_result);
-                $remaining_quantity = $total_quantity - $expired_quantity;
-                echo "<div class='alert alert-warning'>NOTE: You can only add <b>({$remaining_quantity})</b> stock-out items because <b>({$expired_quantity} out of {$total_quantity})</b> have already expired.</div>";
-                // calculate the maximum quantity allowed
-                $max_quantity = $total_quantity - $expired_quantity;
-            }
-            else {
-                // no items have expired, set maximum quantity allowed to the total quantity
-                $max_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
-                $max_quantity_result = pg_query($conn, $max_quantity_query);
-                $max_quantity_row = pg_fetch_assoc($max_quantity_result);
-                $max_quantity = $total_quantity - intval($max_quantity_row['stockout_quantity']);
-            }
+            // // check if there are any expired items
+            // $total_quantity = intval($total_quantity);
+            // $expired_quantity = intval($expired_quantity);
+            // if ($total_quantity == $expired_quantity && $total_quantity != 0) {
+            //     // all items have expired, show the message
+            //     echo "<div class='alert alert-warning'>Sorry, you cannot add a stock-out because all <b>({$expired_quantity})</b> items in stock have already expired. Please restock before performing any stock-out transactions.</div>";
+            //     // set maximum quantity allowed to 0
+            //     $max_quantity = 0;
+            // } else if ($expired_quantity > 0) {
+            //     // some items have expired, show the message about remaining quantity
+            //     $remaining_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+            //     $remaining_quantity_result = pg_query($conn, $remaining_quantity_query);
+            //     $remaining_quantity_row = pg_fetch_assoc($remaining_quantity_result);
+            //     $remaining_quantity = $total_quantity - $expired_quantity;
+            //     echo "<div class='alert alert-warning'>NOTE: You can only add <b>({$remaining_quantity})</b> stock-out items because <b>({$expired_quantity} out of {$total_quantity})</b> have already expired.</div>";
+            //     // calculate the maximum quantity allowed
+            //     $max_quantity = $total_quantity - $expired_quantity;
+            // }
+            // else {
+            //     // no items have expired, set maximum quantity allowed to the total quantity
+            //     $max_quantity_query = "SELECT SUM(quantity) as stockout_quantity FROM wh_stockout_list WHERE item_id = '$item_id'";
+            //     $max_quantity_result = pg_query($conn, $max_quantity_query);
+            //     $max_quantity_row = pg_fetch_assoc($max_quantity_result);
+            //     $max_quantity = $total_quantity - intval($max_quantity_row['stockout_quantity']);
+            // }
         } 
     }
 ?>
@@ -150,7 +150,7 @@
 
         <div class="form-group">
             <label for="remarks" class="control-label">Remarks</label>
-            <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" placeholder="Add your remarks or comments for the approved ingredient request of Sales Department here" required><?= isset($remarks) ? ($remarks) : '' ?></textarea>
+            <textarea type="3" name="remarks" id="remarks" class="form-control form-control-sm rounded-0" placeholder="Please use this space to provide any additional comments or feedback regarding the request." required><?= isset($remarks) ? ($remarks) : '' ?></textarea>
         </div>
     </form>
 </div>

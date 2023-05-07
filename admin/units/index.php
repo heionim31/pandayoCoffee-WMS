@@ -15,9 +15,9 @@
 </style>
 
 
-<div class="card card-outline rounded-5 card-dark">
-	<div class="card-header">
-		<h3 class="card-title">List of Units</h3>
+<div class="card card-outline rounded-5">
+	<div class="card-header mt-2">
+		<h3 class="card-title mt-2 font-weight-bold">LIST OF UNITS</h3>
 		<div class="card-tools">
 			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Unit</a>
 		</div>
@@ -25,23 +25,12 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
-				<colgroup>
-					<col width="5%">
-					<col width=15%">
-					<col width=10%">
-					<col width="30%">
-					<col width="15%">
-					<col width="15%">
-					<col width="10%">
-					<col width="5%">
-				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
 						<th>Name</th>
 						<th>Abbreviation</th>
 						<th>Description</th>
-						<th>Last Updated</th>
 						<th>Total Registered</th>
 						<th>Status</th>
 						<th>Action</th>
@@ -50,7 +39,7 @@
 				<tbody>
 					<?php 
 						$i = 1;
-						$qry = pg_query($conn, "SELECT * from wh_unit_list ORDER BY date_created DESC");
+						$qry = pg_query($conn, "SELECT * from wh_unit_list ORDER BY date_updated DESC");
 						while($row = pg_fetch_assoc($qry)):
 							$id = $row['id'];
 							$item_count_query = "SELECT COUNT(*) FROM wh_item_list WHERE unit = '$id'";
@@ -62,7 +51,6 @@
 							<td class=""><?= $row['name'] ?></td>
 							<td class=""><?= $row['abbreviation'] ?></td>
 							<td class=""><p class="mb-0 truncate-1"><?= strip_tags(htmlspecialchars_decode($row['description'])) ?></p></td>
-							<td><?php echo date("Y-m-d H:i",strtotime($row['date_updated'])) ?></td>
 							<td><?php echo $item_count; ?></td>
 
 							<td class="text-center">

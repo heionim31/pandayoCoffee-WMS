@@ -1,14 +1,13 @@
-<div class="card card-outline rounded-0 card-dark">
+<div class="card card-outline rounded-5">
     <div class="card-header">
-        <h3 class="card-title">Stock Expiration</h3>
+        <h3 class="card-title font-weight-bold">INGREDIENT EXPIRATION LIST</h3>
     </div>
     <div class="card-body">
         <div class="container-fluid">
             <table class="table table-hover table-striped table-bordered text-center" id="list">
                 <colgroup>
                     <col width="5%">
-                    <col width="15%">
-                    <col width="5%">
+                    <col width="20%">
                     <col width="10%">
                     <col width="10%">
                     <col width="10%">
@@ -21,10 +20,9 @@
                         <th>#</th>
                         <th class="d-none">Item ID</th>
                         <th>Item</th>
-                        <th>Unit</th>
-                        <th>Stocks</th>
-                        <th>Manufactured Date</th>
-                        <th>Expiration Date</th>
+                        <th>Quantity</th>
+                        <th>Manufactured</th>
+                        <th>Expiration</th>
                         <th>Expiry Status</th>
                         <th>Message</th>
                         <th>Actions</th>
@@ -98,12 +96,15 @@
                         // Get the stock items that have expired, will expire today, or will expire tomorrow
                         $today = date('Y-m-d');
                         $tomorrow = date('Y-m-d', strtotime('+1 day'));
-                        $stock_items = pg_query($conn, "SELECT s.*, i.name, i.unit, i.id AS item_id, c.name AS category_name 
+                        $stock_items = pg_query($conn, "SELECT s.*, i.name, u.abbreviation, i.id AS item_id, c.name AS category_name 
                                 FROM wh_stockin_list s 
                                 INNER JOIN wh_item_list i ON s.item_id = i.id 
                                 INNER JOIN wh_category_list c ON i.category_id = c.id
+                                LEFT JOIN wh_unit_list u ON i.unit = u.id
                                 WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') 
-                                AND (s.expire_date IS NOT NULL)"); 
+                                AND (s.expire_date IS NOT NULL) 
+                                AND (s.expire_date != '0001-01-01')");
+
                         $stock_items = pg_fetch_all($stock_items);
 
                         // Initialize the ID variable
@@ -146,16 +147,15 @@
                                     <td class="d-none"><?= $item['item_id'] ?></td>
                                     <td class="">
                                         <div style="line-height:1em">
-                                            <div><?= $item['name'] ?></div>
+                                            <div><?= $item['name'] ?> (<?= $item['abbreviation'] ?? $item['unit'] ?>)</div>
                                             <div class="small"><i><?= $item['category_name'] ?></i></div>
                                         </div>
                                     </td>
-                                    <td><?= $item['unit'] ?></td>
                                     <td><?= (int)$item['quantity'] ?></td>
                                     <td><?= date("Y-m-d",strtotime($item['date'])) ?></td>
                                     <td><?= date("Y-m-d",strtotime($item['expire_date'])) ?></td>
                                     <td class="<?= $expiry_class ?>"><?= $expiry_status ?></td>
-                                    <td><?= $message ?></td>
+                                    <td class="font-italic"><?= $message ?></td>
                                     <td>
                                     <?php if ($expiry_status !== "Expires Tomorrow"): ?>
                                         <form method="post">
@@ -173,7 +173,7 @@
                                             
                                             <!-- MODAL FORM FOR EXPIRATION -->
                                             <div class="modal fade" id="myModal<?= $id ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">Do you want to add this to waste?</h5>
@@ -184,13 +184,13 @@
                                                     <div class="modal-body">
                                                         <form method="post">
                                                         <div class="form-group row">
-                                                            <label for="item-name" class="col-sm-4 col-form-label">Item Name:</label>
+                                                            <label for="item-name" class="col-sm-4 col-form-label">Ingredient Name:</label>
                                                             <div class="col-sm-8">
                                                             <input class="form-control" id="item-name" name="item_name" value="<?= $item['name'] ?>" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="quantity" class="col-sm-4 col-form-label">Quantity:</label>
+                                                            <label for="quantity" class="col-sm-4 col-form-label">Expired Quantity:</label>
                                                             <div class="col-sm-8">
                                                             <input class="form-control" id="quantity" value="<?= (int)$item['quantity'] ?>" disabled>
                                                             </div>

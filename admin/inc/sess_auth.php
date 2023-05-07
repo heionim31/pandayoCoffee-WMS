@@ -31,3 +31,4 @@ if(isset($_SESSION['userdata']) && (strpos($link, 'index.php') || strpos($link, 
 	echo "<script>alert('Access Denied!');location.replace('".base_url.$module[$_SESSION['userdata']['login_role']]."');</script>";
     exit;
 }
+?>

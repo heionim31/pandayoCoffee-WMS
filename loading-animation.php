@@ -36,7 +36,7 @@
     renderer: 'svg',
     loop: true,
     autoplay: true,
-    path: 'https://assets8.lottiefiles.com/private_files/lf30_kjpkr2oh.json'
+    path: 'https://assets2.lottiefiles.com/private_files/lf30_spMO1c.json'
   });
 
   // Add an event listener to detect when the page has finished loading
