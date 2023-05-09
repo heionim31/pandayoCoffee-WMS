@@ -135,7 +135,7 @@
                   <li class="nav-item">
                     <a href="./?page=items" class="nav-link tree-item nav-items">
                       <i class="fas fa-chart-line nav-icon"></i>
-                      <p style="color:white">Ingredients List</p>
+                      <p style="color:white">Inventory Items</p>
                     </a>
                   </li>
 
@@ -143,7 +143,7 @@
                     <li class="nav-item">
                       <a href="./?page=set_notification" class="nav-link tree-item nav-set_notification">
                         <i class="fas fa-envelope nav-icon"></i>
-                        <p style="color:white">Alert Notification</p>
+                        <p style="color:white">Quantity Range</p>
                       </a>
                     </li>
                   <?php endif; ?>
@@ -151,7 +151,7 @@
                   <li class="nav-item">
                     <a href="./?page=stockExpiration" class="nav-link tree-item nav-stockExpiration">
                         <i class="fas fa-calendar-times nav-icon"></i>
-                        <p style="color:white">Ingredient Expiration</p>
+                        <p style="color:white">Expiry Tracking</p>
                         <?php
                         // Count the number of expired items in the database
                         $expired_items_count_query = "
@@ -303,8 +303,10 @@
                       $count_result = pg_query($conn, $count_query);
                       $count = pg_fetch_assoc($count_result)['count'];
 
-                      // Display the badge element with the total count
-                      echo '<span class="badge badge-danger">'.$count.'</span>';
+                      if ($count > 0) {
+                        // Display the badge element with the total count
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      }
                     ?>
                   </a>
                 </li>

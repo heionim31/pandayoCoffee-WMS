@@ -220,6 +220,23 @@
   .global-add-dditem:hover {
     background-color: #f2f2f2;
   }
+
+  /* Define the animation */
+  @keyframes bell-ring {
+      0% { transform: rotate(0); }
+      10% { transform: rotate(-5deg); }
+      20% { transform: rotate(10deg); }
+      30% { transform: rotate(-10deg); }
+      40% { transform: rotate(5deg); }
+      50% { transform: rotate(0); }
+      100% { transform: rotate(0); }
+  }
+
+  /* Add the animation to the bell icon on hover */
+  .animated:hover {
+      animation-name: bell-ring;
+      animation-duration: 2s;
+  }
 </style>
 
 
@@ -248,13 +265,13 @@
               $pageTitle = 'Units';
               break;
             case 'items':
-              $pageTitle = 'Ingredients List';
+              $pageTitle = 'Inventory Items';
               break;
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
               break;
             case 'set_notification':
-              $pageTitle = 'Alert Notification';
+              $pageTitle = 'Quantity Range';
               break;
             case 'sales_request':
               $pageTitle = 'Pending Sales Request';
@@ -287,7 +304,7 @@
               $pageTitle = 'Request Adjustment';
               break;
             case 'stockExpiration':
-              $pageTitle = 'Ingredient Expiration';
+              $pageTitle = 'Expiry Tracking';
               break;
             case 'reports/stockin':
               $pageTitle = 'Monthly Stock-In Reports';
@@ -336,7 +353,7 @@
         <i class="fas fa-plus"></i>
       </button>
       <div class="dropdown-menu global-add-ddmenu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-item"><i class="fas fa-plus-square"></i> Ingredient</a>
+        <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-item"><i class="fas fa-plus-square"></i> Item</a>
         <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-category"><i class="fas fa-plus-square"></i> Category</a>
         <a class="dropdown-item global-add-dditem" href="javascript:void(0)" id="sc-new-unit"><i class="fas fa-plus-square"></i> Unit</a>
       </div>
@@ -346,7 +363,7 @@
     <!-- NOTIFICATION -->
     <div class="dropdown">
       <a class="dropdown-toggle" href="#" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="far fa-bell fa-lg" aria-hidden="true"></i>
+        <i class="far fa-bell fa-lg animated" aria-hidden="true"></i>
           <?php
             // Count the number of expired items in the database
             $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
@@ -383,7 +400,7 @@
               $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-calendar-times text-danger"></i> ' . $expired_items_count . ' Ingredient Expired Alerts</a>';
             }
             if ($count > 0) {
-              $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-clipboard-list text-warning"></i> ' . $count . ' Ingredient Quantity Alerts</a>';
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-clipboard-list text-warning"></i> ' . $count . ' Item Quantity Alerts</a>';
             }
             if ($pending_requests_count > 0) {
               $dropdown_items[] = '<a class="dropdown-item" href="./?page=sales_request"><i class="fas fa-cash-register text-info"></i> ' . $pending_requests_count . ' Pending Sales Requests</a>';
@@ -487,7 +504,7 @@
       $(document).ready(function(){
         // CREATE ITEM
         $('#sc-new-item').click(function(){
-          uni_modal("<i class='far fa-plus-square'></i> Add New Ingredient ","items/manage_item.php")
+          uni_modal("<i class='far fa-plus-square'></i> Add New Item ","items/manage_item.php")
         })
 
         // CREATE CATEGORY 

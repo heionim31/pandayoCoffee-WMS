@@ -12,6 +12,14 @@
             <div class="card-body">
                 <div class="container-fluid">
                     <table id="leave-table" class="table table-hover table-striped table-bordered text-center">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="15%">
+                            <col width="45%">
+                            <col width="20%">
+                            <col width="10%">
+                            <col width="5%">
+                        </colgroup>
                         <thead>
                             <tr>
                             <th>#</th>
@@ -19,7 +27,7 @@
                             <th>Reason</th>
                             <th>Decline Reason</th>
                             <th>Status</th>
-                            <th>Cancel</th>
+                            <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,12 +55,12 @@
                                 while($row = pg_fetch_assoc($qry)):
                             ?>
                             <tr>
-                                <td class="text-center"><?php echo $i++; ?></td>
-                                <td><?= $row['from_date'] . ' - ' . $row['to_date'] ?></td>
-                                <td><?= $row['reason'] ?></td>
-                                <td><?= $row['decline_reason'] ?></td>
-                                <td><?= $row['status'] ?></td>
-                                <td align="center">
+                                <td class="align-middle"><?php echo $i++; ?></td>
+                                <td class="align-middle"><?= $row['from_date'] . ' - ' . $row['to_date'] ?></td>
+                                <td class="align-middle"><?= $row['reason'] ?></td>
+                                <td class="align-middle"><?= $row['decline_reason'] ?></td>
+                                <td class="align-middle"><?= $row['status'] ?></td>
+                                <td class="align-middle">
                                 <?php if($row['status'] != 'Approved' && $row['status'] != 'Declined'): ?>
                                     <form method="post" onsubmit="return confirmDelete(event)">
                                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
@@ -79,6 +87,32 @@
                 <div class="container-fluid">
                     <?php
                         if (isset($_POST['approve'])) {
+                            // Get the latest request ID
+                            $query = "SELECT request_id FROM wh_leave_request ORDER BY request_id DESC LIMIT 1";
+                            $result = pg_query($conn, $query);
+
+                            if (pg_num_rows($result) > 0) {
+                                $row = pg_fetch_assoc($result);
+                                $latestId = $row['request_id'];
+                            } else {
+                                $latestId = '000000000000';
+                            }
+
+                            // Generate the next request ID
+                            $lastCounter = substr($latestId, 7);
+                            $lastDate = substr($latestId, 0, 6);
+                            $today = date('ymd');
+                            if ($lastDate == $today) {
+                                if ($lastCounter == str_repeat('9', strlen($lastCounter))) {
+                                    $nextId = $today . '-001';
+                                } else {
+                                    $nextCounter = str_pad($lastCounter + 1, strlen($lastCounter), '0', STR_PAD_LEFT);
+                                    $nextId = $today . '-' . $nextCounter;
+                                }
+                            } else {
+                                $nextId = $today . '-001';
+                            }
+
                             $employee_id = pg_escape_string($conn, $_POST['employee_id']);
                             $department = pg_escape_string($conn, $_POST['department']);
                             $employee_name = pg_escape_string($conn, $_POST['employee_name']);
@@ -88,7 +122,7 @@
                             $from = pg_escape_string($conn, $_POST['from']);
                             $to = pg_escape_string($conn, $_POST['to']);
 
-                            $result = pg_query_params($conn, "INSERT INTO wh_leave_request (employeeid, name, email, contact, reason, from_date, to_date, status, date_requested) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)", array($employee_id, $employee_name, $email, $contact_number, $reason, $from, $to, 'Pending', date('Y-m-d')));
+                            $result = pg_query_params($conn, "INSERT INTO wh_leave_request (employeeid, name, email, contact, reason, from_date, to_date, status, date_requested, request_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)", array($employee_id, $employee_name, $email, $contact_number, $reason, $from, $to, 'Pending', date('Y-m-d'), $nextId));
                             
                             if ($result) {
                                 echo '<script>
@@ -222,16 +256,10 @@
                 leaveDateMsg.innerText = 'The "To" date must be greater than "From" date.';
                 sendRequestBtn.disabled = true;
             } else {
-                // check if the to date and from date are greater than the current date
+                // check if the to date and from date are greater than or equal to the current date
                 const currentDate = new Date();
-                if (fromDate < currentDate && toDate < currentDate) {
-                    leaveDateMsg.innerText = 'The "From" and "To" dates must be greater than the current date.';
-                    sendRequestBtn.disabled = true;
-                } else if (fromDate < currentDate) {
-                    leaveDateMsg.innerText = 'The "From" date must be greater than the current date.';
-                    sendRequestBtn.disabled = true;
-                } else if (toDate < currentDate) {
-                    leaveDateMsg.innerText = 'The "To" date must be greater than the current date.';
+                if (fromDate < currentDate || toDate < currentDate) {
+                    leaveDateMsg.innerText = 'The "From" and "To" dates must be greater than current date.';
                     sendRequestBtn.disabled = true;
                 } else {
                     leaveDateMsg.innerText = '';
@@ -243,7 +271,6 @@
             leaveDateMsg.innerText = '';
         }
     }
-
 </script>
 
 

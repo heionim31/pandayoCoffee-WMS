@@ -114,10 +114,10 @@
 											$disable_adjustment = "";
 										}
 										} else {
-										$request_status = "Awaiting";
-										echo $request_status;
-										$disable_request = "";
-										$disable_adjustment = "disabled";
+											$request_status = "Awaiting";
+											echo $request_status;
+											$disable_request = "";
+											$disable_adjustment = "disabled";
 										}
 									?>
 								</td>
@@ -210,7 +210,7 @@
 					Swal.fire({
 						icon: 'success',
 						title: 'Success',
-						text: 'Successfully declined the request ingredient.',
+						text: 'Successfully declined the request item.',
 						showConfirmButton: true
 					}).then(function() {
 						location.href = window.location.href;
@@ -291,7 +291,7 @@
 					</div>
 					<div class="form-group">
                         <label for="notes">Notes</label>
-                        <textarea class="form-control" id="notes" name="notes" placeholder="Please provide details about the requested ingredient" required></textarea>
+                        <textarea class="form-control" id="notes" name="notes" placeholder="Please provide details about the requested item" required></textarea>
 
                     </div>
                 </form>
@@ -341,7 +341,7 @@
 
 		if (requestedQuantity > totalQuantity) {
 			// If requested quantity is greater than total quantity, display the error message and disable the button
-			document.getElementById("alertMsg").textContent = `Requested quantity cannot be greater than ${totalQuantity}.`;
+			document.getElementById("alertMsg").textContent = `Requested quantity cannot be greater than ${totalQuantity}`;
 			submitBtn.disabled = true;
 		} else {
 			// If requested quantity is less than or equal to total quantity, hide the error message and enable the button

@@ -37,7 +37,7 @@
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 text-center mb-3">
-                                        <h3>Requested Ingredient</h3>
+                                        <h3>Requested Item</h3>
                                     </div>
                                     <div class="col-md-2">
                                         
@@ -215,7 +215,7 @@
     $(function(){
         // Stockin
         $('#add_stockin').click(function(){
-            uni_modal("<i class='far fa-plus-square'></i> Add Requested Ingredient", `stocks/manage_stockin.php?iid=<?= isset($id) ? $id : '' ?>&quantity=${$('#requested_quantity').val()}&expired_date=${$('#expired_date').val()}&manufactured_date=${$('#manufactured_date').val()}&request_id=${$('#request_id').val()}&supplier=${$('#supplier').val()}&physical_count=${$('#physical_count').val()}&date_approved=${$('#date_approved').val()}&date_received=${$('#date_received').val()}&physical_count_date=${$('#physical_count_date').val()}&personnel=${$('#personnel').val()}&personnel_role=${$('#personnel_role').val()}`)
+            uni_modal("<i class='far fa-plus-square'></i> Add Requested Item", `stocks/manage_stockin.php?iid=<?= isset($id) ? $id : '' ?>&quantity=${$('#requested_quantity').val()}&expired_date=${$('#expired_date').val()}&manufactured_date=${$('#manufactured_date').val()}&request_id=${$('#request_id').val()}&supplier=${$('#supplier').val()}&physical_count=${$('#physical_count').val()}&date_approved=${$('#date_approved').val()}&date_received=${$('#date_received').val()}&physical_count_date=${$('#physical_count_date').val()}&personnel=${$('#personnel').val()}&personnel_role=${$('#personnel_role').val()}`)
         })
 
         tbl1 = $('#stockin-tbl').dataTable({

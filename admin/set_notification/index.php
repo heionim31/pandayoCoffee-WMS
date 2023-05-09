@@ -25,7 +25,7 @@
 <div class="col-lg-12">
     <div class="card card-outline rounded-5">
         <div class="card-header">
-            <h5 class="card-title mt-2 font-weight-bold">SET ALERT NOTIFICATION</h5>
+            <h5 class="card-title mt-2 font-weight-bold">SET QUANTITY RANGE</h5>
         </div>
 
         <div class="card-body">
@@ -34,9 +34,8 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Notification Updated',
-                        text: 'The ingredient notification has been updated successfully.',
-                        timer: 2000,
-                        showConfirmButton: false
+                        text: 'The item quantity range has been updated successfully.',
+                        showConfirmButton: true
                     });
                 </script>
             <?php } ?>
@@ -59,7 +58,7 @@
                     <input type="text" class="form-control form-control-sm" name="date_updated" id="date_updated" value="<?php echo isset($row['date_updated']) ? date("Y-m-d H:i",strtotime($row['date_updated'])) : '' ?>" disabled>
                 </div>
 
-                <button type="submit" name="set_notification" class="btn btn-primary">Set Notification</button>
+                <button type="submit" name="set_notification" class="btn btn-primary">Set Range</button>
 
                 <script>
                     function checkMinMaxStock() {

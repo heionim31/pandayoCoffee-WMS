@@ -20,6 +20,7 @@
                 <th>#</th>
                 <th hidden>id</th>
                 <th hidden>EID</th>
+                <th>Request ID</th>
                 <th>Name</th>
                 <th hidden>Date to Leave</th>
                 <th>Date Requested</th>
@@ -39,6 +40,7 @@
                 <td><?php echo $i++; ?></td>
                 <td hidden><?= $row['id'] ?></td>
                 <td hidden><?= $row['employeeid'] ?></td>
+                <td><?= $row['request_id'] ?></td>
                 <td><?= $row['name'] ?></td>
                 <td hidden><?= $row['from_date'] . ' - ' . $row['to_date'] ?></td>
                 <td><?= $row['date_requested'] ?></td>
@@ -217,13 +219,13 @@
       const cells = row.querySelectorAll('td');
       const id = cells[1].textContent;
       const eid = cells[2].textContent;
-      const name = cells[3].textContent;
-      const dateToLeave = cells[4].textContent;
-      const dateRequested = cells[5].textContent;
-      const reason = cells[6].textContent;
-      const email = cells[7].textContent;
-      const contact = cells[8].textContent;
-      const status = cells[9].textContent;
+      const name = cells[4].textContent;
+      const dateToLeave = cells[5].textContent;
+      const dateRequested = cells[6].textContent;
+      const reason = cells[7].textContent;
+      const email = cells[8].textContent;
+      const contact = cells[9].textContent;
+      const status = cells[10].textContent;
 
       // Enable the buttons when a row is clicked
       approveButton.disabled = false;

@@ -51,7 +51,7 @@
                                 <tr>
                                     <th class="px-1 py-1 text-center">#</th>
                                     <th class="px-1 py-1 text-center">Request ID</th>
-                                    <th class="px-1 py-1 text-center">Ingredient</th>
+                                    <th class="px-1 py-1 text-center">Item</th>
                                     <th class="px-1 py-1 text-center">Quantity</th>
                                     <th class="px-1 py-1 text-center">Dates</th>
                                     <th class="px-1 py-1 text-center">Requested By</th>

@@ -19,7 +19,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label for="name" class="control-label">Name</label>
-					<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Ingredient Name" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
+					<input type="text" name="name" id="name" class="form-control form-control-sm rounded-0" placeholder="Item Name" value="<?php echo isset($name) ? $name : ''; ?>"  required/>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -67,7 +67,7 @@
 		
 		<div class="form-group">
 			<label for="description" class="control-label">Description</label>
-			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" placeholder="Add description of the ingredient" required><?php echo isset($description) ? $description : ''; ?></textarea>
+			<textarea rows="3" name="description" id="description" class="form-control form-control-sm rounded-0" placeholder="Add description of the item" required><?php echo isset($description) ? $description : ''; ?></textarea>
 		</div>
 
 		<div class="form-group">

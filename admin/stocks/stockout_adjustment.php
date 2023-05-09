@@ -38,7 +38,7 @@
                                 ?>
                                 <div class="row">
                                     <div class="col-md-6 text-center mb-3">
-                                        <h3>Requested Ingredient</h3>
+                                        <h3>Requested Items</h3>
                                     </div>
                                     <div class="col-md-2">
                                         
@@ -54,7 +54,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="ingredient_name">Ingredient Name</label>
+                                            <label for="ingredient_name">Item Name</label>
                                             <input type="text" class="form-control" id="ingredient_name" name="ingredient_name" value="<?php echo $row['ingredient_name']; ?>" readonly>
                                         </div>
                                     </div>
@@ -146,7 +146,7 @@
                                             $item_type = $item_type_row['item_type'];
 
                                             // check if item is non-perishable
-                                            if ($item_type != 'Non-Perishable') {
+                                            // if ($item_type != 'Non-Perishable') {
                                                 // get total quantity of same items from stockin list table
                                                 $total_quantity_query = "SELECT SUM(quantity) as total_quantity FROM wh_stockin_list WHERE item_id = '$item_id'";
                                                 $total_quantity_result = pg_query($conn, $total_quantity_query);
@@ -165,7 +165,7 @@
                                                 }
 
                                                 // check if item is non-perishable
-                                                if ($item_type != 'Non-Perishable') {
+                                                // if ($item_type != 'Non-Perishable') {
                                                     // get total quantity of expired items from stockin list table
                                                     $expired_quantity = 0;
                                                     $expired_quantity_query = "SELECT SUM(quantity) as expired_quantity FROM wh_stockin_list WHERE item_id = '$item_id' AND expire_date <= CURRENT_DATE";
@@ -201,8 +201,8 @@
                                                         $max_quantity = $total_quantity - intval($max_quantity_row['stockout_quantity']);
                                                         echo "<div class='alert alert-info'>No Expired Ingredients in Inventory</div>";
                                                     }
-                                                } 
-                                            }
+                                                // } 
+                                            // }
                                         ?>
                                     </div>
                                     <div class="col-md-3">
@@ -249,7 +249,11 @@
     addStockOutButton.disabled = true;
 
     function checkQuantity() {
-        if (totalQuantity == expiredQuantity) {
+        if (totalQuantity == 0) {
+            quantityError.style.display = "inline";
+            quantityError.innerText = "There are no items in stock.";
+            addStockOutButton.disabled = true;
+        } else if (totalQuantity == expiredQuantity) {
             quantityError.style.display = "inline";
             quantityError.innerText = "All items in stock have already expired.";
             addStockOutButton.disabled = true;

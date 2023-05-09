@@ -45,7 +45,7 @@
 					<tr>
 						<th>#</th>
 						<th>Request ID</th>
-						<th>Ingredient</th>
+						<th>Items</th>
 						<th>Date Request</th>
 						<th>Request By</th>
 						<th>Request Notes</th>
@@ -155,7 +155,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="approveModalLabel"><span class="fa fa-eye text-dark"></span> Review Requested Ingredients</h5>
+                <h5 class="modal-title" id="approveModalLabel"><span class="fa fa-eye text-dark"></span> Review Requested Items</h5>
             </div>
             <div class="modal-body">
                 <?php
@@ -175,7 +175,7 @@
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success',
-                                        text: 'Successfully prepared the request ingredient.',
+                                        text: 'Successfully prepared the request item.',
                                         showConfirmButton: true
                                     }).then(function() {
                                         location.href = window.location.href;
@@ -187,7 +187,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: 'Failed to prepare the request ingredient.'
+                                    text: 'Failed to prepare the request item.'
                                 })
                             </script>";
                         }
@@ -211,7 +211,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="sales_request_ingredient_name">Ingredient Request Name</label>
+                                    <label for="sales_request_ingredient_name">Items Request Name</label>
                                     <input type="text" class="form-control" id="sales_request_ingredient_name" name="sales_request_ingredient_name" readonly>
                                 </div>
                             </div>
@@ -232,7 +232,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="ingredient_name">Warehouse Ingredient</label>
+                                <label for="ingredient_name">Warehouse Items</label>
                             </div>
                             <div class="col-md-6">
                                 <label for="item_unit">Warehouse Unit</label>
@@ -245,7 +245,7 @@
                                         <?php
                                             $result = pg_query($conn, "SELECT wh_item_list.id, wh_item_list.name, wh_unit_list.name AS unit_name FROM wh_item_list JOIN wh_unit_list ON wh_item_list.unit = wh_unit_list.id");
                                             if (!$result) {
-                                                echo "Failed to retrieve the list of ingredients.";
+                                                echo "Failed to retrieve the list of items.";
                                             } else {
                                                 while ($row = pg_fetch_assoc($result)) {
                                                     echo "<option value='" . $row['name'] . "' data-id='" . $row['id'] . "' data-unit='" . $row['unit_name'] . "'>" . $row['name'] . "</option>";
@@ -446,7 +446,7 @@
             reviewBtn.disabled = true;
         }
     } else {
-        alertMsg1.textContent = 'Warehouse and requested ingredients do not match.';
+        alertMsg1.textContent = 'Warehouse and requested items do not match.';
         // Disable the submit button
         reviewBtn.disabled = true;
     }

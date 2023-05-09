@@ -71,7 +71,7 @@
 						<th></th>
 						<th>#</th>
 						<th>Request ID</th>
-						<th>Ingredient</th>
+						<th>Item</th>
 						<th>Date Request</th>
 						<th>Request By</th>
 						<th>Request Notes</th>

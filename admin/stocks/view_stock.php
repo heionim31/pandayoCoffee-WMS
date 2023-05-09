@@ -23,7 +23,7 @@
         
         <div class="card card-outline rounded-5 shadow printout" >
             <div class="card-header py-1">
-                <div class="card-title mt-2"><b>Ingredient Details</b></div>
+                <div class="card-title mt-2"><b>Item Details</b></div>
                 <div class="card-tools">
                     <button id="print" class="btn btn-info btn-flat" type="button"><i class="fa fa-print"></i> Print</button>
                     <a href="./?page=items" class="btn btn-flat btn-success">
@@ -35,7 +35,7 @@
                 <div class="container-fluid">
                     <fieldset>
                     <div class="d-flex w-100">
-                            <div class="col-4 bg-gradient-oranges text-bold text-white m-0 p-1 border">Ingredient Name</div>
+                            <div class="col-4 bg-gradient-oranges text-bold text-white m-0 p-1 border">Item Name</div>
                             <div class="col-8 m-0 p-1 border"><?= isset($name) ? $name : '' ?></div>
                         </div>
                         <div class="d-flex w-100">
@@ -81,7 +81,7 @@
                         <tr>
                             <th class="px-1 py-1 align-middle text-center">#</th>
                             <th class="px-1 py-1 align-middle text-center">Request ID</th>
-                            <th class="px-1 py-1 align-middle text-center">Ingredient</th>
+                            <th class="px-1 py-1 align-middle text-center">Item</th>
                             <th class="px-1 py-1 align-middle text-center">Quantity</th>
                             <th class="px-1 py-1 align-middle text-center">MFG./EXP.</th>
                             <th class="px-1 py-1 align-middle text-center">Supplier</th>
@@ -161,7 +161,7 @@
                         <tr>
                             <th class="p-1 text-center">#</th>
                             <th class="p-1 text-center">Request ID</th>
-                            <th class="p-1 text-center">Ingredient</th>
+                            <th class="p-1 text-center">Item</th>
                             <th class="p-1 text-center">Quantity</th>
                             <th class="p-1 text-center">Dates</th>
                             <th class="p-1 text-center">Requested By</th>
@@ -280,7 +280,7 @@
             <div class="col-8">
                 <div style="line-height:1em">
                     <h3 class="text-center font-weight-bold mb-0"><large><?= $_settings->info('name') ?></large></h3>
-                    <h3 class="text-center font-weight-bold mb-0"><large>Ingredient Details</large></h3>
+                    <h3 class="text-center font-weight-bold mb-0"><large>Item Details</large></h3>
                 </div>
             </div>
         </div>

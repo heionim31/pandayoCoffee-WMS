@@ -17,18 +17,29 @@
 
 <div class="card card-outline rounded-5">
 	<div class="card-header">
-		<h3 class="card-title mt-2 font-weight-bold">INGREDIENTS LIST</h3>
+		<h3 class="card-title mt-2 font-weight-bold">ITEMS LIST</h3>
 		<div class="card-tools">
-			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Ingredient</a>
+			<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary"><span class="fas fa-plus"></span> New Item</a>
 		</div>
 	</div>
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
+				<colgroup>
+					<col width="5%">
+					<col width="20%">
+					<col width="10%">
+					<col width="15%">
+					<col width="10%">
+					<col width="10%">
+					<col width="15%">
+					<col width="10%">
+					<col width="5%">
+				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Ingredient</th>
+						<th>Item</th>
 						<th>Unit</th>
 						<th>Category</th>
 						<th>Type</th>
@@ -86,7 +97,7 @@
 								<?php if($available_quantity == 0): ?>
 								<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger text-md"></span> Delete</a>
 								<?php else: ?>
-									<a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); Swal.fire({title: 'Cannot delete ingredient', text: 'This ingredient cannot be deleted because there are still stock on it', icon: 'warning', confirmButtonText: 'Ok'});"><span class="fa fa-trash text-muted"></span> Delete</a>
+									<a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); Swal.fire({title: 'Cannot delete item', text: 'This item cannot be deleted because there are still stock on it', icon: 'warning', confirmButtonText: 'Ok'});"><span class="fa fa-trash text-muted"></span> Delete</a>
 								<?php endif; ?>
 								<a class="dropdown-item" href="./?page=stocks/view_stock&id=<?php echo $row['id'] ?>"><span class="fa fa-history text-success text-md"></span> History</a>
 							</div>
@@ -111,16 +122,16 @@
 <script>
 	$(document).ready(function(){
 		$('.delete_data').click(function(){
-			_conf("Are you sure to delete this Ingredient permanently?","delete_item",[$(this).attr('data-id')])
+			_conf("Are you sure to delete this Item permanently?","delete_item",[$(this).attr('data-id')])
 		})
 		$('#create_new').click(function(){
-			uni_modal("<i class='far fa-plus-square'></i> Add New Ingredient ","items/manage_item.php")
+			uni_modal("<i class='far fa-plus-square'></i> Add New Item ","items/manage_item.php")
 		})
 		$('.edit-data').click(function(){
-			uni_modal("<i class='fa fa-edit'></i> Edit Ingredient ","items/manage_item.php?id="+$(this).attr('data-id'))
+			uni_modal("<i class='fa fa-edit'></i> Edit Item ","items/manage_item.php?id="+$(this).attr('data-id'))
 		})
 		$('.view-data').click(function(){
-			uni_modal("<i class='fa fa-th-list'></i> Ingredient Details ","items/view_item.php?id="+$(this).attr('data-id'))
+			uni_modal("<i class='fa fa-th-list'></i> Item Details ","items/view_item.php?id="+$(this).attr('data-id'))
 		})
 		$('.table').dataTable({
 			columnDefs: [

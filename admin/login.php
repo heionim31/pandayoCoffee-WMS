@@ -12,7 +12,7 @@
             start_loader()
         </script>
 
-        <style>
+<style>
             body {
                 background-image: url("<?php echo validate_image($_settings->info('cover')) ?>");
                 background-size: cover;
@@ -21,7 +21,7 @@
             }
 
             #page-title {
-                color: black !important;
+                color: #333333 !important;
                 font-size: 1.2em;
                 font-weight: bold;
             }
@@ -37,6 +37,63 @@
                 max-width: 100px;
                 height: 100px !important;
                 max-height: unset;
+            }
+            
+            .login-box {
+              width: 30%;
+                background-color: #FFFFFF;
+                color: #333333;
+                border-radius: 10px;
+                padding: 20px;
+                margin-top: 20px;
+                box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            }
+            
+            .card {
+                background-color: transparent !important;
+                border: none !important;
+            }
+            
+            .form-control {
+                background-color: #F2F2F2 !important;
+                border: none !important;
+                color: #333333 !important;
+                font-weight: bold;
+                box-shadow: none !important;
+            }
+            
+            .input-group-text {
+                background-color: #F2F2F2 !important;
+                border: none !important;
+                color: #333333 !important;
+                font-weight: bold;
+            }
+            
+            .btn-primary {
+                background-color: #333333 !important;
+                border: none !important;
+                font-weight: bold;
+            }
+            
+            .btn-primary:hover {
+                background-color: #1A1A1A !important;
+                border: none !important;
+                font-weight: bold;
+            }
+            
+            .footer-login {
+                font-size: 0.8em;
+                margin-top: 10px;
+                color: #333333;
+            }
+            
+            .brand-text {
+                color: #333333 !important;
+                font-weight: bold;
+            }
+            
+            .fas {
+                color: #333333 !important;
             }
         </style>
 

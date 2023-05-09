@@ -96,14 +96,21 @@
                         // Get the stock items that have expired, will expire today, or will expire tomorrow
                         $today = date('Y-m-d');
                         $tomorrow = date('Y-m-d', strtotime('+1 day'));
+                        $daytwo  = date('Y-m-d', strtotime('+2 day'));
+                        $daythree = date('Y-m-d', strtotime('+3 day'));
+                        $dayfour = date('Y-m-d', strtotime('+4 day'));
+                        $dayfive = date('Y-m-d', strtotime('+5 day'));
+                        $daysix = date('Y-m-d', strtotime('+6 day'));
+                        $dayseven = date('Y-m-d', strtotime('+7 day'));
                         $stock_items = pg_query($conn, "SELECT s.*, i.name, u.abbreviation, i.id AS item_id, c.name AS category_name 
                                 FROM wh_stockin_list s 
                                 INNER JOIN wh_item_list i ON s.item_id = i.id 
                                 INNER JOIN wh_category_list c ON i.category_id = c.id
                                 LEFT JOIN wh_unit_list u ON i.unit = u.id
-                                WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today') 
+                                WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today' OR s.expire_date = '$daytwo' OR s.expire_date = '$daythree' OR s.expire_date = '$dayfour' OR s.expire_date = '$dayfive' OR s.expire_date = '$daysix' OR s.expire_date = '$dayseven') 
                                 AND (s.expire_date IS NOT NULL) 
                                 AND (s.expire_date != '0001-01-01')");
+                                // WHERE (s.expire_date = '$today' OR s.expire_date = '$tomorrow' OR s.expire_date < '$today' OR s.expire_date > '$today') 
 
                         $stock_items = pg_fetch_all($stock_items);
 
@@ -115,7 +122,7 @@
                             $expiry_status = '';
                             $expiry_class = '';
                             $message = '';
-                            
+
                             if ($item['expire_date'] == $today) {
                                 $expiry_status = "Expired Today";
                                 $expiry_class = 'bg-danger';
@@ -133,11 +140,14 @@
                                 $days_until_expiry = floor((strtotime($item['expire_date']) - strtotime($today)) / (60 * 60 * 24));
                                 if ($days_until_expiry == 1) {
                                     $expiry_status = "Expiring in 1 day";
-                                } else {
+                                } else if ($days_until_expiry >= 2 && $days_until_expiry <= 7) {
                                     $expiry_status = "Expiring in $days_until_expiry days";
+                                    $expiry_class = 'bg-warning';
+                                } else {
+                                    $expiry_status = "Expires on " . date('M jS, Y', strtotime($item['expire_date']));
+                                    $expiry_class = 'bg-secondary';
                                 }
-                                $expiry_class = 'bg-warning';
-                                $message = intval($item['quantity']) . " {$item['name']} is expiring $expiry_status";
+                                $message = intval($item['quantity']) . " {$item['name']} is $expiry_status";
                             }
 
                             // Display the item if it has expired or will expire today or tomorrow
@@ -157,7 +167,7 @@
                                     <td class="<?= $expiry_class ?>"><?= $expiry_status ?></td>
                                     <td class="font-italic"><?= $message ?></td>
                                     <td>
-                                    <?php if ($expiry_status !== "Expires Tomorrow"): ?>
+                                    <?php if ($expiry_class !== 'bg-warning'): ?>
                                         <form method="post">
                                         <input type="hidden" name="id" value="<?= $item['id'] ?>">
                                             <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>">

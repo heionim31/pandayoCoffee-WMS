@@ -51,7 +51,7 @@
                                 <tr>
                                     <th class="px-1 py-1 align-middle text-center">#</th>
                                     <th class="px-1 py-1 align-middle text-center">Request ID</th>
-                                    <th class="px-1 py-1 align-middle text-center">Ingredient</th>
+                                    <th class="px-1 py-1 align-middle text-center">Item</th>
                                     <th class="px-1 py-1 align-middle text-center">Quantity</th>
                                     <th class="px-1 py-1 align-middle text-center">MFG./EXP.</th>
                                     <th class="px-1 py-1 align-middle text-center">Supplier</th>
@@ -86,8 +86,9 @@
                                     <td class="px-1 py-1 align-middle text-center"><?= format_num($row['quantity']) ?></td>
                                     <td class="px-1 py-1 align-middle text-center">
                                         <span class="font-weight-bold">MFG.:</span><span> <?= date("Y-m-d",strtotime($row['date'])) ?></span><br>
-                                        <span class="font-weight-bold">EXP.:</span><span> <?= date("Y-m-d",strtotime($row['expire_date'])) ?></span>
+                                        <span class="font-weight-bold">EXP.:</span><span> <?= $row['expire_date'] ? date("Y-m-d",strtotime($row['expire_date'])) : 'None' ?></span>
                                     </td>
+
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['supplier'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center"><?= $row['date_received'] ?></td>
                                     <td class="px-1 py-1 align-middle text-center">

@@ -62,14 +62,14 @@
             <label for="date_received" class="control-label">Date Received</label>
             <input type="date" name="date_received" id="date_received" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['date_received']) ? $_GET['date_received'] : '' ?>" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="date" class="control-label">Manufactured Date</label>
             <input type="text" name="date" id="date" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['manufactured_date']) ? $_GET['manufactured_date'] : '' ?>" readonly>
         </div>
         <?php if ($item_type != "Non-Perishable"): ?>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label for="expire_date" class="control-label">Expiration Date</label>
-                <input type="text" name="expire_date" id="expire_date" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['expired_date']) && !empty($_GET['expired_date']) ? $_GET['expired_date'] : '0001-01-01' ?>" readonly>
+                <input type="text" name="expire_date" id="expire_date" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['expired_date']) && !empty($_GET['expired_date']) ? $_GET['expired_date'] : '' ?>" readonly>
             </div>
         <?php else: ?>
             <input type="hidden" name="expire_date" value="">
@@ -82,7 +82,7 @@
             <label for="personnel_role" class="control-label">Personnel Role</label>
             <input type="text" name="personnel_role" id="personnel_role" class="form-control form-control-sm rounded-0" value="<?= isset($_GET['personnel_role']) ? $_GET['personnel_role'] : '' ?>" readonly>
         </div>
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="supplier" class="control-label">Supplier</label>
             <input type="text" step="any" name="supplier" id="supplier" class="form-control form-control-sm rounded-0 text-left" value="<?= isset($_GET['supplier']) ? $_GET['supplier'] : '' ?>" readonly>
         </div>

@@ -48,7 +48,7 @@ $(document).ready(function() {
                         }, 1000);
                     } else if (resp.status == 'incorrect') {
                         var _frm = $('#login-frm')
-                        var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fas fa-exclamation-circle'></i> Incorrect username or password.</div>"
+                        var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fas fa-exclamation-circle'></i> Incorrect password.</div>"
                         _frm.prepend(_msg)
                         _frm.find('input').addClass('is-invalid')
                         $('[name="username"]').focus()

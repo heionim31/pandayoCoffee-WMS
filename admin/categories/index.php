@@ -25,6 +25,14 @@
 	<div class="card-body">
         <div class="container-fluid">
 			<table class="table table-hover table-striped table-bordered text-center" id="list">
+				<colgroup>
+					<col width="5%">
+					<col width="20%">
+					<col width="40%">
+					<col width="10%">
+					<col width="15%">
+					<col width="10%">
+				</colgroup>
 				<thead>
 					<tr>
 						<th>#</th>
@@ -70,7 +78,7 @@
 								<?php if($item_count == 0): ?>
 									<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
 									<?php else: ?>
-									<a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); Swal.fire({title: 'Cannot delete category', text: 'This category cannot be deleted because there are ingredient/s registered to it.', icon: 'warning', confirmButtonText: 'Ok'});"><span class="fa fa-trash text-muted"></span> Delete</a>
+									<a class="dropdown-item" href="javascript:void(0)" onclick="event.preventDefault(); Swal.fire({title: 'Cannot delete category', text: 'This category cannot be deleted because there are items/s registered to it.', icon: 'warning', confirmButtonText: 'Ok'});"><span class="fa fa-trash text-muted"></span> Delete</a>
 								<?php endif; ?>
 							</div>
 						</td>

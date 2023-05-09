@@ -191,9 +191,9 @@
 				$resp['iid'] = $iid;
 				$resp['status'] = 'success';
 				if(empty($id))
-					$resp['msg'] = "New ingredient successfully saved.";
+					$resp['msg'] = "New item successfully saved.";
 				else
-					$resp['msg'] = "Ingredient successfully updated.";
+					$resp['msg'] = "Item successfully updated.";
 
 					if(!empty($_FILES['img']['tmp_name'])){
 						$img_path = "uploads/items/";
@@ -260,7 +260,7 @@
 			$del = pg_query($this->conn, "UPDATE wh_item_list SET delete_flag = 1 WHERE id = '{$id}'");
 			if($del){
 				$resp['status'] = 'success';
-				$this->settings->set_flashdata('success',"Ingredient successfully deleted.");
+				$this->settings->set_flashdata('success',"Item successfully deleted.");
 			}else{
 				$resp['status'] = 'failed';
 				$resp['error'] = pg_last_error($this->conn);
@@ -278,9 +278,15 @@
 				if(!in_array($k,array('id'))){
 					if(!empty($data)) $data .=",";
 					if(!empty($values)) $values .= ",";
-					$v = pg_escape_string(htmlspecialchars($v));
-					$data .= " {$k}";
-					$values .= "'{$v}'";
+					if(empty($v)){
+						$data .= " {$k}";
+						$values .= "NULL";
+					} else {
+						$v = pg_escape_string(htmlspecialchars($v));
+						$data .= " {$k}";
+						$values .= "'{$v}'";
+					}
+					
 				}
 			}
 			if(empty($id)){
@@ -302,9 +308,9 @@
 				$cid = !empty($id) ? $id : pg_last_oid($save);
 				$resp['status'] = 'success';
 				if(empty($id))
-					$this->settings->set_flashdata('success'," Ingredient has been added successfully.");
+					$this->settings->set_flashdata('success'," Item has been added successfully.");
 				else
-					$this->settings->set_flashdata('success'," Ingredient successfully updated");
+					$this->settings->set_flashdata('success'," Item successfully updated");
 				// update the status column in the ingredient_request table
 				$update_sql = "UPDATE wh_ingredient_request SET status='Received' WHERE request_id = '{$request_id}' ";
 				$update = pg_query($this->conn, $update_sql);
@@ -372,9 +378,9 @@
 				$cid = !empty($id) ? $id : pg_last_oid($save);
 				$resp['status'] = 'success';
 				if(empty($id))
-					$this->settings->set_flashdata('success'," The requested ingredient has been approved");
+					$this->settings->set_flashdata('success'," The requested item has been approved");
 				else
-					$this->settings->set_flashdata('success'," The requested ingredient has been updated");
+					$this->settings->set_flashdata('success'," The requested item has been updated");
 					
 				// update the status column in the ingredient_request table
 				$update_sql = "UPDATE ingredient_request SET status='Approved', date_approved='{$date_approved}' WHERE request_id = '{$request_id}' ";

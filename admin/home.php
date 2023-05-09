@@ -65,7 +65,7 @@
   }
 
   .bounce {
-    animation: bounce-alert 1s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+    animation: bounce-alert 2s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
   }
 
   @keyframes bounce-alert {
@@ -187,6 +187,7 @@
 <!-- ALL DASHBOARD CONTENTS -->
 <div class="row">
 
+  <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
   <!-- TOTAL ITEMS -->
   <div class="col-12 col-sm-4 col-md-3">
     <div class="info-box">
@@ -200,7 +201,7 @@
             ?>
             <?php ?>
           </span>
-          <span class="info-box-text text-left">Total Ingredients</b></span>
+          <span class="info-box-text text-left">Total Items</b></span>
         </a>
       </div>
       <span class="info-box-icon"><i class="fas fa-chart-line" style="font-size:60px"></i></span>
@@ -263,6 +264,7 @@
       <span class="info-box-icon"><i class="fas fa-users" style="font-size:60px"></i></span>
     </div>
   </div>
+  <?php endif; ?>
 
   <!-- TOTAL OF IN STOCK -->
   <div class="col-12 col-sm-4 col-md-3">
@@ -411,10 +413,10 @@
   <!-- POP-UP ALERT BOX -->
   <div class="alert-container">
     <div class="out-of-stock-alert alert" style="<?php if ($outofstock_count == 0) { echo 'display:none;'; } ?>">
-      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($outofstock_count); ?> Out of Stock Ingredients
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($outofstock_count); ?> Out of Stock Items
     </div>
     <div class="low-stock-alert alert" style="<?php if ($lowstock_count == 0) { echo 'display:none;'; } ?>">
-      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($lowstock_count); ?> Low Stock Ingredients
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($lowstock_count); ?> Low Stock Items
     </div>
     <div class="expired-alert alert" style="<?php if ($expired_items_count == 0) { echo 'display:none;'; } ?>">
       <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($expired_items_count); ?> Expired Ingredients
@@ -775,7 +777,7 @@
             <h5 class="card-title recently-added">Recently Added</h5>
           </li>
           <li class="nav-item">
-            <a class="nav-link recent-add-nav actives" href="#" data-toggle="tab" data-target="#items-table">Ingredients</a>
+            <a class="nav-link recent-add-nav actives" href="#" data-toggle="tab" data-target="#items-table">Items</a>
           </li>
           <li class="nav-item">
             <a class="nav-link recent-add-nav" href="#" data-toggle="tab" data-target="#categories-table">Categories</a>
@@ -795,7 +797,7 @@
               <div class="card-header">
                 <h5 class="card-title">
                   <i class="nav-icon fas fa-chart-line"></i>
-                  Recent Ingredient
+                  Recent Items
                 </h5>
               </div>
               <div class="card-body">
