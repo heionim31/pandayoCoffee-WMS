@@ -212,7 +212,7 @@
 					Swal.fire({
 						icon: 'success',
 						title: 'Success',
-						text: 'Successfully declined the request item.',
+						text: 'Successfully approved the request item.',
 						showConfirmButton: true
 					}).then(function() {
 						location.href = window.location.href;
