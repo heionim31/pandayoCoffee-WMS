@@ -41,26 +41,30 @@ $(document).ready(function() {
                     resp = JSON.parse(resp)
                     if (resp.status == 'success') {
                         var _frm = $('#login-frm')
-                        var _msg = "<div class='alert alert-success text-white success_msg'><i class='fas fa-check-circle'></i> Login successful!</div>"
+                        var _msg = "<div class='alert alert-success text-center text-white success_msg'><i class='fas fa-check-circle'></i> Login successful!</div>"
                         _frm.prepend(_msg)
                         setTimeout(function() {
                             location.replace(_base_url_ + 'admin');
                         }, 1000);
                     } else if (resp.status == 'incorrect') {
                         var _frm = $('#login-frm')
-                        var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fas fa-exclamation-circle'></i> Incorrect password.</div>"
+                        var _msg = "<div class='alert alert-danger text-center text-white err_msg'><i class='fas fa-exclamation-circle'></i> Incorrect password.</div>"
                         _frm.prepend(_msg)
                         _frm.find('input').addClass('is-invalid')
                         $('[name="username"]').focus()
-                    }
-                    else if (resp.status == 'attendance_required') {
+                    } else if (resp.status == 'attendance_required') {
                         var _frm = $('#login-frm')
                         var _msg = "<div class='alert alert-danger text-center text-white err_msg'><i class='fas fa-calendar-check'></i> Please complete attendance in HR Department before logging in.</div>"
                         _frm.prepend(_msg)
                         _frm.find('input').addClass('is-invalid')
                         $('[name="username"]').focus()
-                    }
-                    else if (resp.status == 'no_account') {
+                    } else if (resp.status == 'already_timed_out') {
+                        var _frm = $('#login-frm')
+                        var _msg = "<div class='alert alert-danger text-center text-white err_msg'><i class='fas fa-times-circle'></i> You have already timed out.</div>"
+                        _frm.prepend(_msg)
+                        _frm.find('input').addClass('is-invalid')
+                        $('[name="username"]').focus()
+                    } else if (resp.status == 'no_account') {
                         var _frm = $('#login-frm')
                         var _msg = "<div class='alert alert-danger text-white text-center err_msg'><i class='fas fa-user-times'></i> There is no existing account</div>"
                         _frm.prepend(_msg)

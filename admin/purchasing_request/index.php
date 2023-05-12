@@ -100,19 +100,19 @@
 										$item_name = $row['name'];
 										$request_status_query = pg_query($conn, "SELECT status FROM wh_ingredient_request WHERE name = '$item_name' ORDER BY request_id DESC LIMIT 1");
 										if (pg_num_rows($request_status_query) > 0) {
-										$request_status = pg_fetch_result($request_status_query, 0);
-										if($request_status == "Received") {
-											$request_status = "Awaiting";
-											$disable_request = "";
-											$disable_adjustment = "disabled";
-										} else {
-											$disable_request = "disabled";
-											$disable_adjustment = "disabled";
-										}
-										echo $request_status;
-										if($request_status == "Approved") {
-											$disable_adjustment = "";
-										}
+											$request_status = pg_fetch_result($request_status_query, 0);
+											if($request_status == "Received") {
+												$request_status = "Awaiting";
+												$disable_request = "";
+												$disable_adjustment = "disabled";
+											} else {
+												$disable_request = "disabled";
+												$disable_adjustment = "disabled";
+											}
+											echo $request_status;
+											if($request_status == "Delivered") {
+												$disable_adjustment = "";
+											}
 										} else {
 											$request_status = "Awaiting";
 											echo $request_status;
@@ -123,10 +123,12 @@
 								</td>
 								<td class="font-italic">
 									<?php
-										if($request_status == "Approved") {
-										echo "You can now adjust your inventory.";
+										if($request_status == "In Process") {
+										echo "You request is approved, waiting to deliver.";
 										} else if ($request_status == "Pending") {
 										echo "Your request is waiting for approval.";
+										}else if ($request_status == "Delivered") {
+										echo "Your request is delivered, you can adjust your inventory.";
 										} else if ($request_status == "Awaiting") {
 										echo "Please replenish your stock now!";
 										} else if ($request_status == "Declined") {

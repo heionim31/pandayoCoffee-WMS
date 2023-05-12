@@ -96,8 +96,8 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <div class="form-group">
-                                            <label for="quantity" class="control-label">Quantity</label>
-                                            <input type="number" step="any" name="quantity" id="quantity" class="form-control" value="<?= isset($quantity) ? format_num($quantity) : '' ?>"  max="<?= $max_quantity ?>" required oninput="checkQuantity()">
+                                            <label for="quantity" class="control-label">Requested Quantity</label>
+                                            <input type="number" step="any" name="quantity" id="quantity" class="form-control" value="<?php echo $row['add_stock']; ?>"  max="<?= $max_quantity ?>" readonly oninput="checkQuantity()">
                                         </div>
                                     </div>
                                     <div class="col-md-2">

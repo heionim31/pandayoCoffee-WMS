@@ -157,7 +157,7 @@
                         $expired_items_count_query = "
                             SELECT COUNT(*) AS count
                             FROM wh_stockin_list
-                            WHERE expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date IS NOT NULL
+                            WHERE expire_date <= NOW() + INTERVAL '7 DAY' AND expire_date IS NOT NULL
                         ";
                         $expired_items_count_result = pg_query($conn, $expired_items_count_query);
                         $expired_items_count = pg_fetch_assoc($expired_items_count_result)['count'];

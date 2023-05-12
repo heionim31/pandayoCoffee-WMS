@@ -37,6 +37,13 @@
 					$logResult = pg_query($this->conn, $logQuery);
 		
 					if(pg_num_rows($logResult) > 0) {
+						$log = pg_fetch_assoc($logResult);
+		
+						// Check if the time_out column has a value
+						if($log['time_out'] !== null) {
+							return json_encode(array('status'=>'already_timed_out'));
+						}
+		
 						foreach($user as $k => $v){
 							if(!is_numeric($k) && $k != 'password'){
 								$this->settings->set_userdata($k,$v);
@@ -54,6 +61,7 @@
 		
 			return json_encode(array('status'=>'incorrect','last_qry'=>"SELECT * from users where username = '$username'"));
 		}
+		
 		
 		
 		

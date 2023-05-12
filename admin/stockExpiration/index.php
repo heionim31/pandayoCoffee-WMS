@@ -38,6 +38,14 @@
                             $remarks = $_POST['remarks'];
                             $date = date('Y-m-d');
                             $id = $_POST['id'];
+                            $request_id = $_POST['request_id'];
+                            $supplier = $_POST['supplier'];
+                            $personnel = $_POST['personnel'];
+                            $personnel_role = $_POST['personnel_role'];
+                            $physical_count = $_POST['physical_count'];
+                            $physical_count_date = $_POST['physical_count_date'];
+                            $date_approved = $_POST['date_approved'];
+                            $date_received = $_POST['date_received'];
                             
                             // Insert data in waste_list table
                             $sql = "INSERT INTO wh_waste_list (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
@@ -46,8 +54,9 @@
                             $result = pg_query($conn, $sql);
 
                             // Copy the deleted row to stockin list deleted table
-                            $sql = "INSERT INTO wh_stockin_list_deleted (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated)
-                            SELECT id, item_id, date, quantity, remarks, date_created, expire_date, date_updated FROM wh_stockin_list 
+                            $sql = "INSERT INTO wh_stockin_list_deleted (id, item_id, date, quantity, remarks, date_created, expire_date, date_updated, request_id, supplier, personnel, personnel_role, physical_count, physical_count_date, date_approved, date_received)
+                            SELECT id, item_id, date, quantity, remarks, date_created, expire_date, date_updated, '$request_id', '$supplier', '$personnel', '$personnel_role', '$physical_count', '$physical_count_date', '$date_approved', '$date_received'
+                            FROM wh_stockin_list 
                             WHERE id = $id";
                             $result = pg_query($conn, $sql);
 
@@ -68,7 +77,7 @@
                             
                             if (isset($notification_updated) && $notification_updated) {
                                 echo '<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
-                                          <div class="modal-dialog" role="document">
+                                          <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                               <div class="modal-header">
                                                 <h5 class="modal-title" id="notificationModalLabel">Item Added to Waste</h5>
@@ -173,6 +182,14 @@
                                             <input type="hidden" name="item_id" value="<?= $item['item_id'] ?>">
                                             <input type="hidden" name="quantity" value="<?= intval($item['quantity']) ?>">
                                             <input type="hidden" name="expiry_date" value="<?= $item['expire_date'] ?>">
+                                            <input type="hidden" name="request_id" value="<?= $item['request_id'] ?>">
+                                            <input type="hidden" name="supplier" value="<?= $item['supplier'] ?>">
+                                            <input type="hidden" name="personnel" value="<?= $item['personnel'] ?>">
+                                            <input type="hidden" name="personnel_role" value="<?= $item['personnel_role'] ?>">
+                                            <input type="hidden" name="physical_count" value="<?= $item['physical_count'] ?>">
+                                            <input type="hidden" name="physical_count_date" value="<?= $item['physical_count_date'] ?>">
+                                            <input type="hidden" name="date_approved" value="<?= $item['date_approved'] ?>">
+                                            <input type="hidden" name="date_received" value="<?= $item['date_received'] ?>">
                                             <!-- <input type="text" name="remarks" placeholder="Enter remarks here"> -->
                                             <!-- <button type="submit" name="submit" class="btn btn-danger btn-sm">
                                                 <i class="fa fa-trash"></i>
@@ -193,25 +210,25 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <form method="post">
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" hidden>
                                                             <label for="item-name" class="col-sm-4 col-form-label">Ingredient Name:</label>
                                                             <div class="col-sm-8">
                                                             <input class="form-control" id="item-name" name="item_name" value="<?= $item['name'] ?>" disabled>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" hidden>
                                                             <label for="quantity" class="col-sm-4 col-form-label">Expired Quantity:</label>
                                                             <div class="col-sm-8">
                                                             <input class="form-control" id="quantity" value="<?= (int)$item['quantity'] ?>" disabled>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" hidden>
                                                             <label for="manunufacture-date" class="col-sm-4 col-form-label">Manufactured Date:</label>
                                                             <div class="col-sm-8">
                                                             <input class="form-control" id="manunufacture-date" value="<?= date('m-d-Y', strtotime($item['date'])) ?>" disabled>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" hidden>
                                                             <label for="expiration-date" class="col-sm-4 col-form-label">Expiration Date:</label>
                                                             <div class="col-sm-8">
                                                             <input class="form-control" id="expiration-date" value="<?= date('m-d-Y', strtotime($item['expire_date'])) ?>" disabled>

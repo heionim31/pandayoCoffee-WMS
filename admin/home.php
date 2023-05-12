@@ -397,7 +397,7 @@
               <?php
                 $expired_items_count_result = pg_query($conn, "SELECT COUNT(*) AS count
                                 FROM wh_stockin_list
-                                WHERE expire_date <= CURRENT_DATE + INTERVAL '1 day' AND expire_date IS NOT NULL AND expire_date <> '0001-01-01'");
+                                WHERE expire_date <= CURRENT_DATE + INTERVAL '7 day' AND expire_date IS NOT NULL AND expire_date <> '0001-01-01'");
                 $expired_items_count = pg_fetch_assoc($expired_items_count_result)['count'];
 
                 echo '<span class="text">'.($expired_items_count > 0 ? $expired_items_count : 0).'</span>';
@@ -419,7 +419,7 @@
       <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($lowstock_count); ?> Low Stock Items
     </div>
     <div class="expired-alert alert" style="<?php if ($expired_items_count == 0) { echo 'display:none;'; } ?>">
-      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($expired_items_count); ?> Expired Ingredients
+      <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo format_num($expired_items_count); ?> Expiry Items
     </div>
   </div>
 

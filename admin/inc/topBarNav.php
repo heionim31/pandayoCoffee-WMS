@@ -367,7 +367,7 @@
           <?php
             // Count the number of expired items in the database
             $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
-            WHERE expire_date <= NOW() + INTERVAL '1 DAY'
+            WHERE expire_date <= NOW() + INTERVAL '7 DAY'
             AND expire_date IS NOT NULL 
             AND expire_date <> '0001-01-01'");
             $expired_items_count = pg_fetch_assoc($expired_items_count)['count'];
@@ -397,7 +397,7 @@
             // Count the total number of items in the dropdown menu
             $dropdown_items = array();
             if ($expired_items_count > 0) {
-              $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-calendar-times text-danger"></i> ' . $expired_items_count . ' Ingredient Expired Alerts</a>';
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-calendar-times text-danger"></i> ' . $expired_items_count . ' Item Expiration Alerts</a>';
             }
             if ($count > 0) {
               $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-clipboard-list text-warning"></i> ' . $count . ' Item Quantity Alerts</a>';
