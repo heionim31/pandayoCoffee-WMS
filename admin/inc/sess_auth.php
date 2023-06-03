@@ -26,8 +26,9 @@ if(isset($_SESSION['userdata']) && strpos($link, 'login.php')){
 }
 
 // Set up an array $module that contains the possible login types. Check if the userdata session variable is set, the request URI contains index.php or admin/, and the login_type value of userdata is not 1. If so, display an alert message to the user and redirect them to the appropriate page based on their login type. Use the exit statement to prevent further code execution.
-$module = array('','admin','tutor');
+$module = array('','warehouse_manager','warehouse_staff');
 if(isset($_SESSION['userdata']) && (strpos($link, 'index.php') || strpos($link, 'admin/')) && $_SESSION['userdata']['login_role'] !=  'warehouse_manager'){
 	echo "<script>alert('Access Denied!');location.replace('".base_url.$module[$_SESSION['userdata']['login_role']]."');</script>";
     exit;
 }
+?>

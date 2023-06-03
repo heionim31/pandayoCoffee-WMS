@@ -30,8 +30,13 @@
     opacity: 0.8;
     color: #fff;
     border: 1px solid white;
-     margin-top: 6rem;
+     /* margin-top: 6rem; */
   }
+
+  li p {
+    font-size: 0.9rem;
+  }
+
 </style>
 
 
@@ -42,7 +47,7 @@
   <a href="<?php echo base_url ?>admin" class="brand-link bg-white text-sm">
     <div class="logos">
       <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width: 55% ; height: 100%; "> 
-      <span class="brand-text font-normal shortName"><?php echo $_settings->info('short_name') ?></span>
+      <span class="h6 brand-text font-bold shortName mt-3"><?php echo $_settings->info('short_name') ?></span>
     </div>
   </a>
 
@@ -81,6 +86,7 @@
                 </a>
               </li> 
 
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
               <li class="nav-item dropdown">
                 <a href="./?page=categories" class="nav-link nav-categories">
                   <i class="nav-icon fas fa-cubes"></i>
@@ -89,7 +95,9 @@
                   </p>
                 </a>
               </li>
+              <?php endif; ?>
 
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
               <li class="nav-item dropdown">
                 <a href="./?page=units" class="nav-link nav-units">
                   <i class="nav-icon fas fa-balance-scale"></i>
@@ -98,26 +106,18 @@
                   </p>
                 </a>
               </li> 
+              <?php endif; ?>
 
               <!-- STOCKS DROP-DOWN -->
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-box-open"></i>
                   <p style="color:white">
-                    Manage Stocks
+                    Stock Manager
                     <i class="right fas fa-angle-left"></i>
                     <?php
                       // Count the total number of items with stock status level and expired items
                       $count = 0;
-
-                      // Count items with stock status level
-                      $qry_count = pg_query($conn, "SELECT COUNT(*) as count FROM wh_item_list i 
-                          INNER JOIN wh_category_list c ON i.category_id = c.id 
-                          INNER JOIN wh_stock_notif s ON s.id = 1 
-                          WHERE i.delete_flag = 0 
-                          AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
-                          OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)");
-                      $count = pg_fetch_assoc($qry_count)['count'];
 
                       // Count expired items
                       $qry_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list WHERE (expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date != '0001-01-01') OR (expire_date IS NULL)");
@@ -133,57 +133,31 @@
 
                 <ul class="nav nav-treeview" style="display: none;">
                   <li class="nav-item">
-                      <a href="./?page=items" class="nav-link tree-item nav-items">
-                        <i class="fas fa-chart-line nav-icon"></i>
-                        <p style="color:white">Stock Information</p>
-                      </a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a href="./?page=stocks" class="nav-link tree-item nav-stocks">
-                        <i class="fas fa-exchange-alt nav-icon"></i>
-                        <p style="color:white">Stock Adjustment</p>
-                      </a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a href="./?page=setNotif" class="nav-link tree-item nav-setNotif">
-                        <i class="fas fa-envelope nav-icon"></i>
-                        <p style="color:white">Stock Alert Notification</p>
-                      </a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a href="./?page=stockStatus" class="nav-link tree-item nav-stockStatus">
-                          <i class="fas fa-battery-half nav-icon"></i>
-                          <p style="color:white">Stock Status Level</p>
-                          <?php
-                              // Count the items marked as overstock, lowstock, and out of stock
-                              $count_query = "SELECT COUNT(*) as count FROM wh_item_list i 
-                                              INNER JOIN wh_category_list c ON i.category_id = c.id 
-                                              INNER JOIN wh_stock_notif s ON s.id = 1 
-                                              WHERE i.delete_flag = 0 
-                                              AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
-                                              OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) >= s.max_stock)";
-                              $count_result = pg_query($conn, $count_query);
-                              $count = pg_fetch_assoc($count_result)['count'];
-
-                              // Display the badge element with the total count
-                              echo '<span class="badge badge-danger">'.$count.'</span>';
-                          ?>
-                      </a>
+                    <a href="./?page=items" class="nav-link tree-item nav-items">
+                      <i class="fas fa-chart-line nav-icon"></i>
+                      <p style="color:white">Inventory Items</p>
+                    </a>
                   </li>
+
+                  <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
+                    <li class="nav-item">
+                      <a href="./?page=set_notification" class="nav-link tree-item nav-set_notification">
+                        <i class="fas fa-envelope nav-icon"></i>
+                        <p style="color:white">Quantity Range</p>
+                      </a>
+                    </li>
+                  <?php endif; ?>
 
                   <li class="nav-item">
                     <a href="./?page=stockExpiration" class="nav-link tree-item nav-stockExpiration">
                         <i class="fas fa-calendar-times nav-icon"></i>
-                        <p style="color:white">Stock Expiration</p>
+                        <p style="color:white">Expiry Tracking</p>
                         <?php
                         // Count the number of expired items in the database
                         $expired_items_count_query = "
                             SELECT COUNT(*) AS count
                             FROM wh_stockin_list
-                            WHERE expire_date <= NOW() + INTERVAL '1 DAY' AND expire_date IS NOT NULL
+                            WHERE expire_date <= NOW() + INTERVAL '7 DAY' AND expire_date IS NOT NULL
                         ";
                         $expired_items_count_result = pg_query($conn, $expired_items_count_query);
                         $expired_items_count = pg_fetch_assoc($expired_items_count_result)['count'];
@@ -199,13 +173,84 @@
                 </ul>
               </li>
 
+
+              <!-- REQUEST DROP-DOWN -->
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-file-alt"></i>
+                  <p style="color:white">
+                    Stock Requests
+                    <i class="right fas fa-angle-left"></i>
+                    <?php
+                      // Count the total number of sales and purchasing requests
+                      $count_query = "SELECT SUM(count) as total FROM (
+                                      SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received', 'Declined')
+                                      UNION ALL
+                                      SELECT COUNT(*) as count FROM wh_item_list i 
+                                        INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                        INNER JOIN wh_stock_notif s ON s.id = 1 
+                                        WHERE i.delete_flag = 0 
+                                        AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) > s.max_stock)
+                                      ) as subquery";
+                      $count_result = pg_query($conn, $count_query);
+                      $total = pg_fetch_assoc($count_result)['total'];
+
+                      // Display the badge element with the total count
+                      if ($total > 0) {
+                        echo '<span class="badge badge-danger">'.$total.'</span>';
+                      }
+                    ?>
+                  </p>
+                </a>
+
+                <ul class="nav nav-treeview" style="display: none;">
+                  <li class="nav-item">
+                    <a href="./?page=sales_request" class="nav-link tree-item nav-sales_request">
+                      <i class="fas fa-cash-register nav-icon"></i>
+                      <p style="color:white">Sales Request</p>
+                      <?php
+                        // Count the number of leave requests
+                        $count_query = "SELECT COUNT(*) as count FROM ingredient_request WHERE status NOT IN ('Approved', 'Received', 'Declined')";
+                        $count_result = pg_query($conn, $count_query);
+                        $count = pg_fetch_assoc($count_result)['count'];
+
+                        // Display the badge element with the total count
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      ?>
+                    </a>
+                  </li>
+
+                  <li class="nav-item">
+                    <a href="./?page=purchasing_request" class="nav-link tree-item nav-purchasing_request">
+                      <i class="fas fa-clipboard-list nav-icon"></i>
+                      <p style="color:white">Purchasing Request</p>
+                      <?php
+                        // Count the items marked as overstock, lowstock, and out of stock
+                        $count_query = "SELECT COUNT(*) as count FROM wh_item_list i 
+                                        INNER JOIN wh_category_list c ON i.category_id = c.id 
+                                        INNER JOIN wh_stock_notif s ON s.id = 1 
+                                        WHERE i.delete_flag = 0 
+                                        AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) > s.max_stock)";
+                        $count_result = pg_query($conn, $count_query);
+                        $count = pg_fetch_assoc($count_result)['count'];
+
+                        // Display the badge element with the total count
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      ?>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              
               <!-- REPORTS DROPDOWN -->
-              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-chart-bar"></i>
                     <p style="color:white">
-                      View Reports
+                      Monthly Reports
                       <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
@@ -214,34 +259,66 @@
                     <li class="nav-item">
                       <a href="./?page=reports/stockin" class="nav-link tree-item nav-reports_stockin">
                         <i class="far fa-calendar-alt nav-icon"></i>
-                        <p style="color:white">Monthly Stock-In Report</p>
+                        <p style="color:white">Monthly Stock-In</p>
                       </a>
                     </li>
 
                     <li class="nav-item">
                       <a href="./?page=reports/stockout" class="nav-link tree-item nav-reports_stockout">
                         <i class="fas fa-table nav-icon flex-direction: column" ></i>
-                        <p style="color:white">Monthly Stock-Out Report</p>
+                        <p style="color:white">Monthly Stock-Out</p>
                       </a>
                     </li>
 
                     <li class="nav-item">
                       <a href="./?page=reports/waste" class="nav-link tree-item nav-reports_waste">
                         <i class="fas fa-trash-alt nav-icon"></i>
-                        <p style="color:white">Monthly Waste Report</p>
+                        <p style="color:white">Monthly Waste</p>
                       </a>
                     </li>
                   </ul>
-
                 </li>
 
-                <li class="nav-header" ><p style="color:white">Maintenance</p></li>
 
+              <?php if($_settings->userdata('role') !== 'warehouse_manager'): ?>
+                <li class="nav-item dropdown">
+                  <a href="<?php echo base_url ?>admin/?page=leave_request_staff" class="nav-link  nav-leave_request_staff" >
+                    <i class="nav-icon fas fa-calendar-alt flex-direction: column" ></i>
+                    <p style="color:white">
+                      File a Leave
+                    </p>
+                  </a>
+                </li>
+              <?php endif; ?>
+
+
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
+                <li class="nav-item dropdown">
+                  <a href="<?php echo base_url ?>admin/?page=leave_request_manager" class="nav-link  nav-leave_request_manager">
+                    <i class="nav-icon fas fa-calendar-alt flex-direction: column"></i>
+                    <p style="color:white">Leave Requests</p>
+                    <?php
+                      // Count the number of leave requests
+                      $count_query = "SELECT COUNT(*) as count FROM wh_leave_request WHERE status = 'Pending'";
+                      $count_result = pg_query($conn, $count_query);
+                      $count = pg_fetch_assoc($count_result)['count'];
+
+                      if ($count > 0) {
+                        // Display the badge element with the total count
+                        echo '<span class="badge badge-danger">'.$count.'</span>';
+                      }
+                    ?>
+                  </a>
+                </li>
+              <?php endif; ?>
+
+              
+              <?php if($_settings->userdata('role') == 'warehouse_manager'): ?>
                 <li class="nav-item dropdown">
                   <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link  nav-user_list" >
                     <i class="nav-icon fas fa-users flex-direction: column" ></i>
                     <p style="color:white">
-                      User List
+                      Users List
                     </p>
                   </a>
                 </li>
@@ -255,6 +332,7 @@
                   </a>
                 </li>
               <?php endif; ?>
+
             </ul>
             
           </nav>
@@ -297,13 +375,13 @@
       if($('.nav-link.nav-'+page).hasClass('nav-is-tree') == true){
         $('.nav-link.nav-'+page).parent().addClass('menu-open')
       }
-
     }
     
     // ACTIVE HOVER
-    $('.nav-link.active').addClass('bg-gradient-orange')
+    // $('.nav-link.active').addClass('bg-gradient-orange')
+    // $('.nav-link.active').css('background-color', '#cc891d');
+    // $('.nav-link.active').css('background-image', 'linear-gradient(to right, #cc891d 70%, #f5d68e 100%)');
+    $('.nav-link.active').css('background-image', 'linear-gradient(to right,  #8B4513 20%, #f7b360  90%)');
+
   })
-
-  // TO SHOW NUMBERS BESIDES DROPDOWN WHEN NOT ACTIVE AND HIDE WHEN THE DROPDOWN IS INACTIVE
-
 </script>

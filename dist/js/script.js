@@ -7,6 +7,7 @@ function end_loader() {
         $('.page-preloader').remove();
     })
 }
+
 // function 
 window.alert_toast = function($msg = 'TEST', $bg = 'success', $pos = '') {
     var Toast = Swal.mixin({
@@ -22,38 +23,61 @@ window.alert_toast = function($msg = 'TEST', $bg = 'success', $pos = '') {
 }
 
 $(document).ready(function() {
-    // Login
+    // LOGIN
     $('#login-frm').submit(function(e) {
-            e.preventDefault()
-            start_loader()
-            if ($('.err_msg').length > 0)
-                $('.err_msg').remove()
-            $.ajax({
-                url: _base_url_ + 'classes/Login.php?f=login',
-                method: 'POST',
-                data: $(this).serialize(),
-                error: err => {
-                    console.log(err)
-
-                },
-                success: function(resp) {
-                    if (resp) {
-                        resp = JSON.parse(resp)
-                        if (resp.status == 'success') {
+        e.preventDefault()
+        start_loader()
+        if ($('.err_msg').length > 0)
+            $('.err_msg').remove()
+        $.ajax({
+            url: _base_url_ + 'classes/Login.php?f=login',
+            method: 'POST',
+            data: $(this).serialize(),
+            error: err => {
+                console.log(err)
+            },
+            success: function(resp) {
+                if (resp) {
+                    resp = JSON.parse(resp)
+                    if (resp.status == 'success') {
+                        var _frm = $('#login-frm')
+                        var _msg = "<div class='alert alert-success text-center text-white success_msg'><i class='fas fa-check-circle'></i> Login successful!</div>"
+                        _frm.prepend(_msg)
+                        setTimeout(function() {
                             location.replace(_base_url_ + 'admin');
-                        } else if (resp.status == 'incorrect') {
-                            var _frm = $('#login-frm')
-                            var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Incorrect username or password</div>"
-                            _frm.prepend(_msg)
-                            _frm.find('input').addClass('is-invalid')
-                            $('[name="username"]').focus()
-                        }
-                        end_loader()
+                        }, 1000);
+                    } else if (resp.status == 'incorrect') {
+                        var _frm = $('#login-frm')
+                        var _msg = "<div class='alert alert-danger text-center text-white err_msg'><i class='fas fa-exclamation-circle'></i> Incorrect password.</div>"
+                        _frm.prepend(_msg)
+                        _frm.find('input').addClass('is-invalid')
+                        $('[name="username"]').focus()
+                    } else if (resp.status == 'attendance_required') {
+                        var _frm = $('#login-frm')
+                        var _msg = "<div class='alert alert-danger text-center text-white err_msg'><i class='fas fa-calendar-check'></i> Please complete attendance in HR Department before logging in.</div>"
+                        _frm.prepend(_msg)
+                        _frm.find('input').addClass('is-invalid')
+                        $('[name="username"]').focus()
+                    } else if (resp.status == 'already_timed_out') {
+                        var _frm = $('#login-frm')
+                        var _msg = "<div class='alert alert-danger text-center text-white err_msg'><i class='fas fa-times-circle'></i> You have already timed out.</div>"
+                        _frm.prepend(_msg)
+                        _frm.find('input').addClass('is-invalid')
+                        $('[name="username"]').focus()
+                    } else if (resp.status == 'no_account') {
+                        var _frm = $('#login-frm')
+                        var _msg = "<div class='alert alert-danger text-white text-center err_msg'><i class='fas fa-user-times'></i> There is no existing account</div>"
+                        _frm.prepend(_msg)
+                        _frm.find('input').addClass('is-invalid')
+                        $('[name="username"]').focus()
                     }
+                    end_loader()
                 }
-            })
+            }
         })
-        //Establishment Login
+    })
+
+    // ESTABLISHMENT LOGIN
     $('#flogin-frm').submit(function(e) {
         e.preventDefault()
         start_loader()
@@ -74,7 +98,7 @@ $(document).ready(function() {
                         location.replace(_base_url_ + 'faculty');
                     } else if (resp.status == 'incorrect') {
                         var _frm = $('#flogin-frm')
-                        var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Incorrect username or password</div>"
+                        var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Test2 username or password</div>"
                         _frm.prepend(_msg)
                         _frm.find('input').addClass('is-invalid')
                         $('[name="username"]').focus()
@@ -85,38 +109,39 @@ $(document).ready(function() {
         })
     })
 
-    //user login
+    // USER LOGIN
     $('#slogin-frm').submit(function(e) {
-            e.preventDefault()
-            start_loader()
-            if ($('.err_msg').length > 0)
-                $('.err_msg').remove()
-            $.ajax({
-                url: _base_url_ + 'classes/Login.php?f=slogin',
-                method: 'POST',
-                data: $(this).serialize(),
-                error: err => {
-                    console.log(err)
+        e.preventDefault()
+        start_loader()
+        if ($('.err_msg').length > 0)
+            $('.err_msg').remove()
+        $.ajax({
+            url: _base_url_ + 'classes/Login.php?f=slogin',
+            method: 'POST',
+            data: $(this).serialize(),
+            error: err => {
+                console.log(err)
 
-                },
-                success: function(resp) {
-                    if (resp) {
-                        resp = JSON.parse(resp)
-                        if (resp.status == 'success') {
-                            location.replace(_base_url_ + 'student');
-                        } else if (resp.status == 'incorrect') {
-                            var _frm = $('#slogin-frm')
-                            var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Incorrect username or password</div>"
-                            _frm.prepend(_msg)
-                            _frm.find('input').addClass('is-invalid')
-                            $('[name="username"]').focus()
-                        }
-                        end_loader()
+            },
+            success: function(resp) {
+                if (resp) {
+                    resp = JSON.parse(resp)
+                    if (resp.status == 'success') {
+                        location.replace(_base_url_ + 'student');
+                    } else if (resp.status == 'incorrect') {
+                        var _frm = $('#slogin-frm')
+                        var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Test3 username or password</div>"
+                        _frm.prepend(_msg)
+                        _frm.find('input').addClass('is-invalid')
+                        $('[name="username"]').focus()
                     }
+                    end_loader()
                 }
-            })
+            }
         })
-        // System Info
+    })
+
+    // SYSTEM INFO
     $('#system-frm').submit(function(e) {
         e.preventDefault()
         start_loader()

@@ -75,11 +75,13 @@
 				unlink(base_app.$fname);
 				$upload =imagepng($temp,base_app.$fname);
 				if($upload){
+					$timestamp = time();
+					$url = "uploads/logo.png?v=$timestamp";
 					if(isset($_SESSION['wh_system_info']['logo'])){
-						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'logo' ");
+						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = '{$url}' where meta_field = 'logo'");
 						if(is_file(base_app.$_SESSION['wh_system_info']['logo'])) unlink(base_app.$_SESSION['wh_system_info']['logo']);
-					}else{
-						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$fname}',meta_field = 'logo' ");
+					} else {
+						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$url}', meta_field = 'logo'");
 					}
 				}
 				imagedestroy($temp);
@@ -105,70 +107,72 @@
 				unlink(base_app.$fname);
 				$upload =imagepng($temp,base_app.$fname);
 				if($upload){
+					$timestamp = time();
+					$url = "uploads/cover.png?v=$timestamp";
 					if(isset($_SESSION['wh_system_info']['cover'])){
-						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = CONCAT('{$fname}', '?v=',unix_timestamp(CURRENT_TIMESTAMP)) where meta_field = 'cover' ");
+						$qry = pg_query($this->conn, "UPDATE wh_system_info set meta_value = '{$url}' where meta_field = 'cover'");
 						if(is_file(base_app.$_SESSION['wh_system_info']['cover'])) unlink(base_app.$_SESSION['wh_system_info']['cover']);
-					}else{
-						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$fname}',meta_field = 'cover' ");
+					} else {
+						$qry = pg_query($this->conn, "INSERT into wh_system_info set meta_value = '{$url}', meta_field = 'cover'");
 					}
 				}
 				imagedestroy($temp);
 			}
 
-			if(isset($_FILES['banners']) && count($_FILES['banners']['tmp_name']) > 0){
-				$err='';
-				$banner_path = "uploads/banner/";
-				foreach($_FILES['banners']['tmp_name'] as $k => $v){
-					if(!empty($_FILES['banners']['tmp_name'][$k])){
-						$accept = array('image/jpeg','image/png');
-						if(!in_array($_FILES['banners']['type'][$k],$accept)){
-							$err = "Image file type is invalid";
-							break;
-						}
-						if($_FILES['banners']['type'][$k] == 'image/jpeg')
-							$uploadfile = imagecreatefromjpeg($_FILES['banners']['tmp_name'][$k]);
-						elseif($_FILES['banners']['type'][$k] == 'image/png')
-							$uploadfile = imagecreatefrompng($_FILES['banners']['tmp_name'][$k]);
-						if(!$uploadfile){
-							$err = "Image is invalid";
-							break;
-						}
-						list($width, $height) =getimagesize($_FILES['banners']['tmp_name'][$k]);
-						if($width > 1200 || $height > 480){
-							if($width > $height){
-								$perc = ($width - 1200) / $width;
-								$width = 1200;
-								$height = $height - ($height * $perc);
-							}else{
-								$perc = ($height - 480) / $height;
-								$height = 480;
-								$width = $width - ($width * $perc);
-							}
-						}
-						$temp = imagescale($uploadfile,$width,$height);
-						$spath = base_app.$banner_path.'/'.$_FILES['banners']['name'][$k];
-						$i = 1;
-						while(true){
-							if(is_file($spath)){
-								$spath = base_app.$banner_path.'/'.($i++).'_'.$_FILES['banners']['name'][$k];
-							}else{
-								break;
-							}
-						}
-						if($_FILES['banners']['type'][$k] == 'image/jpeg')
-						imagejpeg($temp,$spath,60);
-						elseif($_FILES['banners']['type'][$k] == 'image/png')
-						imagepng($temp,$spath,6);
+			// if(isset($_FILES['banners']) && count($_FILES['banners']['tmp_name']) > 0){
+			// 	$err='';
+			// 	$banner_path = "uploads/banner/";
+			// 	foreach($_FILES['banners']['tmp_name'] as $k => $v){
+			// 		if(!empty($_FILES['banners']['tmp_name'][$k])){
+			// 			$accept = array('image/jpeg','image/png');
+			// 			if(!in_array($_FILES['banners']['type'][$k],$accept)){
+			// 				$err = "Image file type is invalid";
+			// 				break;
+			// 			}
+			// 			if($_FILES['banners']['type'][$k] == 'image/jpeg')
+			// 				$uploadfile = imagecreatefromjpeg($_FILES['banners']['tmp_name'][$k]);
+			// 			elseif($_FILES['banners']['type'][$k] == 'image/png')
+			// 				$uploadfile = imagecreatefrompng($_FILES['banners']['tmp_name'][$k]);
+			// 			if(!$uploadfile){
+			// 				$err = "Image is invalid";
+			// 				break;
+			// 			}
+			// 			list($width, $height) =getimagesize($_FILES['banners']['tmp_name'][$k]);
+			// 			if($width > 1200 || $height > 480){
+			// 				if($width > $height){
+			// 					$perc = ($width - 1200) / $width;
+			// 					$width = 1200;
+			// 					$height = $height - ($height * $perc);
+			// 				}else{
+			// 					$perc = ($height - 480) / $height;
+			// 					$height = 480;
+			// 					$width = $width - ($width * $perc);
+			// 				}
+			// 			}
+			// 			$temp = imagescale($uploadfile,$width,$height);
+			// 			$spath = base_app.$banner_path.'/'.$_FILES['banners']['name'][$k];
+			// 			$i = 1;
+			// 			while(true){
+			// 				if(is_file($spath)){
+			// 					$spath = base_app.$banner_path.'/'.($i++).'_'.$_FILES['banners']['name'][$k];
+			// 				}else{
+			// 					break;
+			// 				}
+			// 			}
+			// 			if($_FILES['banners']['type'][$k] == 'image/jpeg')
+			// 			imagejpeg($temp,$spath,60);
+			// 			elseif($_FILES['banners']['type'][$k] == 'image/png')
+			// 			imagepng($temp,$spath,6);
 
-						imagedestroy($temp);
-					}
-				}
+			// 			imagedestroy($temp);
+			// 		}
+			// 	}
 
-				if(!empty($err)){
-					$resp['status'] = 'failed';
-					$resp['msg'] = $err;
-				}
-			}
+			// 	if(!empty($err)){
+			// 		$resp['status'] = 'failed';
+			// 		$resp['msg'] = $err;
+			// 	}
+			// }
 			
 			$update = $this->update_wh_system_info();
 			$flash = $this->set_flashdata('success','System Info Successfully Updated.');

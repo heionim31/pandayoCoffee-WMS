@@ -12,7 +12,7 @@
             start_loader()
         </script>
 
-        <style>
+<style>
             body {
                 background-image: url("<?php echo validate_image($_settings->info('cover')) ?>");
                 background-size: cover;
@@ -21,7 +21,7 @@
             }
 
             #page-title {
-                color: black !important;
+                color: #333333 !important;
                 font-size: 1.2em;
                 font-weight: bold;
             }
@@ -38,6 +38,63 @@
                 height: 100px !important;
                 max-height: unset;
             }
+            
+            .login-box {
+              width: 30%;
+                background-color: #FFFFFF;
+                color: #333333;
+                border-radius: 10px;
+                padding: 20px;
+                margin-top: 20px;
+                box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+            }
+            
+            .card {
+                background-color: transparent !important;
+                border: none !important;
+            }
+            
+            .form-control {
+                background-color: #F2F2F2 !important;
+                border: none !important;
+                color: #333333 !important;
+                font-weight: bold;
+                box-shadow: none !important;
+            }
+            
+            .input-group-text {
+                background-color: #F2F2F2 !important;
+                border: none !important;
+                color: #333333 !important;
+                font-weight: bold;
+            }
+            
+            .btn-primary {
+                background-color: #333333 !important;
+                border: none !important;
+                font-weight: bold;
+            }
+            
+            .btn-primary:hover {
+                background-color: #1A1A1A !important;
+                border: none !important;
+                font-weight: bold;
+            }
+            
+            .footer-login {
+                font-size: 0.8em;
+                margin-top: 10px;
+                color: #333333;
+            }
+            
+            .brand-text {
+                color: #333333 !important;
+                font-weight: bold;
+            }
+            
+            .fas {
+                color: #333333 !important;
+            }
         </style>
 
         <div class="login-box">
@@ -47,10 +104,9 @@
                         <img src="<?php echo validate_image($_settings->info('logo'))?>" alt="Store Logo" class="brand-image img-circle elevation-3 logo-img" style="width:55%; height:100%">
                         <p class="text-center text-white px-1 py-2" id="page-title"><?php echo $_settings->info('name') ?></p>
                     </div>
-                    <!-- <p class="login-box-msg">Please enter your credentials</p> -->
                     <form id="login-frm" action="" method="post">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="username" autofocus placeholder="Username" />
+                            <input type="text" class="form-control" name="username" autofocus placeholder="Username" required />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-user"></span>
@@ -58,7 +114,7 @@
                             </div>
                         </div>
                         <div class="input-group mb-3">
-                            <input type="password" class="form-control" name="password" placeholder="Password" />
+                            <input type="password" class="form-control" name="password" placeholder="Password" required />
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>

@@ -1,3 +1,5 @@
+<?php include '../loading-animation.php'; ?>
+
 <style>
   .user-img{
     position: absolute;
@@ -9,7 +11,7 @@
   }
 
   .btn-rounded{
-        border-radius: 50px;
+    border-radius: 50px;
   }
 
   /* LEFT NAVBAR*/
@@ -218,6 +220,23 @@
   .global-add-dditem:hover {
     background-color: #f2f2f2;
   }
+
+  /* Define the animation */
+  @keyframes bell-ring {
+      0% { transform: rotate(0); }
+      10% { transform: rotate(-5deg); }
+      20% { transform: rotate(10deg); }
+      30% { transform: rotate(-10deg); }
+      40% { transform: rotate(5deg); }
+      50% { transform: rotate(0); }
+      100% { transform: rotate(0); }
+  }
+
+  /* Add the animation to the bell icon on hover */
+  .animated:hover {
+      animation-name: bell-ring;
+      animation-duration: 2s;
+  }
 </style>
 
 
@@ -246,19 +265,46 @@
               $pageTitle = 'Units';
               break;
             case 'items':
-              $pageTitle = 'Stock Information';
+              $pageTitle = 'Inventory Items';
               break;
             case 'stocks':
               $pageTitle = 'Stock Adjustment';
               break;
-            case 'setNotif':
-              $pageTitle = 'Stock Alert Notifications';
+            case 'set_notification':
+              $pageTitle = 'Quantity Range';
               break;
-            case 'stockStatus':
-              $pageTitle = 'Stock Status Level';
+            case 'sales_request':
+              $pageTitle = 'Pending Sales Request';
+              break;
+            case 'sales_request/history':
+              $pageTitle = 'Sales Request History';
+              break;
+            case 'stocks/stockout_adjustment':
+              $pageTitle = 'Request Adjustment';
+              break;
+            case 'purchasing_request':
+              $pageTitle = 'Purchasing Request';
+              break;
+            case 'purchasing_request/history':
+              $pageTitle = 'Purchasing Request History';
+              break;
+            case 'stocks/stockin_adjustment':
+              $pageTitle = 'Request Adjustment';
+              break;
+            case 'leave_request_manager':
+              $pageTitle = 'Pending Leave Requests';
+              break;
+            case 'leave_request_manager/history':
+              $pageTitle = 'Leave Request History';
+              break;
+            case 'leave_request_staff':
+              $pageTitle = 'File Leave Request';
+              break;
+            case 'stocks/stockin_adjustment':
+              $pageTitle = 'Request Adjustment';
               break;
             case 'stockExpiration':
-              $pageTitle = 'Stock Expiration';
+              $pageTitle = 'Expiry Tracking';
               break;
             case 'reports/stockin':
               $pageTitle = 'Monthly Stock-In Reports';
@@ -270,7 +316,13 @@
               $pageTitle = 'Monthly Waste Reports';
               break;
             case 'user/list':
-              $pageTitle = 'User List';
+              $pageTitle = 'Users List';
+              break;
+            case 'user':
+              $pageTitle = 'Edit Profle Information';
+              break;
+            case 'user/manage_user':
+              $pageTitle = 'View Account Information';
               break;
             case 'system_info':
               $pageTitle = 'System Information';
@@ -307,77 +359,69 @@
       </div>
     </div>
 
-    <script>
-      $(document).ready(function(){
-        // CREATE ITEM
-        $('#sc-new-item').click(function(){
-          uni_modal("<i class='far fa-plus-square'></i> Add New Item ","items/manage_item.php")
-        })
-
-        // CREATE CATEGORY 
-        $('#sc-new-category').click(function(){
-          uni_modal("<i class='far fa-plus-square'></i> Add New Category ","categories/manage_category.php");
-        });
-      
-        // CREATE UNIT
-        $('#sc-new-unit').click(function(){
-          uni_modal("<i class='far fa-plus-square'></i> Add New Units ","units/manage_unit.php")
-        })
-      });
-    </script>
-
 
     <!-- NOTIFICATION -->
     <div class="dropdown">
       <a class="dropdown-toggle" href="#" role="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="far fa-bell fa-lg" aria-hidden="true"></i>
+        <i class="far fa-bell fa-lg animated" aria-hidden="true"></i>
           <?php
-          // Count the number of expired items in the database
-          // Count the number of expired items in the database
-          $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
-          WHERE expire_date <= NOW() + INTERVAL '1 DAY'
-          AND expire_date IS NOT NULL 
-          AND expire_date <> '0001-01-01'");
-          $expired_items_count = pg_fetch_assoc($expired_items_count)['count'];
+            // Count the number of expired items in the database
+            $expired_items_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_stockin_list 
+            WHERE expire_date <= NOW() + INTERVAL '7 DAY'
+            AND expire_date IS NOT NULL 
+            AND expire_date <> '0001-01-01'");
+            $expired_items_count = pg_fetch_assoc($expired_items_count)['count'];
 
+            // Count the number of items with quantity alerts
+            $query = "SELECT COUNT(*) AS count FROM wh_item_list i 
+                      INNER JOIN wh_category_list c ON i.category_id = c.id 
+                      INNER JOIN wh_stock_notif s ON s.id = 1 
+                      WHERE i.delete_flag = 0 
+                      AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) <= s.min_stock 
+                                        OR (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0)) > s.max_stock)";
 
-          $query = "SELECT COUNT(*) AS count FROM wh_item_list i 
-                    INNER JOIN wh_category_list c ON i.category_id = c.id 
-                    INNER JOIN wh_stock_notif s ON s.id = 1 
-                    WHERE i.delete_flag = 0 
-                    AND ((COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) < s.min_stock OR 
-                            (COALESCE((SELECT SUM(quantity) FROM wh_stockin_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_stockout_list WHERE item_id = i.id),0) - 
-                            COALESCE((SELECT SUM(quantity) FROM wh_waste_list WHERE item_id = i.id),0)) > s.max_stock)";
+            // Execute the query
+            $result = pg_query($conn, $query);
 
-          // Execute the query
-          $result = pg_query($conn, $query);
+            // Get the count of overstock items
+            $count = pg_fetch_assoc($result)['count'];
 
-          // Get the count of overstock items
-          $count = pg_fetch_assoc($result)['count'];
+            // Count the number of pending ingredient requests
+            $pending_requests_count = pg_query($conn, "SELECT COUNT(*) AS count FROM ingredient_request WHERE status IN ('Pending', 'Preparing')");
+            $pending_requests_count = pg_fetch_assoc($pending_requests_count)['count'];
 
-          // Count the total number of items in the dropdown menu
-          $dropdown_items = array();
-          if ($expired_items_count > 0) {
-            $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-exclamation-circle text-danger"></i> ' . $expired_items_count . ' Items Expired Alerts</a>';
-          }
-          if ($count > 0) {
-            $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockStatus"><i class="fas fa-exclamation-triangle text-warning"></i> ' . $count . ' Items Quantity Alerts</a>';
-          }
-          $dropdown_count = count($dropdown_items);
+            // Count the number of pending leave requests
+            $pending_leave_count = pg_query($conn, "SELECT COUNT(*) AS count FROM wh_leave_request WHERE status = 'Pending'");
+            $pending_leave_count = pg_fetch_assoc($pending_leave_count)['count'];
 
-          // Output the count in the notification badge
-          if ($dropdown_count > 0) {
-            if ($dropdown_count > 9) {
-              echo '<span class="notification-badge">9+</span>';
-            } else {
-              echo '<span class="notification-badge">' . $dropdown_count . '</span>';
+            // Count the total number of items in the dropdown menu
+            $dropdown_items = array();
+            if ($expired_items_count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=stockExpiration"><i class="fas fa-calendar-times text-danger"></i> ' . $expired_items_count . ' Item Expiration Alerts</a>';
             }
-          }
-        ?>
+            if ($count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=purchasing_request"><i class="fas fa-clipboard-list text-warning"></i> ' . $count . ' Item Quantity Alerts</a>';
+            }
+            if ($pending_requests_count > 0) {
+              $dropdown_items[] = '<a class="dropdown-item" href="./?page=sales_request"><i class="fas fa-cash-register text-info"></i> ' . $pending_requests_count . ' Pending Sales Requests</a>';
+            }
 
+            if($_settings->userdata('role') == 'warehouse_manager'){
+              if ($pending_leave_count > 0) {
+                $dropdown_items[] = '<a class="dropdown-item" href="./?page=leave_request_manager"><i class="fas fa-calendar-alt text-dark"></i> ' . $pending_leave_count . ' Pending Leave Requests</a>';
+              }      
+            }      
+            $dropdown_count = count($dropdown_items);
+
+            // Output the count in the notification badge
+            if ($dropdown_count > 0) {
+              if ($dropdown_count > 9) {
+                echo '<span class="notification-badge">9+</span>';
+              } else {
+                echo '<span class="notification-badge">' . $dropdown_count . '</span>';
+              }
+            }
+          ?>
       </a>
 
       <div class="dropdown-menu dropdown-menu-notif">
@@ -396,21 +440,95 @@
     </div>
 
     
-    <!-- PROFILE DROPDOWN -->
+   <!-- PROFILE DROPDOWN -->
+    <?php
+      // Retrieve user id based on fullname from users table
+      $fullname = ucwords($_settings->userdata('fullname'));
+      $query = "SELECT id FROM users WHERE fullname = '$fullname'";
+      $result = pg_query($conn, $query);
+      $user = pg_fetch_assoc($result);
+      $user_id = $user['id'];
+
+      // Retrieve latest time_in based on user id from hr_employee_logs table
+      $query = "SELECT time_in FROM hr_employee_logs WHERE employeeid = '$user_id' ORDER BY time_in DESC LIMIT 1";
+      $result = pg_query($conn, $query);
+      $log = pg_fetch_assoc($result);
+      $time_in = $log['time_in'];
+    ?>
     <li class="nav-item">
       <div class="btn-group nav-link">
-            <button type="button" class="btn btn-rounded badge badge-light dropdown-toggle dropdown-icon" data-toggle="dropdown">
-              <span><img src="<?php echo validate_image($_settings->userdata('avatar')) ?>" class="img-circle elevation-2 user-img" alt="User Image"></span>
-              <span class="ml-3"><?php echo ucwords($_settings->userdata('fullname')) ?></span>
-              <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu" role="menu">
-              <a class="dropdown-item" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> Profile</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a>
+        <button type="button" class="btn btn-rounded badge badge-light dropdown-toggle dropdown-icon" data-toggle="dropdown">
+          <?php 
+            $userImgUrl = $_settings->userdata('imgurl');
+            $userAvatar = validate_image($userImgUrl) ? $userImgUrl : $_settings->userdata('avatar');
+          ?>
+          <span><img src="<?php echo $userAvatar ?>" class="img-circle elevation-2 user-img" alt="User Image"></span>
+          <span class="ml-3"><?php echo ucwords($_settings->userdata('fullname')) ?></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <div class="card" id="user-profile-card" style="width: 18rem;">
+            <img src="<?php echo $userAvatar ?>" class="card-img-top mx-auto d-block mt-3" alt="User Image" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+            <div class="card-body d-flex flex-column align-items-center">
+              <?php 
+                $role = $_settings->userdata('role');
+                if ($role == 'warehouse_manager') {
+                  $displayRole = 'Manager';
+                } else if ($role == 'warehouse_staff') {
+                  $displayRole = 'Staff';
+                } else {
+                  $displayRole = $role;
+                }
+              ?>
+              <h5 class="card-title text-bold"><?php echo ucwords($_settings->userdata('fullname')) ?></h5>
+              <h5 class="card-title text-mute mt-1">(<?php echo $displayRole ?>)</h5>
             </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-center" href="<?php echo base_url.'admin/?page=user' ?>"><span class="fa fa-user"></span> Edit Profile</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-center text-danger" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fa fa-power-off"></span> Logout</a>
+          </div>
+          <div class="dropdown-menu-info">
+            <?php if ($time_in): ?>
+            <p class="text-center mb-0"><small>Time In: <?php echo date('Y-m-d H:i:s', strtotime($time_in)) ?></small></p>
+            <?php endif; ?>
+          </div>
         </div>
+      </div>
     </li>
 
   </ul>
 </nav>
+
+<script>
+      $(document).ready(function(){
+        // CREATE ITEM
+        $('#sc-new-item').click(function(){
+          uni_modal("<i class='far fa-plus-square'></i> Add New Item ","items/manage_item.php")
+        })
+
+        // CREATE CATEGORY 
+        $('#sc-new-category').click(function(){
+          uni_modal("<i class='far fa-plus-square'></i> Add New Category ","categories/manage_category.php");
+        });
+      
+        // CREATE UNIT
+        $('#sc-new-unit').click(function(){
+          uni_modal("<i class='far fa-plus-square'></i> Add New Units ","units/manage_unit.php")
+        })
+      });
+
+      document.addEventListener('ready', function() {
+        var dropdownButton = document.querySelector('.dropdown-toggle');
+        var userProfileCard = document.querySelector('#user-profile-card');
+        
+        dropdownButton.addEventListener('click', function() {
+          userProfileCard.classList.toggle('d-none');
+        });
+      });
+    </script>
+
+<!-- 
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item" href="<?php echo base_url.'/classes/Login.php?f=logout' ?>"><span class="fas fa-sign-out-alt"></span> Sign Out</a> 
+  </div> -->

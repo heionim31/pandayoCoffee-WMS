@@ -1,7 +1,7 @@
 <?php
 	require_once('./../../config.php');
 	if(isset($_GET['id']) && $_GET['id'] > 0){
-		$qry = pg_query($conn, "SELECT * FROM wh_category_list where id = '{$_GET['id']}' and delete_flag = 0 ");
+		$qry = pg_query($conn, "SELECT * FROM wh_category_list where id = '{$_GET['id']}'");
 		if(pg_num_rows($qry) > 0){
 			foreach(pg_fetch_assoc($qry) as $k => $v){
 				$$k=$v;
@@ -60,8 +60,8 @@
 						alert_toast(resp.msg, 'success')
 						// Delay the page reload by 2 seconds and redirect to category page
                         setTimeout(function(){
-                          window.location.href = './?page=categories';
-                        }, 1000);
+							window.location.href = window.location.href;
+						}, 1000);
 					} else if(resp.status == 'failed' && !!resp.msg){
                         var el = $('<div>')
                             el.addClass("alert alert-danger err-msg").text(resp.msg)
